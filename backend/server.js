@@ -6,24 +6,22 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Replace with your actual frontend Netlify URL
+// Your frontend origin URL (adjust if needed)
 const frontendURL = 'https://sportssquare.netlify.app';
 
-// Directory for posts
+// Directory where posts are saved (on the server)
 const postsDir = path.join(__dirname, 'posts');
 if (!fs.existsSync(postsDir)) {
   fs.mkdirSync(postsDir);
 }
 
-// Enable CORS for your frontend origin
 app.use(cors({ origin: frontendURL }));
-
 app.use(express.json());
 
-// Serve static files from /posts
+// Serve posts statically
 app.use('/posts', express.static(postsDir));
 
-// Publish new post endpoint
+// Endpoint: Publish new post
 app.post('/publish', (req, res) => {
   const { title, content } = req.body;
 
@@ -37,37 +35,45 @@ app.post('/publish', (req, res) => {
     .replace(/-+/g, '-') + '.html';
 
   const filePath = path.join(postsDir, filename);
-  const fullHtml = `<!DOCTYPE html><html><head><title>${title}</title></head><body>${content}</body></html>`;
+
+  const fullHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>${title}</title>
+</head>
+<body>
+  ${content}
+</body>
+</html>`;
 
   fs.writeFile(filePath, fullHtml, (err) => {
     if (err) {
-      console.error('Write file error:', err);
+      console.error('Error writing file:', err);
       return res.status(500).json({ error: 'Failed to save post.' });
     }
-    // Send JSON response with URL
-    res.json({ url: `/posts/${filename}` });
+    console.log(`Post saved: ${filename}`);
+    res.json({ message: 'Post published', url: `/posts/${filename}` });
   });
 });
 
-// Optional: Serve frontend static files locally if you have any
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Root fallback
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// Individual post route (fallback)
-app.get('/posts/:filename', (req, res) => {
-  const filePath = path.join(postsDir, req.params.filename);
-  fs.access(filePath, fs.constants.F_OK, (err) => {
+// Endpoint: List all posts (for debugging)
+app.get('/list-posts', (req, res) => {
+  fs.readdir(postsDir, (err, files) => {
     if (err) {
-      return res.status(404).send('Post not found.');
+      console.error('Error reading posts dir:', err);
+      return res.status(500).json({ error: 'Failed to list posts' });
     }
-    res.sendFile(filePath);
+    res.json({ posts: files });
   });
 });
 
+// Fallback root route (optional)
+app.get('/', (req, res) => {
+  res.send('Server is running');
+});
+
+// Start server
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
 });
