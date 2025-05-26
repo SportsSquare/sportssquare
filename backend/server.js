@@ -15,6 +15,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.static(__dirname));
+app.use('/posts', express.static(path.join(__dirname, 'posts')));
 
 app.post('/publish', (req, res) => {
   const { title, content } = req.body;
