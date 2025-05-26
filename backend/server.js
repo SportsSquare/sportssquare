@@ -6,10 +6,10 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Replace with your actual frontend Netlify URL
+// Your frontend Netlify URL (must match exactly)
 const frontendURL = 'https://sportssquare.netlify.app';
 
-// ✅ Fix: Define postsDir BEFORE it's used
+// Define posts directory BEFORE using it
 const postsDir = path.join(__dirname, 'posts');
 if (!fs.existsSync(postsDir)) {
   fs.mkdirSync(postsDir);
@@ -18,54 +18,52 @@ if (!fs.existsSync(postsDir)) {
 app.use(cors({ origin: frontendURL }));
 app.use(express.json());
 
-// ✅ Serve static files from /posts
+// Serve generated posts statically under /posts
 app.use('/posts', express.static(postsDir));
 
-// 📝 Publish new post (writes to /posts folder)
+// POST /publish to save new post HTML files
 app.post('/publish', (req, res) => {
   const { title, content } = req.body;
 
   if (!title || !content) {
-    return res.status(400).send('Title and content are required.');
+    return res.status(400).json({ error: 'Title and content are required.' });
   }
 
+  // Sanitize title to filename-safe string
   const filename = title
     .toLowerCase()
-    .replace(/[^a-z0-9]/g, '-')
-    .replace(/-+/g, '-') + '.html';
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '') + '.html';
 
   const filePath = path.join(postsDir, filename);
   const fullHtml = `<!DOCTYPE html><html><head><title>${title}</title></head><body>${content}</body></html>`;
 
   fs.writeFile(filePath, fullHtml, (err) => {
     if (err) {
-      console.error(err);
-      return res.status(500).send('Failed to save post.');
+      console.error('Error writing post:', err);
+      return res.status(500).json({ error: 'Failed to save post.' });
     }
-    res.send(`Post published at /posts/${filename}`);
+    res.json({ message: 'Post published', url: `/posts/${filename}` });
   });
 });
 
-// 🔁 Optional: Serve index.html if you test locally
-app.use(express.static(path.join(__dirname, 'public')));
-
-// 📄 Optional: Root fallback
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// 🔎 Individual post route (safety net)
+// Safety net for serving posts individually
 app.get('/posts/:filename', (req, res) => {
   const filePath = path.join(postsDir, req.params.filename);
   fs.access(filePath, fs.constants.F_OK, (err) => {
-    if (err) {
-      return res.status(404).send('Post not found.');
-    }
+    if (err) return res.status(404).send('Post not found.');
     res.sendFile(filePath);
   });
 });
 
-// 🚀 Start the server
+// Optional: serve frontend statically if local testing
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Optional: root fallback route
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
 });
