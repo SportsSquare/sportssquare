@@ -9,19 +9,19 @@ const PORT = process.env.PORT || 3000;
 // Replace with your actual frontend Netlify URL
 const frontendURL = 'https://sportssquare.netlify.app';
 
-app.use(cors({ origin: frontendURL }));
-app.use(express.json());
-
-// Directory for dynamically generated post files (Render only allows writing to /tmp)
-const postsDir = '/tmp/posts';
+// ✅ Fix: Define postsDir BEFORE it's used
+const postsDir = path.join(__dirname, 'posts');
 if (!fs.existsSync(postsDir)) {
   fs.mkdirSync(postsDir);
 }
 
-// Serve generated posts
+app.use(cors({ origin: frontendURL }));
+app.use(express.json());
+
+// ✅ Serve static files from /posts
 app.use('/posts', express.static(postsDir));
 
-// Handle publishing new post
+// 📝 Publish new post (writes to /posts folder)
 app.post('/publish', (req, res) => {
   const { title, content } = req.body;
 
@@ -46,15 +46,15 @@ app.post('/publish', (req, res) => {
   });
 });
 
-// Serve static frontend files (optional — only if you're testing frontend locally)
+// 🔁 Optional: Serve index.html if you test locally
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Fallback route (optional)
+// 📄 Optional: Root fallback
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Explicit route to serve individual posts (already handled above, but safe fallback)
+// 🔎 Individual post route (safety net)
 app.get('/posts/:filename', (req, res) => {
   const filePath = path.join(postsDir, req.params.filename);
   fs.access(filePath, fs.constants.F_OK, (err) => {
@@ -65,7 +65,7 @@ app.get('/posts/:filename', (req, res) => {
   });
 });
 
-// Start server
+// 🚀 Start the server
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
 });
