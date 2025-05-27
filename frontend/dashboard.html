@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<style>
+    body {
+        background-color: rgb(249, 251, 231);
+        font-family: 'Montserrat', sans-serif;
+        text-align: center;
+        padding: 50px;
+    }
+    h1 {
+        color: blue;
+    }
+</style>
+<body>
+    <h1>Sports Square Admin Dashboard</h1>
+    <div class="solongpopsclicks">0</div>
+    <div class="solongpopsviews">0</div>
+</body>
+<script>
+    const userName = prompt("Username (for admin access):");
+    const password = prompt("Password (for admin access):");
+    if (userName !== "Smayan" || password !== "SSAdmin123") {
+        alert("Access denied. Incorrect username or password.");
+        window.location.href = "https://sportssquare.netlify.app";
+    } else {
+        alert("Access granted. Welcome to the admin dashboard!");
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('so-long-pops.html')
+        .then(response => response.text())
+        .then(data => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(data, 'text/html');
+
+          const clicksElement = doc.querySelector('#solongpopsclicks');
+          const viewsElement = doc.querySelector('#solongpopsviews');
+
+          if (clicksElement && viewsElement) {
+            const statsContainer = document.getElementById('stats-container');
+
+            const clicksDisplay = document.createElement('p');
+            clicksDisplay.textContent = `Clicks: ${clicksElement.textContent}`;
+            statsContainer.appendChild(clicksDisplay);
+
+            const viewsDisplay = document.createElement('p');
+            viewsDisplay.textContent = `Views: ${viewsElement.textContent}`;
+            statsContainer.appendChild(viewsDisplay);
+          } else {
+            console.error('Could not find required elements in so-long-pops.html');
+          }
+        })
+        .catch(error => console.error('Error fetching so-long-pops.html:', error));
+    });
+</script>
+</html>

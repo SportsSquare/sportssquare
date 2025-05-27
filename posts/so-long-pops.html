@@ -41,7 +41,7 @@
 <body>
 
   <h1>So Long Pops</h1>
-<p>By: <a href="./smayan.html">Smayan Srikanth</a></p>
+<p>By: <a href="smayan.html">Smayan Srikanth</a></p>
   <p><strong>Gregg Popovich Day</strong></p>
   <p><strong>That’s what January 28th should be, every single year.</strong></p>
 
@@ -136,4 +136,33 @@
     Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a>
   </div>
 </body>
+<div class="solongpopsclicks" style="display: none;">0</div>
+<div class="solongpopsviews" style="display: none;">0</div>
+
+<script>
+  // Initialize counters from localStorage or default to 0
+  let solongpopsclicks = parseInt(localStorage.getItem('solongpopsclicks')) || 0;
+  let solongpopsviews = parseInt(localStorage.getItem('solongpopsviews')) || 0;
+
+  // Increment views on page load
+  solongpopsviews++;
+  localStorage.setItem('solongpopsviews', solongpopsviews);
+  document.querySelector(".solongpopsviews").textContent = solongpopsviews;
+
+  // Only count one click per session
+  let hasClicked = sessionStorage.getItem('solongpopsUserClicked') === 'true';
+
+  document.addEventListener("click", function () {
+    if (!hasClicked) {
+      solongpopsclicks++;
+      localStorage.setItem('solongpopsclicks', solongpopsclicks);
+      document.querySelector(".solongpopsclicks").textContent = solongpopsclicks;
+      sessionStorage.setItem('solongpopsUserClicked', 'true');
+      hasClicked = true;
+    }
+  });
+
+  // Display current clicks from localStorage
+  document.querySelector(".solongpopsclicks").textContent = solongpopsclicks;
+</script>
 </html>
