@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
+     crossorigin="anonymous"></script>
 </head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
 <script>
@@ -27,13 +29,32 @@
 </style>
 <body>
     <h1 style="color:blue">Sports Square</h1>
-    <nav>
+    <input type="text" id="search" placeholder="Search for posts..." style="width: 300px; padding: 10px; margin-bottom: 20px;">
+    <script>
+        document.getElementById('search').addEventListener('input', function() {
+            const search = this.value;
+            this.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter' && (search === 'So LongPops' || search === 'So Long Pops' || search === 'SoLongPops' || search === 'SoLong Pops')) {
+                    window.location.href = '../posts/so-long-pops.html';
+                } else if (event.key === 'Enter' && (search === 'Smayan' || search === 'smayan' || search === 'Smayan Srikanth' || search === 'smayan srikanth')) {
+                    window.location.href = '../posts/smayan.html';
+                } else if (event.key === 'Enter' && (search === 'Sports Calendar' || search === 'sports calendar')) {
+                    window.location.href = './sportscalendar.html';
+                } else if (event.key === 'Enter' && (search === 'Dashboard' || search === 'dashboard')) {
+                    window.location.href = './dashboard.html';
+                } else if (event.key === 'Enter' && (search === 'Subscribed' || search === 'subscribed')) {
+                    window.location.href = './subscribed.html';
+                } 
+            });
+        });
+    </script>
+    <nav style="margin: 20px 0; background-color: rgb(255, 208, 0);">
         <ul style="list-style-type: none; padding: 0; display: flex; justify-content: center; gap: 20px;">
             <li><a href="./index.html">Home</a></li>
             <li><a href="">Posts</a></li>
             <li><a href="./sportscalendar.html">Calendar</a></li>
             <li><a href="">About</a></li>
-            <li><a href="l">Contact</a></li>
+            <li><a href="">Contact</a></li>
         </ul>
     </nav>
     <div id="hero" style="border: 3px ; border-color: black; border-style: solid; padding: 20px; margin: 20px auto; width: 80%; max-width: 600px; background-color: white; border-radius: 10px;">
@@ -54,17 +75,133 @@
     <div>
     <figure>
         <h1>FEATURED:</h1>
-        <a href="../posts/so-long-pops.html">So Long Pops</a>
-        <h3>From Air Force Cadet to NBA Legend: The Unmatched Legacy of Coach Popovich</h3></a>
-        <img src="./image.png" alt="Sports Square Logo" style="width: auto; height: 270px; margin-bottom: 20px;">
+        <a href="../posts/so-long-pops.html" style="color:blue"><h2>So Long Pops</h2></a>
+        <a href="../posts/so-long-pops.html" style="color:black"><h4>From Air Force Cadet to NBA Legend: The Unmatched Legacy of Coach Popovich</h3></a>
+        <a href="../posts/so-long-pops.html" style="color:black"><img src="./image.png" alt="Sports Square Logo" style="width: auto; height: 270px; margin-bottom: 20px;">
         <figcaption>For nearly three decades, Gregg Popovich wasn't just coaching basketball — he was redefining it. From humble beginnings at a tiny DIII college to five NBA titles and Olympic gold, Pop's journey is a masterclass in leadership, grit, and principle. As he steps away from the sideline, we reflect on the legacy of a coach who changed the game — and every life he touched along the way.
-        </figcaption>
+        </figcaption></a>
+        <p>By: <a href="../posts/smayan.html">Smayan Srikanth</a></p>
       </figure>
+    </div>
+    <hr style="border: 1px solid black; margin: 40px 0;">
+    <nav style="display: flex; justify-content: center; gap: 1rem; margin: 2rem 0;">
+        <button onclick="location.href='./nfl.html'" 
+          style="width: 200px; height: 50px; background-color: rgb(249, 251, 231); 
+                 color: black; font-size: 16px; font-weight: bold; border: none; 
+                 border-radius: 6px; cursor: pointer; font-family: 'Montserrat', sans-serif;">
+          NFL
+        </button>
+      
+        <button onclick="location.href='./mlb.html'" 
+          style="width: 200px; height: 50px; background-color: rgb(249, 251, 231); 
+                 color: black; font-size: 16px; font-weight: bold; border: none; 
+                 border-radius: 6px; cursor: pointer; font-family: 'Montserrat', sans-serif;">
+          MLB
+        </button>
+      
+        <button onclick="location.href='./nba.html'" 
+          style="width: 200px; height: 50px; background-color: rgb(249, 251, 231); 
+                 color: black; font-size: 16px; font-weight: bold; border: none; 
+                 border-radius: 6px; cursor: pointer; font-family: 'Montserrat', sans-serif;">
+          NBA
+        </button>
+      </nav>
+    <hr style="border: 1px solid black; margin: 40px 0;">
+    <h2>Latest Posts</h2>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+        <div style="border: 1px solid black; padding: 20px; width: 300px; background-color: white; border-radius: 10px;">
+            <h3><a href="../posts/so-long-pops.html" style="color:blue">So Long Pops</a></h3>
+            <p>From Air Force Cadet to NBA Legend: The Unmatched Legacy of Coach Popovich</p>
+            <p>By: <a href="../posts/smayan.html">Smayan Srikanth</a></p>
     </div>
 
 
-    <footer style="margin-top: 20px;">
-        <p>&copy; 2025 Sports Square. All rights reserved.</p>
-        <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a>
+    <div style="display: flex; justify-content: flex-end; width: 100%;">
+        <aside style="background: white; padding: 1rem; border-radius: 8px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin: 0; 
+            font-family: 'Segoe UI', sans-serif; max-width: 300px;">
+          <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">🏀 Fan Poll</h3>
+          <p style="margin-bottom: 1rem;">Who will win the NBA Finals?</p>
+      
+          <form id="pollForm" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <label><input type="radio" name="vote" value="O1"> Thunder</label>
+            <label><input type="radio" name="vote" value="O2"> Knicks</label>
+            <label><input type="radio" name="vote" value="O3"> Pacers</label>
+      
+            <button type="submit" style="margin-top: 1rem; padding: 0.5rem; 
+                                background-color: #2ecc71; color: white; border: none; 
+                                border-radius: 4px; cursor: pointer;">Vote</button>
+          </form>
+      
+          <div id="pollResult" style="margin-top: 1rem; font-size: 0.95rem; color: #2d3436;"></div>
+          <div id="pollCounts" style="margin-top: 1rem; font-size: 0.95rem; color: #34495e;"></div>
+        </aside>
+      </div>
+      
+
+
+
+<script>
+  const form = document.getElementById('pollForm');
+  const resultDiv = document.getElementById('pollResult');
+  const countsDiv = document.getElementById('pollCounts');
+
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWyaj5EOkvdBZ_CUAI8AT9k41u2ovK3F-q0XlCvCwyLv4REagM0dydH57WJP5iCINj/exec'; // Replace with your Web App URL
+
+  // Submit vote to Google Apps Script
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const selected = document.querySelector('input[name="vote"]:checked');
+    if (!selected) {
+      resultDiv.textContent = '⚠️ Please select an option before submitting.';
+      return;
+    }
+
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `vote=${encodeURIComponent(selected.value)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        resultDiv.textContent = '✅ Thanks for voting! Your vote has been recorded.';
+        form.style.display = 'none';
+        fetchResults();
+      } else {
+        resultDiv.textContent = '⚠️ There was an error submitting your vote.';
+      }
+    })
+    .catch(() => {
+      resultDiv.textContent = '⚠️ Sorry, could not submit your vote.';
+    });
+  });
+
+  // Fetch vote counts from Google Apps Script (GET)
+  function fetchResults() {
+    fetch(GOOGLE_SCRIPT_URL)
+      .then(response => response.json())
+      .then(counts => {
+        countsDiv.innerHTML = `
+          🗳️ Current Results:<br>
+          • Thunder: ${counts.O1}<br>
+          • Knicks: ${counts.O2}<br>
+          • Pacers: ${counts.O3}
+        `;
+      })
+      .catch(() => {
+        countsDiv.textContent = '⚠️ Unable to load current results.';
+      });
+  }
+
+  // Fetch results every 30 seconds
+  fetchResults();
+  setInterval(fetchResults, 30000);
+</script>
+
+
+      
 </body>
 </html>
