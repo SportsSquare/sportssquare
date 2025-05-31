@@ -52,7 +52,9 @@
 <body>
 
   <h1>So Long Pops</h1>
-<p>By: <a href="smayan.html">Smayan Srikanth</a></p>
+  <p>By: <a href="smayan.html">Smayan Srikanth</a></p>
+
+  <hr style="border: 1px solid black; margin: 20px 0;">
   <p><strong>Gregg Popovich Day</strong></p>
   <p><strong>That’s what January 28th should be, every single year.</strong></p>
 
@@ -65,7 +67,7 @@
     <input type="hidden" name="_message" value="A new user has subscribed to Sports Square.">
     <br>
     <button type="submit" style="width:120px; height: 50px; background-color: #2ECC71; color: white; padding: 10px 20px; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; font-family: 'Montserrat', sans-serif;">Subscribe</button>
-</form> 
+  </form> 
 
   <h2>Origins</h2>
   <p>The Popovich story began on that date in 1949, in bustling East Chicago, Indiana, home to the Indiana Harbor and the Ship Canal. He was born to a Serbian father and a Croatian mother, graduating from Merrillville High School in 1966.</p>
@@ -141,39 +143,109 @@
   <h3>Coach</h3>
   <h3>Pops</h3>
   <h3>Way.</h3>
+  <hr style="border: 1px solid black; margin: 40px 0;">
 
-  <div class="footer">
-    &copy; 2025 Sports Sports__Square. All rights reserved.<br>
-    Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a>
+  <div id="comments-section" style="max-width: 400px; margin: 2rem auto; font-family: Arial, sans-serif;">
+    <h2>Comments</h2>
+
+    <!-- FORM START -->
+    <form id="commentForm" style="background-color: #f9f9f9; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+      <input type="text" id="name" placeholder="Your name" required 
+         style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: 'Montserrat', sans-serif;">
+      <textarea id="comment" placeholder="Your comment" required 
+          style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: 'Montserrat', sans-serif; resize: vertical; min-height: 80px;"></textarea>
+      <button type="submit" 
+          style="width: 100%; padding: 12px; background-color: #2ECC71; color: white; font-size: 16px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; font-family: 'Montserrat', sans-serif;">
+      Post Comment
+      </button>
+    </form>
+    <!-- FORM END -->
+
+    <div id="commentsList" style="margin-top: 1rem;">
+      Loading comments...
+    </div>
   </div>
-</body>
-<div class="solongpopsclicks" style="display: none;">0</div>
-<div class="solongpopsviews" style="display: none;">0</div>
 
-<script>
-  // Initialize counters from localStorage or default to 0
-  let solongpopsclicks = parseInt(localStorage.getItem('solongpopsclicks')) || 0;
-  let solongpopsviews = parseInt(localStorage.getItem('solongpopsviews')) || 0;
+  <script>
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzdV6sXY5r1mrKJj69UdZRP6FvEtvC2tyzhBYGjS0vXxGzio2XZ3mUIK0jgJJaBdbqm3Q/exec';
 
-  // Increment views on page load
-  solongpopsviews++;
-  localStorage.setItem('solongpopsviews', solongpopsviews);
-  document.querySelector(".solongpopsviews").textContent = solongpopsviews;
+    const form = document.getElementById('commentForm');
+    const commentsList = document.getElementById('commentsList');
 
-  // Only count one click per session
-  let hasClicked = sessionStorage.getItem('solongpopsUserClicked') === 'true';
+    // Fetch and display comments
+    async function fetchComments() {
+      commentsList.textContent = 'Loading comments...';
+      try {
+        const res = await fetch(WEB_APP_URL);
+        const comments = await res.json();
 
-  document.addEventListener("click", function () {
-    if (!hasClicked) {
-      solongpopsclicks++;
-      localStorage.setItem('solongpopsclicks', solongpopsclicks);
-      document.querySelector(".solongpopsclicks").textContent = solongpopsclicks;
-      sessionStorage.setItem('solongpopsUserClicked', 'true');
-      hasClicked = true;
+        if (comments.length === 0) {
+          commentsList.textContent = 'No comments yet. Be the first!';
+          return;
+        }
+
+        commentsList.innerHTML = comments.map(c => `
+          <div style="border-bottom: 1px solid #ddd; padding: 6px 0;">
+            <strong>${escapeHtml(c.name)}</strong> <small style="color:#777;">(${new Date(c.timestamp).toLocaleString()})</small>
+            <p>${escapeHtml(c.comment)}</p>
+          </div>
+        `).join('');
+      } catch (err) {
+        commentsList.textContent = 'Failed to load comments.';
+        console.error(err);
+      }
     }
-  });
 
-  // Display current clicks from localStorage
-  document.querySelector(".solongpopsclicks").textContent = solongpopsclicks;
-</script>
+    // Escape HTML to prevent injection
+    function escapeHtml(text) {
+      return text.replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+    }
+
+    // Handle comment form submission
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const name = form.name.value.trim();
+      const comment = form.comment.value.trim();
+
+      if (!name || !comment) return;
+
+      // Disable submit button while posting
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Posting...';
+
+      try {
+        const response = await fetch(WEB_APP_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ name, comment })
+        });
+
+        if (!response.ok) throw new Error('Network response was not ok');
+
+        form.reset();
+        fetchComments();
+      } catch (error) {
+        alert('Failed to post comment.');
+        console.error(error);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Post Comment';
+      }
+    });
+
+    // Initial load
+    fetchComments();
+  </script>
+
+  <footer class="footer">
+    © 2025 Sports Square by Smayan Srikanth
+  </footer>
+</body>
 </html>
