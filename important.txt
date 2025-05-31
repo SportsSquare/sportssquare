@@ -2,3 +2,15 @@ cd ~/Desktop/Sports\ Square
 git add .
 git commit -m "Describe your changes"
 git push origin main
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6CR81XMZN5');
+</script>
+
+Add the code above to every page

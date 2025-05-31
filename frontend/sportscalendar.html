@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Calendar</title>
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6CR81XMZN5');
+</script>
+
+<style>
+    body {
+        background-color: rgb(249, 251, 231);
+        font-family: 'Montserrat', sans-serif;
+        text-align: center;
+        padding: 50px;
+    }
+    h1 {
+        color: blue;
+    }
+    .calendar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+    }
+</style>
+<body>
+<h1>Find Your Favorite Team</h1>
+<div id="teams">
+    <div id="MLB" class="team-category">
+        <h2>Major League Baseball</h2>
+        <a href="athleticscalendar.html" class="team-link">Athletics</a>
+    </div>
+
+    <div id="NHL" class="team-category">
+        <h2>National Hockey League</h2>
+        <a href="bruinscalendar.html" class="team-link">Boston Bruins</a>
+    </div>
+
+    <div id="NBA" class="team-category">
+        <h2>National Basketball Association</h2>
+        <a href="warriorscalendar.html" class="team-link">Golden State Warriors</a>
+    </div>
+
+    <div id="NFL" class="team-category">
+        <h2>National Football League</h2>
+        <a href="eaglescalendar.html" class="team-link">Philadelphia Eagles</a>
+    </div>
+</div>
+
+<style>
+    .team-category {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        width: 80%;
+        max-width: 500px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .team-category h2 {
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .team-link {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: white;
+        background-color: #007BFF;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .team-link:hover {
+        background-color: #0056b3;
+    }
+</style>
+</body>
+</html>
