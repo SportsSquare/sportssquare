@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign Up / Login - Sports Square</title>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      max-width: 400px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #f9fbf7;
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #2ECC71;
+      border: none;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    button:hover {
+      background-color: #27ae60;
+    }
+    .message {
+      margin: 1rem 0;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Sports Square Authentication</h1>
+
+  <div id="auth-container">
+
+    <h2>Register</h2>
+    <input type="email" id="register-email" placeholder="Email" required />
+    <input type="password" id="register-password" placeholder="Password" required />
+    <button id="register-btn">Register</button>
+
+    <h2>Login</h2>
+    <input type="email" id="login-email" placeholder="Email" required />
+    <input type="password" id="login-password" placeholder="Password" required />
+    <button id="login-btn">Login</button>
+
+    <div class="message" id="message"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+    // Your Firebase config here
+    const firebaseConfig = {
+      apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+      authDomain: "sportssquare-b96ed.firebaseapp.com",
+      projectId: "sportssquare-b96ed",
+      storageBucket: "sportssquare-b96ed.appspot.com",
+      messagingSenderId: "844736978057",
+      appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const messageEl = document.getElementById('message');
+
+    document.getElementById('register-btn').addEventListener('click', async () => {
+      messageEl.textContent = '';
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      if (!email || !password) {
+        messageEl.textContent = 'Please enter both email and password.';
+        return;
+      }
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        messageEl.style.color = 'green';
+        messageEl.textContent = `Registration successful! Welcome ${userCredential.user.email}`;
+      } catch (error) {
+        messageEl.style.color = 'red';
+        messageEl.textContent = `Error: ${error.message}`;
+      }
+    });
+
+    document.getElementById('login-btn').addEventListener('click', async () => {
+      messageEl.textContent = '';
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      if (!email || !password) {
+        messageEl.textContent = 'Please enter both email and password.';
+        return;
+      }
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        messageEl.style.color = 'green';
+        messageEl.textContent = `Login successful! Welcome back ${userCredential.user.email}`;
+        // Optionally, redirect to main site or update UI
+      } catch (error) {
+        messageEl.style.color = 'red';
+        messageEl.textContent = `Error: ${error.message}`;
+      }
+    });
+
+    // Optional: Listen to auth state changes
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log('User logged in:', user.email);
+      } else {
+        console.log('User logged out');
+      }
+    });
+  </script>
+</body>
+</html>

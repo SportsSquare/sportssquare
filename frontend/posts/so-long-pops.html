@@ -3,28 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title id="SoLongPops">So Long Pops</title>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
-     crossorigin="anonymous"></script>
+  <title>So Long Pops</title>
+
   <style>
     body {
-        font-family: 'Montserrat', sans-serif;
-        line-height: 1.7;
-        padding: 2rem;
-        max-width: 800px;
-        margin: auto;
-        background-color: rgb(249, 251, 231);
-        color: #333;
-        text-align: center;
-        padding: 50px;
+      font-family: 'Montserrat', sans-serif;
+      background-color: rgb(249, 251, 231);
+      color: #333;
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+      text-align: center;
     }
-    h1, h2 {
-      color: #222;
-    }
-    img {
-      max-width: 100%;
-      height: auto;
-    }
+    h1, h2 { color: #222; }
+    img { max-width: 100%; height: auto; }
     blockquote {
       border-left: 4px solid #888;
       margin-left: 0;
@@ -38,21 +30,181 @@
       color: #777;
       text-align: center;
     }
+    button.like-btn {
+      background-color: #eee;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 6px 12px;
+      margin-top: 5px;
+    }
+    #authStatus {
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+    #loginBtn, #logoutBtn {
+      background-color: #2ECC71;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 0 5px;
+      font-family: 'Montserrat', sans-serif;
+    }
   </style>
-</head>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-6CR81XMZN5');
-</script>
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <!-- Firebase Auth -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <!-- Firebase Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+      authDomain: "sportssquare-b96ed.firebaseapp.com",
+      projectId: "sportssquare-b96ed",
+      storageBucket: "sportssquare-b96ed.appspot.com",
+      messagingSenderId: "844736978057",
+      appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // DOM elements
+    const authStatus = document.getElementById('authStatus');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const commentsList = document.getElementById('commentsList');
+    const articleLikesSpan = document.getElementById('articleLikes');
+
+    let currentUser = null; // To track logged-in user
+
+    // Show auth status & buttons based on login state
+    auth.onAuthStateChanged(user => {
+      currentUser = user;
+      if (user) {
+        authStatus.textContent = `Logged in as ${user.email}`;
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+      } else {
+        authStatus.textContent = `Not logged in`;
+        loginBtn.style.display = 'inline-block';
+        logoutBtn.style.display = 'none';
+      }
+    });
+
+    // Redirect to your signup/login page
+    loginBtn.addEventListener('click', () => {
+      window.location.href = 'signup.html'; // change if your login page URL is different
+    });
+
+    // Logout action
+    logoutBtn.addEventListener('click', () => {
+      auth.signOut();
+      alert('You have been logged out.');
+    });
+
+    // Fetch and render comments with like buttons
+    async function fetchComments() {
+      commentsList.innerHTML = 'Loading comments...';
+      const snapshot = await db.collection("comments").orderBy("timestamp", "desc").get();
+
+      if (snapshot.empty) {
+        commentsList.innerHTML = 'No comments yet.';
+        return;
+      }
+
+      let html = '';
+      snapshot.forEach(docSnap => {
+        const c = docSnap.data();
+        html += `
+          <div style="border-bottom:1px solid #ccc; margin:1rem 0;">
+            <strong>${escapeHtml(c.name)}</strong>
+            <small style="color:#777;">${c.timestamp?.toDate ? c.timestamp.toDate().toLocaleString() : ''}</small>
+            <p>${escapeHtml(c.comment)}</p>
+            <button class="like-btn" onclick="likeComment('${docSnap.id}')" ${currentUser ? '' : 'disabled title="Login to like"'}>❤️ Like (<span id="likes-${docSnap.id}">${c.likes || 0}</span>)</button>
+          </div>
+        `;
+      });
+
+      commentsList.innerHTML = html;
+    }
+
+    // Like a comment - only if logged in
+    window.likeComment = async function(commentId) {
+      if (!currentUser) {
+        alert('You must be logged in to like comments!');
+        return;
+      }
+
+      // Disable the button right away
+      const btn = event.currentTarget || event.target;
+      btn.disabled = true;
+
+      const ref = db.collection("comments").doc(commentId);
+      await ref.update({ likes: firebase.firestore.FieldValue.increment(1) });
+
+      const el = document.getElementById(`likes-${commentId}`);
+      el.textContent = parseInt(el.textContent) + 1;
+    };
+
+    // Like article - only if logged in
+    window.likeArticle = async function() {
+      if (!currentUser) {
+        alert('You must be logged in to like the article!');
+        return;
+      }
+      const ref = db.collection("articles").doc("so-long-pops");
+      await ref.update({ likes: firebase.firestore.FieldValue.increment(1) });
+      const span = document.getElementById("articleLikes");
+      span.textContent = parseInt(span.textContent) + 1;
+    };
+
+    // Load article likes count
+    async function loadArticleLikes() {
+      const ref = db.collection("articles").doc("so-long-pops");
+      const snap = await ref.get();
+      if (snap.exists) {
+        articleLikesSpan.textContent = snap.data().likes || 0;
+      } else {
+        await ref.set({ likes: 0 }).catch(() => {});
+        articleLikesSpan.textContent = "0";
+      }
+    }
+
+    // Escape HTML utility
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[m]);
+    }
+
+    // Initial load
+    auth.onAuthStateChanged(() => {
+      fetchComments();
+      loadArticleLikes();
+    });
+  </script>
+</head>
 
 <body>
-
   <h1>So Long Pops</h1>
   <p>By: <a href="smayan.html">Smayan Srikanth</a></p>
+
+  <div id="authStatus">Loading authentication status...</div>
+  <button id="loginBtn">Login / Signup</button>
+  <button id="logoutBtn" style="display:none;">Logout</button>
+
+  <button class="like-btn" onclick="likeArticle()">❤️ Like Article (<span id="articleLikes">0</span>)</button>
 
   <hr style="border: 1px solid black; margin: 20px 0;">
   <p><strong>Gregg Popovich Day</strong></p>
@@ -68,6 +220,7 @@
     <br>
     <button type="submit" style="width:120px; height: 50px; background-color: #2ECC71; color: white; padding: 10px 20px; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; font-family: 'Montserrat', sans-serif;">Subscribe</button>
   </form> 
+
 
   <h2>Origins</h2>
   <p>The Popovich story began on that date in 1949, in bustling East Chicago, Indiana, home to the Indiana Harbor and the Ship Canal. He was born to a Serbian father and a Croatian mother, graduating from Merrillville High School in 1966.</p>
@@ -145,104 +298,17 @@
   <h3>Way.</h3>
   <hr style="border: 1px solid black; margin: 40px 0;">
 
-  <div id="comments-section" style="max-width: 400px; margin: 2rem auto; font-family: Arial, sans-serif;">
+  <div id="comments-section">
     <h2>Comments</h2>
-
-    <!-- FORM START -->
-    <form id="commentForm" style="background-color: #f9f9f9; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-      <input type="text" id="name" placeholder="Your name" required 
-         style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: 'Montserrat', sans-serif;">
-      <textarea id="comment" placeholder="Your comment" required 
-          style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: 'Montserrat', sans-serif; resize: vertical; min-height: 80px;"></textarea>
-      <button type="submit" 
-          style="width: 100%; padding: 12px; background-color: #2ECC71; color: white; font-size: 16px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; font-family: 'Montserrat', sans-serif;">
-      Post Comment
-      </button>
+    <form id="commentForm">
+      <input type="text" id="name" placeholder="Your name" required><br>
+      <textarea id="comment" placeholder="Your comment" required></textarea><br>
+      <button type="submit">Post Comment</button>
     </form>
-    <!-- FORM END -->
-
-    <div id="commentsList" style="margin-top: 1rem;">
-      Loading comments...
-    </div>
+    <div id="commentsList">Loading...</div>
   </div>
+  
 
-  <script>
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwGyFxPolYsQtgnq6neZ-7hDw0hFv64luiilyR9z5orW3efq3U4hSAV3nWSwe1P0pU-jA/exec';
-
-    const form = document.getElementById('commentForm');
-    const commentsList = document.getElementById('commentsList');
-
-    // Fetch and display comments
-    async function fetchComments() {
-      commentsList.textContent = 'Loading comments...';
-      try {
-        const res = await fetch(WEB_APP_URL);
-        const comments = await res.json();
-
-        if (comments.length === 0) {
-          commentsList.textContent = 'No comments yet. Be the first!';
-          return;
-        }
-
-        commentsList.innerHTML = comments.map(c => `
-          <div style="border-bottom: 1px solid #ddd; padding: 6px 0;">
-            <strong>${escapeHtml(c.name)}</strong> <small style="color:#777;">(${new Date(c.timestamp).toLocaleString()})</small>
-            <p>${escapeHtml(c.comment)}</p>
-          </div>
-        `).join('');
-      } catch (err) {
-        commentsList.textContent = 'Failed to load comments.';
-        console.error(err);
-      }
-    }
-
-    // Escape HTML to prevent injection
-    function escapeHtml(text) {
-      return text.replace(/&/g, "&amp;")
-                 .replace(/</g, "&lt;")
-                 .replace(/>/g, "&gt;")
-                 .replace(/"/g, "&quot;")
-                 .replace(/'/g, "&#039;");
-    }
-
-    // Handle comment form submission
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      const name = form.name.value.trim();
-      const comment = form.comment.value.trim();
-
-      if (!name || !comment) return;
-
-      // Disable submit button while posting
-      const submitBtn = form.querySelector('button[type="submit"]');
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Posting...';
-
-      try {
-        const response = await fetch(WEB_APP_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ name, comment })
-        });
-
-        if (!response.ok) throw new Error('Network response was not ok');
-
-        form.reset();
-        fetchComments();
-      } catch (error) {
-        alert('Failed to post comment.');
-        console.error(error);
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Post Comment';
-      }
-    });
-
-    // Initial load
-    fetchComments();
-  </script>
 
   <footer class="footer">
     © 2025 Sports Square by Smayan Srikanth
