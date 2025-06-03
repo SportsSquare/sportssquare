@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collaborations</title>
+</head>
+<style>
+    body {
+        background-color: rgb(249, 251, 231);
+        font-family: 'Montserrat', sans-serif;
+        text-align: center;
+        padding: 50px;
+    }
+    h1 {
+        color: #2c3e50;
+    }
+    h2 {
+        color: #34495e;
+    }
+    p {
+        font-size: 1.2em;
+        color: #333;
+    }
+    a {
+        color: #2980b9;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    button {
+        background-color: #3498db;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+    }
+    button:hover {
+        background-color: #2980b9;
+    }
+    form {
+        max-width: 600px;
+        margin: auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="number"], 
+    textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box; /* Ensures padding is included in width */
+    }
+    button[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #2ECC71;
+        color: white;
+        font-size: 1.2em;
+        font-weight: bold;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    button[type="submit"]:hover {
+        background-color: #27ae60; /* Darker shade on hover */
+    }
+    button[type="submit"]:disabled {
+        background-color: #95d7a5; /* Lighter shade when disabled */
+        cursor: not-allowed;
+    }
+    textarea {
+        height: 150px;
+        resize: vertical; /* Allows vertical resizing */
+    }
+    @media (max-width: 600px) {
+        form {
+            width: 90%;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+        }
+    }
+    @media (max-width: 400px) {
+        form {
+            width: 100%;
+            padding: 15px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+        }
+    }
+    h1 {
+        color: blue;
+        margin-bottom: 20px;
+    }
+    h2 {
+        color: #333;
+        margin-bottom: 15px;
+    }
+    p {
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+    label {
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box; /* Ensures padding is included in width */
+    }
+    button[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        background-color: #2ECC71;
+        color: white;
+        font-size: 1.2em;
+        font-weight: bold;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    button[type="submit"]:hover {
+        background-color: #27ae60; /* Darker shade on hover */
+    }
+    button[type="submit"]:disabled {
+        background-color: #95d7a5; /* Lighter shade when disabled */
+        cursor: not-allowed;
+    }
+</style>
+<body>
+    <h1>Are You Interested in Collaborating On an Article?</h1>
+    <h2>Reach an audience of thousands!</h2>
+    <p>We are always looking for passionate writers and content creators to collaborate with us on articles, features, and special projects.</p>
+    <p>If you have a unique perspective, expertise in a specific area, or simply want to share your love for sports, we would love to hear from you!</p>
+    <form action="https://formsubmit.co/sportssquareauthor@gmail.com" method="POST">
+        <!-- Hidden inputs for FormSubmit configuration -->
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://sportssquare.netlify.app/contactresult">
+    
+        <label for="name">Your Name</label>
+        <input type="text" id="name" name="name" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px;">
+    
+        <label for="email">Your Email</label>
+        <input type="email" id="email" name="email" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px;">
+    
+        <label for="subject">Number of Subscribers</label>
+        <input type="number" id="number" name="number" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px;">
+    
+        <label for="message">Why Would You Like To Collaborate with Sports Square?</label>
+        <textarea id="message" name="message" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+    
+        <button type="submit">Send Message</button>
+    </form>
+    
+</body>
+</html>
