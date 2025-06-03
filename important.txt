@@ -106,5 +106,73 @@ Article Template:
       });
     });
   </script>
+  <div id="rate-me" style="font-family: Arial, sans-serif; margin: 50px auto; text-align: center; padding: 20px; border: 2px solid #ccc; border-radius: 10px; background-color: #f9f9f9; max-width: 400px;">
+    <label style="font-weight: bold;">Rate The Article:</label>
+    <br>
+    <div id="stars-container" class="stars" style="display: flex; justify-content: center; cursor: pointer; font-size: 3rem; color: lightgray; text-align: center;">
+      <span class="star" data-value="1" style="margin-right: 10px;">&#9733;</span>
+      <span class="star" data-value="2" style="margin-right: 10px;">&#9733;</span>
+      <span class="star" data-value="3" style="margin-right: 10px;">&#9733;</span>
+      <span class="star" data-value="4" style="margin-right: 10px;">&#9733;</span>
+      <span class="star" data-value="5" style="margin-right: 10px;">&#9733;</span>
+    </div>
+    <button id="submit-rating" style="margin-top: 15px; padding: 6px 12px; font-size: 1rem;">Submit</button>
+    <div id="feedback" style="margin-top: 10px; color: green; display: none;">Thank you for your rating!</div>
+  </div>
+
+  <script type="module">
+    // Firebase setup
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // Star rating logic
+    let selectedRating = 0;
+    const stars = document.querySelectorAll('.star');
+
+    stars.forEach((star) => {
+      star.addEventListener('mouseover', () => {
+        const val = parseInt(star.getAttribute('data-value'));
+        stars.forEach(s => {
+          const sVal = parseInt(s.getAttribute('data-value'));
+          s.style.color = sVal <= val ? 'gold' : 'lightgray';
+        });
+      });
+
+      star.addEventListener('mouseleave', () => {
+        stars.forEach(s => {
+          const sVal = parseInt(s.getAttribute('data-value'));
+          s.style.color = sVal <= selectedRating ? 'gold' : 'lightgray';
+        });
+      });
+
+      star.addEventListener('click', () => {
+        selectedRating = parseInt(star.getAttribute('data-value'));
+        stars.forEach(s => {
+          const sVal = parseInt(s.getAttribute('data-value'));
+          s.style.color = sVal <= selectedRating ? 'gold' : 'lightgray';
+        });
+      });
+    });
+
+    document.getElementById('submit-rating').addEventListener('click', async () => {
+      if (selectedRating === 0) {
+        alert("Please select a rating before submitting.");
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, "ratings"), {
+          rating: selectedRating,
+          timestamp: new Date()
+        });
+
+        document.getElementById("feedback").style.display = "block";
+      } catch (e) {
+        console.error("Error adding document: ", e);
+        alert("Something went wrong. Check the console for details.");
+      }
+    });
+  </script>
+  
 </body>
 </html>

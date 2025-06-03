@@ -27,8 +27,12 @@
       cursor: pointer;
       border-radius: 6px;
     }
-    button:hover {
+    button:hover:not(:disabled) {
       background-color: #27ae60;
+    }
+    button:disabled {
+      background-color: #95d7a5;
+      cursor: not-allowed;
     }
     .message {
       margin: 1rem 0;
@@ -43,23 +47,33 @@
   <div id="auth-container">
 
     <h2>Register</h2>
-    <input type="email" id="register-email" placeholder="Email" required />
-    <input type="password" id="register-password" placeholder="Password" required />
+    <input type="email" id="register-email" placeholder="Email" />
+    <input type="password" id="register-password" placeholder="Password" />
     <button id="register-btn">Register</button>
 
     <h2>Login</h2>
-    <input type="email" id="login-email" placeholder="Email" required />
-    <input type="password" id="login-password" placeholder="Password" required />
+    <input type="email" id="login-email" placeholder="Email" />
+    <input type="password" id="login-password" placeholder="Password" />
     <button id="login-btn">Login</button>
 
     <div class="message" id="message"></div>
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    import { 
+      initializeApp 
+    } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
 
-    // Your Firebase config here
+    import { 
+      getAuth, 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword, 
+      onAuthStateChanged, 
+      setPersistence, 
+      browserLocalPersistence 
+    } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
       authDomain: "sportssquare-b96ed.firebaseapp.com",
@@ -72,16 +86,26 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
+    // Set auth persistence explicitly
+    await setPersistence(auth, browserLocalPersistence);
+
     const messageEl = document.getElementById('message');
 
-    document.getElementById('register-btn').addEventListener('click', async () => {
+    const registerBtn = document.getElementById('register-btn');
+    const loginBtn = document.getElementById('login-btn');
+
+    registerBtn.addEventListener('click', async () => {
       messageEl.textContent = '';
-      const email = document.getElementById('register-email').value;
+      const email = document.getElementById('register-email').value.trim();
       const password = document.getElementById('register-password').value;
+
       if (!email || !password) {
+        messageEl.style.color = 'red';
         messageEl.textContent = 'Please enter both email and password.';
         return;
       }
+
+      registerBtn.disabled = true;
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         messageEl.style.color = 'green';
@@ -89,32 +113,49 @@
       } catch (error) {
         messageEl.style.color = 'red';
         messageEl.textContent = `Error: ${error.message}`;
+      } finally {
+        registerBtn.disabled = false;
       }
     });
 
-    document.getElementById('login-btn').addEventListener('click', async () => {
+    loginBtn.addEventListener('click', async () => {
       messageEl.textContent = '';
-      const email = document.getElementById('login-email').value;
+      const email = document.getElementById('login-email').value.trim();
       const password = document.getElementById('login-password').value;
+
       if (!email || !password) {
+        messageEl.style.color = 'red';
         messageEl.textContent = 'Please enter both email and password.';
         return;
       }
+
+      loginBtn.disabled = true;
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         messageEl.style.color = 'green';
         messageEl.textContent = `Login successful! Welcome back ${userCredential.user.email}`;
-        // Optionally, redirect to main site or update UI
+        // Redirect after login
+        const params = new URLSearchParams(window.location.search);
+        const redirectUrl = params.get('redirect') || '../frontend/posts/so-long-pops.html';
+        window.location.href = redirectUrl;
       } catch (error) {
         messageEl.style.color = 'red';
         messageEl.textContent = `Error: ${error.message}`;
+      } finally {
+        loginBtn.disabled = false;
       }
     });
 
-    // Optional: Listen to auth state changes
+    // Listen for auth state changes to persist session and redirect if needed
     onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log('User logged in:', user.email);
+        const params = new URLSearchParams(window.location.search);
+        const redirectUrl = params.get('redirect') || '../frontend/posts/so-long-pops.html';
+        // Prevent redirect loop
+        if (window.location.pathname !== new URL(redirectUrl, window.location.origin).pathname) {
+          window.location.href = redirectUrl;
+        }
       } else {
         console.log('User logged out');
       }

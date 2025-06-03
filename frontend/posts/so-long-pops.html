@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>So Long Pops</title>
-
   <style>
     body {
       font-family: 'Montserrat', sans-serif;
@@ -15,8 +14,13 @@
       padding: 2rem;
       text-align: center;
     }
-    h1, h2 { color: #222; }
-    img { max-width: 100%; height: auto; }
+    h1, h2 {
+      color: #222;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
     blockquote {
       border-left: 4px solid #888;
       margin-left: 0;
@@ -37,6 +41,7 @@
       cursor: pointer;
       padding: 6px 12px;
       margin-top: 5px;
+      font-family: 'Montserrat', sans-serif;
     }
     #authStatus {
       margin-bottom: 1rem;
@@ -53,147 +58,39 @@
       margin: 0 5px;
       font-family: 'Montserrat', sans-serif;
     }
+    textarea {
+      width: 100%;
+      height: 80px;
+      padding: 8px;
+      margin: 10px 0;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      resize: vertical;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      margin: 10px 0;
+    }
+    #commentsList > div {
+      text-align: left;
+    }
+    a.login-signup-btn {
+      background-color: #2ECC71;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 0 5px;
+      font-family: 'Montserrat', sans-serif;
+      text-decoration: none;
+      display: inline-block;
+    }
   </style>
-
-  <!-- Firebase App (the core Firebase SDK) -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <!-- Firebase Auth -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-  <!-- Firebase Firestore -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-
-  <script>
-    // Your Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
-      authDomain: "sportssquare-b96ed.firebaseapp.com",
-      projectId: "sportssquare-b96ed",
-      storageBucket: "sportssquare-b96ed.appspot.com",
-      messagingSenderId: "844736978057",
-      appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    // DOM elements
-    const authStatus = document.getElementById('authStatus');
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const commentsList = document.getElementById('commentsList');
-    const articleLikesSpan = document.getElementById('articleLikes');
-
-    let currentUser = null; // To track logged-in user
-
-    // Show auth status & buttons based on login state
-    auth.onAuthStateChanged(user => {
-      currentUser = user;
-      if (user) {
-        authStatus.textContent = `Logged in as ${user.email}`;
-        loginBtn.style.display = 'none';
-        logoutBtn.style.display = 'inline-block';
-      } else {
-        authStatus.textContent = `Not logged in`;
-        loginBtn.style.display = 'inline-block';
-        logoutBtn.style.display = 'none';
-      }
-    });
-
-    // Redirect to your signup/login page
-    loginBtn.addEventListener('click', () => {
-      window.location.href = 'signup.html'; // change if your login page URL is different
-    });
-
-    // Logout action
-    logoutBtn.addEventListener('click', () => {
-      auth.signOut();
-      alert('You have been logged out.');
-    });
-
-    // Fetch and render comments with like buttons
-    async function fetchComments() {
-      commentsList.innerHTML = 'Loading comments...';
-      const snapshot = await db.collection("comments").orderBy("timestamp", "desc").get();
-
-      if (snapshot.empty) {
-        commentsList.innerHTML = 'No comments yet.';
-        return;
-      }
-
-      let html = '';
-      snapshot.forEach(docSnap => {
-        const c = docSnap.data();
-        html += `
-          <div style="border-bottom:1px solid #ccc; margin:1rem 0;">
-            <strong>${escapeHtml(c.name)}</strong>
-            <small style="color:#777;">${c.timestamp?.toDate ? c.timestamp.toDate().toLocaleString() : ''}</small>
-            <p>${escapeHtml(c.comment)}</p>
-            <button class="like-btn" onclick="likeComment('${docSnap.id}')" ${currentUser ? '' : 'disabled title="Login to like"'}>❤️ Like (<span id="likes-${docSnap.id}">${c.likes || 0}</span>)</button>
-          </div>
-        `;
-      });
-
-      commentsList.innerHTML = html;
-    }
-
-    // Like a comment - only if logged in
-    window.likeComment = async function(commentId) {
-      if (!currentUser) {
-        alert('You must be logged in to like comments!');
-        return;
-      }
-
-      // Disable the button right away
-      const btn = event.currentTarget || event.target;
-      btn.disabled = true;
-
-      const ref = db.collection("comments").doc(commentId);
-      await ref.update({ likes: firebase.firestore.FieldValue.increment(1) });
-
-      const el = document.getElementById(`likes-${commentId}`);
-      el.textContent = parseInt(el.textContent) + 1;
-    };
-
-    // Like article - only if logged in
-    window.likeArticle = async function() {
-      if (!currentUser) {
-        alert('You must be logged in to like the article!');
-        return;
-      }
-      const ref = db.collection("articles").doc("so-long-pops");
-      await ref.update({ likes: firebase.firestore.FieldValue.increment(1) });
-      const span = document.getElementById("articleLikes");
-      span.textContent = parseInt(span.textContent) + 1;
-    };
-
-    // Load article likes count
-    async function loadArticleLikes() {
-      const ref = db.collection("articles").doc("so-long-pops");
-      const snap = await ref.get();
-      if (snap.exists) {
-        articleLikesSpan.textContent = snap.data().likes || 0;
-      } else {
-        await ref.set({ likes: 0 }).catch(() => {});
-        articleLikesSpan.textContent = "0";
-      }
-    }
-
-    // Escape HTML utility
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/[&<>"']/g, m => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-      })[m]);
-    }
-
-    // Initial load
-    auth.onAuthStateChanged(() => {
-      fetchComments();
-      loadArticleLikes();
-    });
-  </script>
 </head>
 
 <body>
@@ -201,48 +98,92 @@
   <p>By: <a href="smayan.html">Smayan Srikanth</a></p>
 
   <div id="authStatus">Loading authentication status...</div>
-  <button id="loginBtn">Login / Signup</button>
-  <button id="logoutBtn" style="display:none;">Logout</button>
+  <!-- Login / Signup button -->
+  <button id="loginBtn" style="display: inline-block;">Login / Signup</button>
+  <button id="logoutBtn" style="display: none;">Logout</button>
 
-  <button class="like-btn" onclick="likeArticle()">❤️ Like Article (<span id="articleLikes">0</span>)</button>
+  <button class="like-btn" id="likeArticleBtn">❤️ Like Article (<span id="articleLikes">0</span>)</button>
 
-  <hr style="border: 1px solid black; margin: 20px 0;">
+  <hr style="border: 1px solid black; margin: 20px 0;" />
   <p><strong>Gregg Popovich Day</strong></p>
   <p><strong>That’s what January 28th should be, every single year.</strong></p>
 
   <p>Thanks for reading Sports Square! Subscribe for free to receive new posts and support my work.</p>
-  <form action="https://formsubmit.co/sportssquareauthor@gmail.com" method="POST">
-    <input type="email" name="email" placeholder="Your email" required style="width: 300px; padding: 10px; margin-bottom: 10px;">
-    <input type="hidden" name="_next" value="https://sportssquare.netlify.app/subscribed.html">
-    <input type="hidden" name="_captcha" value="false">
-    <input type="hidden" name="_subject" value="New subscription from Sports Square">
-    <input type="hidden" name="_message" value="A new user has subscribed to Sports Square.">
-    <br>
-    <button type="submit" style="width:120px; height: 50px; background-color: #2ECC71; color: white; padding: 10px 20px; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; font-family: 'Montserrat', sans-serif;">Subscribe</button>
-  </form> 
-
+  <form action="https://formsubmit.co/sportssquareauthor@gmail.com" method="POST" style="margin-bottom: 3rem;">
+    <input
+      type="email"
+      name="email"
+      placeholder="Your email"
+      required
+      style="width: 300px; padding: 10px; margin-bottom: 10px;"
+    />
+    <input type="hidden" name="_next" value="https://sportssquare.netlify.app/subscribed.html" />
+    <input type="hidden" name="_captcha" value="false" />
+    <input type="hidden" name="_subject" value="New subscription from Sports Square" />
+    <input type="hidden" name="_message" value="A new user has subscribed to Sports Square." />
+    <br />
+    <button
+      type="submit"
+      style="
+        width: 120px;
+        height: 50px;
+        background-color: #2ecc71;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: 'Montserrat', sans-serif;
+      "
+    >
+      Subscribe
+    </button>
+  </form>
 
   <h2>Origins</h2>
-  <p>The Popovich story began on that date in 1949, in bustling East Chicago, Indiana, home to the Indiana Harbor and the Ship Canal. He was born to a Serbian father and a Croatian mother, graduating from Merrillville High School in 1966.</p>
+  <p>
+    The Popovich story began on that date in 1949, in bustling East Chicago, Indiana, home to the Indiana Harbor
+    and the Ship Canal. He was born to a Serbian father and a Croatian mother, graduating from Merrillville High School
+    in 1966.
+  </p>
 
-  <p>He then attended the United States Air Force Academy, playing on the academy’s Air Force Falcons basketball team. In his senior year, he even became the team captain and was the leading scorer that year. He graduated in 1970 and considered a career with the CIA.</p>
+  <p>
+    He then attended the United States Air Force Academy, playing on the academy’s Air Force Falcons basketball team. In
+    his senior year, he even became the team captain and was the leading scorer that year. He graduated in 1970 and
+    considered a career with the CIA.
+  </p>
 
-  <p>Pops then served in the US Air Force. During this time, he continued playing with the US Armed Forces basketball team, becoming captain and winning the AAU championship. He was then invited to the 1972 US Olympic Trials — but was cut from the team.</p>
+  <p>
+    Pops then served in the US Air Force. During this time, he continued playing with the US Armed Forces basketball team,
+    becoming captain and winning the AAU championship. He was then invited to the 1972 US Olympic Trials — but was cut from
+    the team.
+  </p>
 
   <h2>Early Coaching</h2>
-  <p>Popovich began his coaching career as an assistant coach to Hank Egan at the Air Force Academy. During this time, he earned a master’s degree in physical education and sports sciences from the University of Denver.</p>
+  <p>
+    Popovich began his coaching career as an assistant coach to Hank Egan at the Air Force Academy. During this time, he
+    earned a master’s degree in physical education and sports sciences from the University of Denver.
+  </p>
 
-  <p>He worked there for 6 years (1973–1979), before moving to the Pomona-Pitzer Sagehens in Claremont, California — a small DIII program. According to Popovich, he didn’t know the program was in rough shape. In 1980, he was just another coach trying to figure it out.</p>
+  <p>
+    He worked there for 6 years (1973–1979), before moving to the Pomona-Pitzer Sagehens in Claremont, California — a small
+    DIII program. According to Popovich, he didn’t know the program was in rough shape. In 1980, he was just another coach
+    trying to figure it out.
+  </p>
 
   <blockquote>
     “It was a horrendous beginning,” Popovich recalled, “But be that as it may, I still fell in love with it.”
   </blockquote>
 
   <p><em>Popovich with Pomona-Pitzer. Courtesy: Peter Osgood.</em></p>
-  <!-- Replace with actual image if you have it -->
   <img src="../image.png" alt="Popovich with Pomona-Pitzer" />
 
-  <p>That first year, the Hens lost to Caltech, breaking their 99-game conference losing streak. But Popovich kept going, sending thousands of recruiting letters nationwide. His assistant Charles Katsiaficas recalled the grind:</p>
+  <p>
+    That first year, the Hens lost to Caltech, breaking their 99-game conference losing streak. But Popovich kept going,
+    sending thousands of recruiting letters nationwide. His assistant Charles Katsiaficas recalled the grind:
+  </p>
 
   <blockquote>
     “A lot of letter-writing, a lot of follow-up calls...you really had to work very hard at generating a recruiting list.”
@@ -251,41 +192,70 @@
   <p>Five seasons after a 2-22 season, the Sagehens were SCIAC champions. They lost in the first round, but they won the conference.</p>
 
   <h2>Climbing to the NBA</h2>
-  <p>Popovich volunteered under Larry Brown at Kansas, then returned to Pomona. By 1988, he joined Brown in the NBA as a Spurs assistant, until 1992. He later served under Don Nelson at the Warriors, which Pop said helped him grow immensely.</p>
+  <p>
+    Popovich volunteered under Larry Brown at Kansas, then returned to Pomona. By 1988, he joined Brown in the NBA as a Spurs
+    assistant, until 1992. He later served under Don Nelson at the Warriors, which Pop said helped him grow immensely.
+  </p>
 
-  <p>He returned to San Antonio in 1994 as GM, signing Avery Johnson and trading Dennis Rodman. After a rough 3-15 start in 1996, Popovich fired head coach Bob Hill and took over himself on December 10.</p>
+  <p>
+    He returned to San Antonio in 1994 as GM, signing Avery Johnson and trading Dennis Rodman. After a rough 3-15 start in
+    1996, Popovich fired head coach Bob Hill and took over himself on December 10.
+  </p>
 
   <p>That poor season earned the Spurs the #1 draft pick, selecting Tim Duncan — changing the franchise forever.</p>
 
   <h2>The Spurs Dynasty</h2>
-  <p>With David Robinson and Tim Duncan, Popovich led the Spurs to 56 wins in 1997–98 and their first NBA title in 1999. Over the next 20 years, he would win five championships (1999, 2003, 2005, 2007, and 2014), and three Coach of the Year awards.</p>
+  <p>
+    With David Robinson and Tim Duncan, Popovich led the Spurs to 56 wins in 1997–98 and their first NBA title in 1999. Over
+    the next 20 years, he would win five championships (1999, 2003, 2005, 2007, and 2014), and three Coach of the Year awards.
+  </p>
 
-  <p>Pop was never afraid to make unpopular decisions — like resting stars and getting fined for it — to protect his players’ longevity. His vision went beyond basketball.</p>
+  <p>
+    Pop was never afraid to make unpopular decisions — like resting stars and getting fined for it — to protect his players’
+    longevity. His vision went beyond basketball.
+  </p>
 
   <blockquote>
-    “This is probably the most meaningful of any award I've received... this place molded me from a wise guy to a half decent person.”
-    <br>– Gregg Popovich on becoming an Air Force Distinguished Graduate
+    “This is probably the most meaningful of any award I've received... this place molded me from a wise guy to a half decent
+    person.”
+    <br />
+    – Gregg Popovich on becoming an Air Force Distinguished Graduate
   </blockquote>
 
   <h2>The Final Years</h2>
-  <p>In 2021, Popovich coached Team USA to Olympic Gold. In 2022, he became the all-time regular season wins leader. In 2023, he entered the Basketball Hall of Fame. And on November 2, 2024, Popovich suffered a stroke — his final game as coach was against the Timberwolves.</p>
+  <p>
+    In 2021, Popovich coached Team USA to Olympic Gold. In 2022, he became the all-time regular season wins leader. In 2023,
+    he entered the Basketball Hall of Fame. And on November 2, 2024, Popovich suffered a stroke — his final game as coach
+    was against the Timberwolves.
+  </p>
 
-  <p>He stepped down in 2025, ending a 29-year head-coaching reign, but continued as President of Basketball Operations.</p>
+  <p>
+    He stepped down in 2025, ending a 29-year head-coaching reign, but continued as President of Basketball Operations.
+  </p>
 
   <h2>Legacy and Impact</h2>
-  <p>From Shaq to Steve Kerr, Pop’s impact is universally respected. He treated every player the same. He stood for discipline, equality, humility, and honesty.</p>
+  <p>
+    From Shaq to Steve Kerr, Pop’s impact is universally respected. He treated every player the same. He stood for
+    discipline, equality, humility, and honesty.
+  </p>
 
   <blockquote>
-    “We used to call it ‘The Program.’ I love that man for a different reason... Pop gave us a couple pairs of shoes. He never wanted anything in return.”
-    <br>– Shaquille O’Neal
+    “We used to call it ‘The Program.’ I love that man for a different reason... Pop gave us a couple pairs of shoes. He
+    never wanted anything in return.”
+    <br />
+    – Shaquille O’Neal
   </blockquote>
 
   <blockquote>
     “Pop is one of the most important people in my life... for reasons that go way beyond basketball.”
-    <br>– Steve Kerr
+    <br />
+    – Steve Kerr
   </blockquote>
 
-  <p>He held players accountable — even legends like Tim Duncan — and inspired everyone in his orbit. He revolutionized the way coaching is viewed in the NBA.</p>
+  <p>
+    He held players accountable — even legends like Tim Duncan — and inspired everyone in his orbit. He revolutionized the
+    way coaching is viewed in the NBA.
+  </p>
 
   <h2>Forever Coach Pops</h2>
   <p>I didn’t expect to publish this article so soon — maybe in 2028. But Pops deserves this. Forever.</p>
@@ -296,65 +266,294 @@
   <h3>Coach</h3>
   <h3>Pops</h3>
   <h3>Way.</h3>
-  <hr style="border: 1px solid black; margin: 40px 0;">
-
+  <hr style="border: 1px solid black; margin: 40px 0;" />
   <div id="comments-section">
     <h2>Comments</h2>
     <form id="commentForm">
-      <input type="text" id="name" placeholder="Your name" required><br>
-      <textarea id="comment" placeholder="Your comment" required></textarea><br>
+      <input type="text" id="name" placeholder="Your name" required /><br />
+      <textarea id="comment" placeholder="Your comment" required></textarea><br />
       <button type="submit">Post Comment</button>
     </form>
     <div id="commentsList">Loading...</div>
   </div>
-  
 
+  <div
+    id="rate-me"
+    style="
+      font-family: Arial, sans-serif;
+      margin: 50px auto;
+      text-align: center;
+      padding: 20px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      max-width: 400px;
+    "
+  >
+    <label style="font-weight: bold;">Rate The Article:</label>
+    <br />
+    <div
+      id="stars-container"
+      class="stars"
+      style="display: flex; justify-content: center; cursor: pointer; font-size: 3rem; color: lightgray; text-align: center;"
+    >
+      <span class="star" data-value="1" style="margin-right: 10px;">★</span>
+      <span class="star" data-value="2" style="margin-right: 10px;">★</span>
+      <span class="star" data-value="3" style="margin-right: 10px;">★</span>
+      <span class="star" data-value="4" style="margin-right: 10px;">★</span>
+      <span class="star" data-value="5">★</span>
+    </div>
+    <p id="rating-result" style="font-size: 1.2rem; font-weight: bold;"></p>
+  </div>
 
-  <footer class="footer">
-    © 2025 Sports Square by Smayan Srikanth
-  </footer>
-  <script type="module">
-    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-  
-    // Removed duplicate declarations of db and auth
-  
-    let hasScrolledToBottom = false;
-    const startTime = Date.now(); // Capture the page load time
-  
-    window.addEventListener('scroll', () => {
-      if (hasScrolledToBottom) return;
-  
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight;
-      const winHeight = window.innerHeight;
-  
-      const scrollPercent = (scrollTop + winHeight) / docHeight;
-  
-      if (scrollPercent > 0.9) {
-        hasScrolledToBottom = true;
-  
-        onAuthStateChanged(auth, async (user) => {
-          if (!user) return;
-  
-          const duration = Math.floor((Date.now() - startTime) / 1000); // Duration in seconds
-  
-          const userReadRef = doc(db, "reads", `${user.uid}-so-long-pops`);
-          await setDoc(userReadRef, {
-            userId: user.uid,
-            articleId: "so-long-pops",
-            title: "So Long Pops",
-            timestamp: serverTimestamp(),
-            duration
-          });
-  
-          // Increment global article read count
-          const globalRef = doc(db, "articles", "so-long-pops");
-          await setDoc(globalRef, { readCount: increment(1) }, { merge: true });
-        });
+  <div class="footer">
+    <p>© 2025 Sports Square. All rights reserved.</p>
+  </div>
+
+  <!-- Firebase SDK scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Your Firebase config (replace with your own)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDbYPXqU1m1_WylprJzqN5k_0G2GqzIL7w",
+      authDomain: "sportssquare-460d1.firebaseapp.com",
+      projectId: "sportssquare-460d1",
+      storageBucket: "sportssquare-460d1.appspot.com",
+      messagingSenderId: "1071840349220",
+      appId: "1:1071840349220:web:af6667f07ff26701f9c9f9",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Elements
+    const authStatus = document.getElementById("authStatus");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const articleLikesSpan = document.getElementById("articleLikes");
+    const likeArticleBtn = document.getElementById("likeArticleBtn");
+    const commentsList = document.getElementById("commentsList");
+    const commentForm = document.getElementById("commentForm");
+    const starsContainer = document.getElementById("stars-container");
+    const ratingResult = document.getElementById("rating-result");
+
+    let currentUser = null;
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Update UI based on auth state
+    auth.onAuthStateChanged((user) => {
+    currentUser = user;
+    if (user) {
+      authStatus.textContent = `Welcome, ${user.email}`;
+      loginBtn.style.display = "none";
+      logoutBtn.style.display = "inline-block";
+    } else {
+      authStatus.textContent = "You are not logged in.";
+      loginBtn.style.display = "inline-block";
+      logoutBtn.style.display = "none";
+    }
+    loadComments();
+    loadArticleLikes();
+    loadUserRating();
+  });
+
+    // Login or Signup prompt
+    loginBtn.onclick = () => {
+    // Redirect to signup.html where user will login/signup
+    window.location.href = "../signup.html";
+  };
+
+  // Logout remains the same
+  logoutBtn.onclick = () => {
+    auth.signOut();
+  };
+
+    // Load article likes count
+    async function loadArticleLikes() {
+      try {
+        const doc = await db.collection("likes").doc("article").get();
+        const likesCount = doc.exists && doc.data().count ? doc.data().count : 0;
+        articleLikesSpan.textContent = likesCount;
+      } catch (error) {
+        console.error("Failed to load article likes:", error);
       }
-    });
+    }
+
+    // Like the article (only once per user)
+    likeArticleBtn.onclick = async () => {
+      if (!currentUser) {
+        alert("You need to be logged in to like the article.");
+        return;
+      }
+      const userLikesDoc = db.collection("likes").doc("users").collection(currentUser.uid).doc("article");
+      const articleLikesDoc = db.collection("likes").doc("article");
+
+      try {
+        const userLikeSnap = await userLikesDoc.get();
+        if (userLikeSnap.exists) {
+          alert("You already liked this article!");
+          return;
+        }
+        await userLikesDoc.set({ liked: true });
+        await articleLikesDoc.set(
+          { count: firebase.firestore.FieldValue.increment(1) },
+          { merge: true }
+        );
+        loadArticleLikes();
+      } catch (error) {
+        console.error("Error liking article:", error);
+      }
+    };
+
+    // Load and display comments
+    async function loadComments() {
+      commentsList.textContent = "Loading...";
+      try {
+        const snapshot = await db.collection("comments").orderBy("timestamp", "desc").get();
+        commentsList.innerHTML = "";
+        if (snapshot.empty) {
+          commentsList.textContent = "No comments yet.";
+          return;
+        }
+
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          const commentDiv = document.createElement("div");
+          commentDiv.style.borderBottom = "1px solid #ccc";
+          commentDiv.style.padding = "10px 0";
+
+          commentDiv.innerHTML = `
+            <strong>${escapeHtml(data.name)}</strong> <small>(${data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString() : "..."})</small>
+            <p>${escapeHtml(data.comment)}</p>
+            <button class="like-btn" data-comment-id="${doc.id}">
+              ❤️ Like (<span class="comment-likes-count">${data.likes || 0}</span>)
+            </button>
+          `;
+
+          // Like button handler for comment
+          const likeBtn = commentDiv.querySelector("button");
+          likeBtn.addEventListener("click", async () => {
+            if (!currentUser) {
+              alert("Login to like comments.");
+              return;
+            }
+            const likeDocRef = db.collection("comments").doc(doc.id).collection("likes").doc(currentUser.uid);
+            try {
+              const likeDoc = await likeDocRef.get();
+              if (likeDoc.exists) {
+                alert("You already liked this comment.");
+                return;
+              }
+              await likeDocRef.set({ liked: true });
+              await db.collection("comments").doc(doc.id).update({
+                likes: firebase.firestore.FieldValue.increment(1),
+              });
+              loadComments(); // refresh comments to update like count
+            } catch (e) {
+              console.error("Failed to like comment:", e);
+            }
+          });
+
+          commentsList.appendChild(commentDiv);
+        });
+      } catch (error) {
+        commentsList.textContent = "Failed to load comments.";
+        console.error("Error loading comments:", error);
+      }
+    }
+
+    // Posting a new comment
+    commentForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const name = commentForm.name.value.trim();
+      const comment = commentForm.comment.value.trim();
+      if (!name || !comment) {
+        alert("Please fill out your name and comment.");
+        return;
+      }
+      try {
+        await db.collection("comments").add({
+          name,
+          comment,
+          likes: 0,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        commentForm.reset();
+        loadComments();
+      } catch (error) {
+        alert("Failed to post comment: " + error.message);
+      }
+    };
+
+    // Star rating system
+    let userRating = 0;
+
+    // Load user rating from Firestore
+    async function loadUserRating() {
+      ratingResult.textContent = "";
+      userRating = 0;
+      if (!currentUser) {
+        updateStars(0);
+        ratingResult.textContent = "Login to rate the article.";
+        return;
+      }
+
+      try {
+        const doc = await db.collection("ratings").doc(currentUser.uid).get();
+        if (doc.exists && doc.data().rating) {
+          userRating = doc.data().rating;
+          updateStars(userRating);
+          ratingResult.textContent = `Your rating: ${userRating} star${userRating > 1 ? "s" : ""}`;
+        } else {
+          updateStars(0);
+          ratingResult.textContent = "You haven't rated the article yet.";
+        }
+      } catch (error) {
+        console.error("Error loading user rating:", error);
+      }
+    }
+
+    // Update stars UI coloring
+    function updateStars(rating) {
+      const stars = starsContainer.querySelectorAll(".star");
+      stars.forEach((star) => {
+        star.style.color = Number(star.dataset.value) <= rating ? "#ffc107" : "lightgray";
+      });
+    }
+
+    // Handle star clicks
+    starsContainer.onclick = async (e) => {
+      if (!currentUser) {
+        alert("You need to login to rate.");
+        return;
+      }
+      if (!e.target.classList.contains("star")) return;
+
+      const selectedRating = Number(e.target.dataset.value);
+      userRating = selectedRating;
+      updateStars(userRating);
+      ratingResult.textContent = `Your rating: ${userRating} star${userRating > 1 ? "s" : ""}`;
+
+      try {
+        await db.collection("ratings").doc(currentUser.uid).set({
+          rating: userRating,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+      } catch (error) {
+        alert("Failed to save rating: " + error.message);
+      }
+    };
   </script>
-  
 </body>
 </html>
