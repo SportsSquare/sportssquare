@@ -12,12 +12,20 @@
       padding: 1rem;
       background: #f9fbf7;
       text-align: center;
+      border-radius: 8px; /* Added rounded corners */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added subtle shadow */
+    }
+    h1, h2 {
+      color: #333;
     }
     input, button {
-      width: 100%;
+      width: calc(100% - 20px); /* Adjusted width for padding */
       margin: 8px 0;
       padding: 10px;
       font-size: 1rem;
+      border: 1px solid #ddd; /* Added border */
+      border-radius: 6px; /* Added rounded corners */
+      box-sizing: border-box; /* Include padding and border in the element's total width and height */
     }
     button {
       background-color: #2ECC71;
@@ -26,6 +34,7 @@
       font-weight: bold;
       cursor: pointer;
       border-radius: 6px;
+      transition: background-color 0.3s ease; /* Smooth transition for hover */
     }
     button:hover:not(:disabled) {
       background-color: #27ae60;
@@ -37,6 +46,7 @@
     .message {
       margin: 1rem 0;
       color: red;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -47,119 +57,154 @@
   <div id="auth-container">
 
     <h2>Register</h2>
-    <input type="email" id="register-email" placeholder="Email" />
-    <input type="password" id="register-password" placeholder="Password" />
+    <input type="email" id="register-email" placeholder="Email" autocomplete="email" />
+    <input type="password" id="register-password" placeholder="Password" autocomplete="new-password" />
     <button id="register-btn">Register</button>
 
     <h2>Login</h2>
-    <input type="email" id="login-email" placeholder="Email" />
-    <input type="password" id="login-password" placeholder="Password" />
+    <input type="email" id="login-email" placeholder="Email" autocomplete="email" />
+    <input type="password" id="login-password" placeholder="Password" autocomplete="current-password" />
     <button id="login-btn">Login</button>
 
     <div class="message" id="message"></div>
   </div>
 
-  <script type="module">
-    import { 
-      initializeApp 
-    } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <!-- Add Firestore compat SDK here as well, although it's not directly used in signup.html,
+       it ensures consistency if you decide to add Firestore ops later. -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
-    import { 
-      getAuth, 
-      createUserWithEmailAndPassword, 
-      signInWithEmailAndPassword, 
-      onAuthStateChanged, 
-      setPersistence, 
-      browserLocalPersistence 
-    } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
-    // Firebase config
+  <script>
+    console.log("Script started."); // Debugging: Confirm script execution
+
+    // IMPORTANT: This Firebase config is now set to sportssquare-b96ed.
+    // Ensure your so-long-pops.html also uses this exact configuration.
     const firebaseConfig = {
       apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
       authDomain: "sportssquare-b96ed.firebaseapp.com",
       projectId: "sportssquare-b96ed",
-      storageBucket: "sportssquare-b96ed.appspot.com",
+      storageBucket: "sportssquare-b96ed.firebasestorage.app",
       messagingSenderId: "844736978057",
       appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    // Initialize Firebase. `firebase` object is globally available after firebase-app-compat.js is loaded.
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth(); // Get the auth instance using firebase.auth()
+    // If you were to use Firestore on this page, you would initialize it like this:
+    // const db = firebase.firestore();
+    console.log("Firebase initialized."); // Debugging: Confirm Firebase init
 
-    // Set auth persistence explicitly
-    await setPersistence(auth, browserLocalPersistence);
+    (async () => {
+      // Set persistence to local storage so the user stays logged in
+      // Use firebase.auth.Auth.Persistence.LOCAL for compat libraries
+      await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+      console.log("Firebase persistence set."); // Debugging: Confirm persistence
 
-    const messageEl = document.getElementById('message');
+      // Get references to DOM elements
+      const messageEl = document.getElementById('message');
+      const registerBtn = document.getElementById('register-btn');
+      const loginBtn = document.getElementById('login-btn');
+      const authContainer = document.getElementById('auth-container');
+      console.log("DOM elements retrieved."); // Debugging: Confirm element retrieval
 
-    const registerBtn = document.getElementById('register-btn');
-    const loginBtn = document.getElementById('login-btn');
+      // Event listener for the Register button
+      registerBtn.addEventListener('click', async () => {
+        console.log("Register button clicked."); // Debugging: Confirm click event
+        messageEl.textContent = ''; // Clear previous messages
+        const email = document.getElementById('register-email').value.trim();
+        const password = document.getElementById('register-password').value;
 
-    registerBtn.addEventListener('click', async () => {
-      messageEl.textContent = '';
-      const email = document.getElementById('register-email').value.trim();
-      const password = document.getElementById('register-password').value;
-
-      if (!email || !password) {
-        messageEl.style.color = 'red';
-        messageEl.textContent = 'Please enter both email and password.';
-        return;
-      }
-
-      registerBtn.disabled = true;
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        messageEl.style.color = 'green';
-        messageEl.textContent = `Registration successful! Welcome ${userCredential.user.email}`;
-      } catch (error) {
-        messageEl.style.color = 'red';
-        messageEl.textContent = `Error: ${error.message}`;
-      } finally {
-        registerBtn.disabled = false;
-      }
-    });
-
-    loginBtn.addEventListener('click', async () => {
-      messageEl.textContent = '';
-      const email = document.getElementById('login-email').value.trim();
-      const password = document.getElementById('login-password').value;
-
-      if (!email || !password) {
-        messageEl.style.color = 'red';
-        messageEl.textContent = 'Please enter both email and password.';
-        return;
-      }
-
-      loginBtn.disabled = true;
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        messageEl.style.color = 'green';
-        messageEl.textContent = `Login successful! Welcome back ${userCredential.user.email}`;
-        // Redirect after login
-        const params = new URLSearchParams(window.location.search);
-        const redirectUrl = params.get('redirect') || '../posts/so-long-pops.html';
-        window.location.href = redirectUrl;
-      } catch (error) {
-        messageEl.style.color = 'red';
-        messageEl.textContent = `Error: ${error.message}`;
-      } finally {
-        loginBtn.disabled = false;
-      }
-    });
-
-    // Listen for auth state changes to persist session and redirect if needed
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log('User logged in:', user.email);
-        const params = new URLSearchParams(window.location.search);
-        const redirectUrl = params.get('redirect') || '../posts/so-long-pops.html';
-        // Prevent redirect loop
-        if (window.location.pathname !== new URL(redirectUrl, window.location.origin).pathname) {
-          window.location.href = redirectUrl;
+        // Basic input validation
+        if (!email || !password) {
+          messageEl.style.color = 'red';
+          messageEl.textContent = 'Please enter both email and password.';
+          return;
         }
-      } else {
-        console.log('User logged out');
-      }
-    });
+        if (password.length < 6) {
+          messageEl.style.color = 'red';
+          messageEl.textContent = 'Password should be at least 6 characters.';
+          return;
+        }
+
+        registerBtn.disabled = true; // Disable button to prevent multiple clicks
+        try {
+          // Create user with email and password
+          await auth.createUserWithEmailAndPassword(email, password);
+          messageEl.style.color = 'green';
+          messageEl.textContent = `Registration successful! Welcome ${email}`;
+          console.log("Registration successful."); // Debugging: Confirm registration success
+
+          // Redirect after successful registration
+          const params = new URLSearchParams(window.location.search);
+          // Ensure the redirect URL points correctly to your article page
+          const redirectUrl = params.get('redirect') || '../frontend/posts/so-long-pops.html';
+          window.location.href = redirectUrl;
+        } catch (error) {
+          messageEl.style.color = 'red';
+          messageEl.textContent = `Error: ${error.message}`;
+          console.error("Registration error:", error); // Debugging: Log registration error
+        } finally {
+          registerBtn.disabled = false; // Re-enable button
+        }
+      });
+
+      // Event listener for the Login button
+      loginBtn.addEventListener('click', async () => {
+        console.log("Login button clicked."); // Debugging: Confirm click event
+        messageEl.textContent = ''; // Clear previous messages
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value;
+
+        // Basic input validation
+        if (!email || !password) {
+          messageEl.style.color = 'red';
+          messageEl.textContent = 'Please enter both email and password.';
+          return;
+        }
+
+        loginBtn.disabled = true; // Disable button to prevent multiple clicks
+        try {
+          // Sign in user with email and password
+          await auth.signInWithEmailAndPassword(email, password);
+          messageEl.style.color = 'green';
+          messageEl.textContent = `Login successful! Welcome back ${email}`;
+          console.log("Login successful."); // Debugging: Confirm login success
+
+          // Redirect after successful login
+          const params = new URLSearchParams(window.location.search);
+          // Ensure the redirect URL points correctly to your article page
+          const redirectUrl = params.get('redirect') || '../frontend/posts/so-long-pops.html';
+          window.location.href = redirectUrl;
+        } catch (error) {
+          messageEl.style.color = 'red';
+          messageEl.textContent = `Error: ${error.message}`;
+          console.error("Login error:", error); // Debugging: Log login error
+        } finally {
+          loginBtn.disabled = false; // Re-enable button
+        }
+      });
+
+      // Listen for authentication state changes
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          console.log('User logged in (onAuthStateChanged):', user.email);
+          // Redirect if user is already logged in when landing on this page
+          const params = new URLSearchParams(window.location.search);
+          const redirectUrl = params.get('redirect') || '../frontend/posts/so-long-pops.html';
+          // Only redirect if not already on the target page to prevent infinite loops
+          if (!window.location.href.includes(redirectUrl)) {
+            window.location.href = redirectUrl;
+          }
+        } else {
+          console.log('User logged out (onAuthStateChanged).');
+          authContainer.style.display = 'block';
+        }
+      });
+    })();
   </script>
 </body>
 </html>

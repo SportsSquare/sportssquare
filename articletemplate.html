@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>So Long Pops</title>
+  <title>Your Article Title Here</title>
   <style>
     body {
       font-family: 'Montserrat', sans-serif;
@@ -14,12 +14,15 @@
       padding: 2rem;
       text-align: center;
     }
-    h1, h2 {
+    h1, h2, h3 {
       color: #222;
     }
     img {
       max-width: 100%;
       height: auto;
+      border-radius: 8px; /* Added rounded corners for images */
+      margin-top: 1rem;
+      margin-bottom: 1rem;
     }
     blockquote {
       border-left: 4px solid #888;
@@ -27,6 +30,9 @@
       padding-left: 1rem;
       font-style: italic;
       color: #555;
+      background-color: #f5f5f5; /* Light background for blockquotes */
+      padding: 10px 15px;
+      border-radius: 4px;
     }
     .footer {
       margin-top: 3rem;
@@ -34,14 +40,19 @@
       color: #777;
       text-align: center;
     }
-    button.like-btn {
+    button.action-btn { /* Renamed from like-btn for generality */
       background-color: #eee;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      padding: 6px 12px;
-      margin-top: 5px;
+      padding: 8px 15px; /* Slightly larger padding */
+      margin-top: 10px;
       font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    button.action-btn:hover {
+        background-color: #e0e0e0;
     }
     #authStatus {
       margin-bottom: 1rem;
@@ -57,212 +68,127 @@
       font-weight: bold;
       margin: 0 5px;
       font-family: 'Montserrat', sans-serif;
+      transition: background-color 0.3s ease;
+    }
+    #loginBtn:hover, #logoutBtn:hover {
+        background-color: #27ae60;
     }
     textarea {
       width: 100%;
-      height: 80px;
-      padding: 8px;
+      height: 100px; /* Slightly taller textarea */
+      padding: 10px;
       margin: 10px 0;
       font-family: 'Montserrat', sans-serif;
       font-size: 1rem;
       resize: vertical;
+      border: 1px solid #ddd;
+      border-radius: 5px;
     }
-    input[type="text"] {
+    input[type="text"], input[type="email"] {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       font-family: 'Montserrat', sans-serif;
       font-size: 1rem;
       margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
     }
     #commentsList > div {
       text-align: left;
+      border-bottom: 1px solid #eee; /* Lighter border for comments */
+      padding: 15px 0;
+      margin-bottom: 10px;
+    }
+    #commentsList > div:last-child {
+        border-bottom: none;
+    }
+    .article-content {
+        text-align: left; /* Align article content to the left */
+        line-height: 1.6; /* Improve readability */
+        margin-top: 2rem;
+    }
+    .article-content p {
+        margin-bottom: 1em;
+    }
+    .article-meta {
+        font-size: 0.9em;
+        color: #666;
+        margin-bottom: 1.5rem;
+    }
+    .section-divider {
+        border: 0;
+        height: 1px;
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+        margin: 40px 0;
     }
   </style>
 </head>
 
 <body>
-  <h1>So Long Pops</h1>
-  <p>By: <a href="smayan.html">Smayan Srikanth</a></p>
+  <h1>[Article Title]</h1>
+  <p class="article-meta">By: <a href="[author-profile-link]">Author Name</a> | Published: [Date]</p>
 
+  <!-- Authentication and Interaction Section -->
   <div id="authStatus">Loading authentication status...</div>
   <button id="loginBtn" style="display: inline-block;">Login / Signup</button>
   <button id="logoutBtn" style="display: none;">Logout</button>
 
-  <button class="like-btn" id="likeArticleBtn">❤️ Like Article (<span id="articleLikes">0</span>)</button>
+  <button class="action-btn" id="likeArticleBtn">❤️ Like Article (<span id="articleLikes">0</span>)</button>
+  <!-- You can add other action buttons here, e.g., share, save -->
 
-  <hr style="border: 1px solid black; margin: 20px 0;" />
-  <p><strong>Gregg Popovich Day</strong></p>
-  <p><strong>That’s what January 28th should be, every single year.</strong></p>
+  <hr class="section-divider" />
 
-  <p>Thanks for reading Sports Square! Subscribe for free to receive new posts and support my work.</p>
-  <form action="https://formsubmit.co/sportssquareauthor@gmail.com" method="POST" style="margin-bottom: 3rem;">
-    <input
-      type="email"
-      name="email"
-      placeholder="Your email"
-      required
-      style="width: 300px; padding: 10px; margin-bottom: 10px;"
-    />
-    <input type="hidden" name="_next" value="https://sportssquare.netlify.app/subscribed.html" />
-    <input type="hidden" name="_captcha" value="false" />
-    <input type="hidden" name="_subject" value="New subscription from Sports Square" />
-    <input type="hidden" name="_message" value="A new user has subscribed to Sports Square." />
-    <br />
-    <button
-      type="submit"
-      style="
-        width: 120px;
-        height: 50px;
-        background-color: #2ecc71;
-        color: white;
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: bold;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-family: 'Montserrat', sans-serif;
-      "
-    >
-      Subscribe
-    </button>
-  </form>
+  <!-- Main Article Content -->
+  <div class="article-content">
+    <h2>Introduction</h2>
+    <p>This is where your introductory paragraph goes. Set the stage for your readers and introduce the main topic of your article. Keep it engaging to hook your audience.</p>
 
-  <h2>Origins</h2>
-  <p>
-    The Popovich story began on that date in 1949, in bustling East Chicago, Indiana, home to the Indiana Harbor
-    and the Ship Canal. He was born to a Serbian father and a Croatian mother, graduating from Merrillville High School
-    in 1966.
-  </p>
+    <p>You can add more paragraphs here to expand on your ideas. Break down complex information into smaller, digestible chunks. Use clear and concise language.</p>
 
-  <p>
-    He then attended the United States Air Force Academy, playing on the academy’s Air Force Falcons basketball team. In
-    his senior year, he even became the team captain and was the leading scorer that year. He graduated in 1970 and
-    considered a career with the CIA.
-  </p>
+    <h3>Sub-heading One</h3>
+    <p>This section can delve deeper into a specific aspect of your topic. Provide details, examples, or supporting evidence for your claims.</p>
 
-  <p>
-    Pops then served in the US Air Force. During this time, he continued playing with the US Armed Forces basketball team,
-    becoming captain and winning the AAU championship. He was then invited to the 1972 US Olympic Trials — but was cut from
-    the team.
-  </p>
+    <blockquote>
+      “This is an example of a blockquote. Use it for impactful quotes or to highlight important statements from other sources.”
+      <br />
+      – [Source of Quote]
+    </blockquote>
 
-  <h2>Early Coaching</h2>
-  <p>
-    Popovich began his coaching career as an assistant coach to Hank Egan at the Air Force Academy. During this time, he
-    earned a master’s degree in physical education and sports sciences from the University of Denver.
-  </p>
+    <p>
+      You can also include images to break up text and provide visual context. Remember to use descriptive `alt` text for accessibility.
+    </p>
+    <img src="https://placehold.co/800x450/cccccc/333333?text=Placeholder+Image" alt="Descriptive image alt text" />
+    <p style="font-size: 0.85em; color: #777;"><em>Caption for the image.</em></p>
 
-  <p>
-    He worked there for 6 years (1973–1979), before moving to the Pomona-Pitzer Sagehens in Claremont, California — a small
-    DIII program. According to Popovich, he didn’t know the program was in rough shape. In 1980, he was just another coach
-    trying to figure it out.
-  </p>
+    <h3>Sub-heading Two</h3>
+    <p>Continue developing your arguments or narrative here. Ensure a logical flow between sections. Think about what your readers need to know next.</p>
 
-  <blockquote>
-    “It was a horrendous beginning,” Popovich recalled, “But be that as it may, I still fell in love with it.”
-  </blockquote>
+    <ul>
+      <li>Point one: Use lists to present information clearly.</li>
+      <li>Point two: They are great for summarizing key takeaways.</li>
+      <li>Point three: Or for outlining steps or features.</li>
+    </ul>
 
-  <p><em>Popovich with Pomona-Pitzer. Courtesy: Peter Osgood.</em></p>
-  <img src="../image.png" alt="Popovich with Pomona-Pitzer" />
+    <p>Conclude your main content by summarizing your key points and offering a final thought or call to action, if applicable.</p>
+  </div>
 
-  <p>
-    That first year, the Hens lost to Caltech, breaking their 99-game conference losing streak. But Popovich kept going,
-    sending thousands of recruiting letters nationwide. His assistant Charles Katsiaficas recalled the grind:
-  </p>
+  <hr class="section-divider" />
 
-  <blockquote>
-    “A lot of letter-writing, a lot of follow-up calls...you really had to work very hard at generating a recruiting list.”
-  </blockquote>
-
-  <p>Five seasons after a 2-22 season, the Sagehens were SCIAC champions. They lost in the first round, but they won the conference.</p>
-
-  <h2>Climbing to the NBA</h2>
-  <p>
-    Popovich volunteered under Larry Brown at Kansas, then returned to Pomona. By 1988, he joined Brown in the NBA as a Spurs
-    assistant, until 1992. He later served under Don Nelson at the Warriors, which Pop said helped him grow immensely.
-  </p>
-
-  <p>
-    He returned to San Antonio in 1994 as GM, signing Avery Johnson and trading Dennis Rodman. After a rough 3-15 start in
-    1996, Popovich fired head coach Bob Hill and took over himself on December 10.
-  </p>
-
-  <p>That poor season earned the Spurs the #1 draft pick, selecting Tim Duncan — changing the franchise forever.</p>
-
-  <h2>The Spurs Dynasty</h2>
-  <p>
-    With David Robinson and Tim Duncan, Popovich led the Spurs to 56 wins in 1997–98 and their first NBA title in 1999. Over
-    the next 20 years, he would win five championships (1999, 2003, 2005, 2007, and 2014), and three Coach of the Year awards.
-  </p>
-
-  <p>
-    Pop was never afraid to make unpopular decisions — like resting stars and getting fined for it — to protect his players’
-    longevity. His vision went beyond basketball.
-  </p>
-
-  <blockquote>
-    “This is probably the most meaningful of any award I've received... this place molded me from a wise guy to a half decent
-    person.”
-    <br />
-    – Gregg Popovich on becoming an Air Force Distinguished Graduate
-  </blockquote>
-
-  <h2>The Final Years</h2>
-  <p>
-    In 2021, Popovich coached Team USA to Olympic Gold. In 2022, he became the all-time regular season wins leader. In 2023,
-    he entered the Basketball Hall of Fame. And on November 2, 2024, Popovich suffered a stroke — his final game as coach
-    was against the Timberwolves.
-  </p>
-
-  <p>
-    He stepped down in 2025, ending a 29-year head-coaching reign, but continued as President of Basketball Operations.
-  </p>
-
-  <h2>Legacy and Impact</h2>
-  <p>
-    From Shaq to Steve Kerr, Pop’s impact is universally respected. He treated every player the same. He stood for
-    discipline, equality, humility, and honesty.
-  </p>
-
-  <blockquote>
-    “We used to call it ‘The Program.’ I love that man for a different reason... Pop gave us a couple pairs of shoes. He
-    never wanted anything in return.”
-    <br />
-    – Shaquille O’Neal
-  </blockquote>
-
-  <blockquote>
-    “Pop is one of the most important people in my life... for reasons that go way beyond basketball.”
-    <br />
-    – Steve Kerr
-  </blockquote>
-
-  <p>
-    He held players accountable — even legends like Tim Duncan — and inspired everyone in his orbit. He revolutionized the
-    way coaching is viewed in the NBA.
-  </p>
-
-  <h2>Forever Coach Pops</h2>
-  <p>I didn’t expect to publish this article so soon — maybe in 2028. But Pops deserves this. Forever.</p>
-
-  <h3>Because</h3>
-  <h3>That’s</h3>
-  <h3>The</h3>
-  <h3>Coach</h3>
-  <h3>Pops</h3>
-  <h3>Way.</h3>
-  <hr style="border: 1px solid black; margin: 40px 0;" />
+  <!-- Comments Section -->
   <div id="comments-section">
     <h2>Comments</h2>
     <form id="commentForm">
       <input type="text" id="name" placeholder="Your name (anonymous allowed)" required /><br />
       <textarea id="comment" placeholder="Your comment" required></textarea><br />
-      <button type="submit">Post Comment</button>
+      <button type="submit" class="action-btn">Post Comment</button>
     </form>
-    <div id="commentsList">Loading...</div>
+    <div id="commentsList">
+      <!-- Comments will be loaded here dynamically -->
+      <p>No comments yet. Be the first!</p>
+    </div>
   </div>
 
+  <!-- Article Rating Section -->
   <div
     id="rate-me"
     style="
@@ -293,7 +219,7 @@
   </div>
 
   <div class="footer">
-    <p>© 2025 Sports Square. All rights reserved.</p>
+    <p>© [Current Year] Your Blog Name. All rights reserved.</p>
   </div>
 
   <!-- Firebase SDK -->
@@ -302,8 +228,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
   <script>
-    // IMPORTANT: This Firebase config is now set to sportssquare-b96ed.
-    // This must match the configuration in your signup.html file for consistent authentication.
+    // IMPORTANT: Firebase project configuration
     const firebaseConfig = {
       apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
       authDomain: "sportssquare-b96ed.firebaseapp.com",
@@ -313,10 +238,12 @@
       appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
+    // Get references to DOM elements
     const authStatus = document.getElementById("authStatus");
     const loginBtn = document.getElementById("loginBtn");
     const logoutBtn = document.getElementById("logoutBtn");
@@ -327,16 +254,18 @@
     const starsContainer = document.getElementById("stars-container");
     const ratingResult = document.getElementById("rating-result");
 
-    let currentUser = null;
+    let currentUser = null; // Variable to store the current authenticated user
 
+    // Helper function to escape HTML for display
     function escapeHtml(text) {
       const div = document.createElement("div");
       div.textContent = text;
       return div.innerHTML;
     }
 
+    // Authentication state change listener
     auth.onAuthStateChanged(async (user) => {
-      currentUser = user;
+      currentUser = user; // Update current user
       if (user) {
         authStatus.textContent = `Welcome, ${user.email}`;
         loginBtn.style.display = "none";
@@ -346,37 +275,44 @@
         loginBtn.style.display = "inline-block";
         logoutBtn.style.display = "none";
       }
+      // Load dynamic data after authentication status is determined
       await loadArticleLikes();
       await loadComments();
       await loadUserRating();
     });
 
+    // Login button click handler
     loginBtn.onclick = () => {
-      // Pass the current article URL as a redirect parameter
+      // Redirect to signup.html, passing the current page URL as a redirect parameter
       window.location.href = `../signup.html?redirect=${encodeURIComponent(window.location.href)}`;
     };
 
+    // Logout button click handler
     logoutBtn.onclick = () => {
-      auth.signOut();
+      auth.signOut(); // Sign out the user
     };
 
+    // Function to load and display article likes
     async function loadArticleLikes() {
       try {
+        // Get the 'article' document from the 'likes' collection
         const doc = await db.collection("likes").doc("article").get();
+        // Get the likes count, defaulting to 0 if not found
         const likesCount = doc.exists && doc.data().count ? doc.data().count : 0;
-        articleLikesSpan.textContent = likesCount;
+        articleLikesSpan.textContent = likesCount; // Update the display
       } catch (error) {
         console.error("Failed to load article likes:", error);
       }
     }
 
+    // Function to handle article liking
     likeArticleBtn.onclick = async () => {
       if (!currentUser) {
-        // Using a custom message box instead of alert()
         showMessageBox("You need to be logged in to like the article.");
         return;
       }
       try {
+        // Check if the current user has already liked this article
         const userLikeDoc = await db
           .collection("likes")
           .doc("articleLikesUsers")
@@ -389,6 +325,7 @@
           return;
         }
 
+        // Record that the user liked the article
         await db
           .collection("likes")
           .doc("articleLikesUsers")
@@ -396,28 +333,31 @@
           .doc(currentUser.uid)
           .set({ liked: true });
 
+        // Update the total article likes count using a transaction for atomicity
         const articleLikesRef = db.collection("likes").doc("article");
         await db.runTransaction(async (transaction) => {
           const doc = await transaction.get(articleLikesRef);
           if (!doc.exists) {
-            transaction.set(articleLikesRef, { count: 1 });
+            transaction.set(articleLikesRef, { count: 1 }); // If no likes yet, set to 1
           } else {
-            const newCount = (doc.data().count || 0) + 1;
+            const newCount = (doc.data().count || 0) + 1; // Increment count
             transaction.update(articleLikesRef, { count: newCount });
           }
         });
 
-        await loadArticleLikes();
+        await loadArticleLikes(); // Reload likes to update display
       } catch (error) {
         console.error("Error liking article:", error);
         showMessageBox("Failed to like the article. Please try again.");
       }
     };
 
+    // Function to load and display comments
     async function loadComments() {
       try {
+        // Get comments ordered by timestamp (newest first)
         const snapshot = await db.collection("comments").orderBy("timestamp", "desc").get();
-        commentsList.innerHTML = "";
+        commentsList.innerHTML = ""; // Clear existing comments
         if (snapshot.empty) {
           commentsList.textContent = "No comments yet. Be the first!";
           return;
@@ -431,16 +371,18 @@
           const commentId = doc.id;
 
           const commentLikeBtn = document.createElement("button");
-          commentLikeBtn.className = "like-btn";
+          commentLikeBtn.className = "action-btn"; // Use general action-btn class
           commentLikeBtn.textContent = `❤️ Like Comment (0)`;
           commentLikeBtn.style.marginTop = "5px";
 
+          // Comment like button click handler
           commentLikeBtn.onclick = async () => {
             if (!currentUser) {
               showMessageBox("You need to be logged in to like comments.");
               return;
             }
             try {
+              // Check if user already liked this specific comment
               const userCommentLikeDoc = await db
                 .collection("commentLikes")
                 .doc(commentId)
@@ -453,6 +395,7 @@
                 return;
               }
 
+              // Record user's like for this comment
               await db
                 .collection("commentLikes")
                 .doc(commentId)
@@ -460,6 +403,7 @@
                 .doc(currentUser.uid)
                 .set({ liked: true });
 
+              // Update comment likes count using a transaction
               const commentLikesRef = db.collection("commentLikes").doc(commentId);
               await db.runTransaction(async (transaction) => {
                 const docSnap = await transaction.get(commentLikesRef);
@@ -471,6 +415,7 @@
                 }
               });
 
+              // Update the displayed like count for this button
               const newCountDoc = await db.collection("commentLikes").doc(commentId).get();
               commentLikeBtn.textContent = `❤️ Like Comment (${newCountDoc.data().count || 0})`;
             } catch (err) {
@@ -479,16 +424,18 @@
             }
           };
 
+          // Immediately load likes for each comment when displayed
           (async () => {
             try {
               const commentLikesDoc = await db.collection("commentLikes").doc(commentId).get();
               const likesCount = commentLikesDoc.exists && commentLikesDoc.data().count ? commentLikesDoc.data().count : 0;
               commentLikeBtn.textContent = `❤️ Like Comment (${likesCount})`;
             } catch {
-              commentLikeBtn.textContent = `❤️ Like Comment (0)`;
+              commentLikeBtn.textContent = `❤️ Like Comment (0)`; // Fallback if error
             }
           })();
 
+          // Construct comment HTML and append button
           commentDiv.innerHTML = `
             <strong>${escapeHtml(data.name)}</strong><br />
             <p>${escapeHtml(data.comment)}</p>
@@ -504,8 +451,9 @@
       }
     }
 
+    // Comment form submission handler
     commentForm.onsubmit = async (e) => {
-      e.preventDefault();
+      e.preventDefault(); // Prevent default form submission
 
       const name = document.getElementById("name").value.trim();
       const comment = document.getElementById("comment").value.trim();
@@ -516,19 +464,21 @@
       }
 
       try {
+        // Add new comment to Firestore
         await db.collection("comments").add({
           name,
           comment,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(), // Use server timestamp
         });
-        commentForm.reset();
-        loadComments();
+        commentForm.reset(); // Clear form
+        loadComments(); // Reload comments to show the new one
       } catch (error) {
         console.error("Error posting comment:", error);
         showMessageBox("Failed to post comment.");
       }
     };
 
+    // Star rating click handler
     starsContainer.addEventListener("click", async (event) => {
       if (!currentUser) {
         showMessageBox("You need to be logged in to rate the article.");
@@ -539,11 +489,11 @@
       if (!clickedStar) return;
 
       const ratingValue = parseInt(clickedStar.dataset.value, 10);
-      const userRatingRef = db.collection("ratings").doc(currentUser.uid);
+      const userRatingRef = db.collection("ratings").doc(currentUser.uid); // Document for user's rating
 
       try {
-        await userRatingRef.set({ rating: ratingValue });
-        showStarRating(ratingValue);
+        await userRatingRef.set({ rating: ratingValue }); // Set or update user's rating
+        showStarRating(ratingValue); // Update star visuals
         ratingResult.textContent = `You rated this article ${ratingValue} star${ratingValue > 1 ? "s" : ""}.`;
       } catch (error) {
         console.error("Error submitting rating:", error);
@@ -551,9 +501,10 @@
       }
     });
 
+    // Function to load user's existing rating
     async function loadUserRating() {
       if (!currentUser) {
-        showStarRating(0);
+        showStarRating(0); // No user, no rating displayed
         ratingResult.textContent = "";
         return;
       }
@@ -564,7 +515,7 @@
           showStarRating(ratingValue);
           ratingResult.textContent = `You rated this article ${ratingValue} star${ratingValue > 1 ? "s" : ""}.`;
         } else {
-          showStarRating(0);
+          showStarRating(0); // User logged in but no rating yet
           ratingResult.textContent = "";
         }
       } catch (error) {
@@ -572,6 +523,7 @@
       }
     }
 
+    // Function to visually update star rating
     function showStarRating(value) {
       const stars = document.querySelectorAll(".star");
       stars.forEach((star) => {
