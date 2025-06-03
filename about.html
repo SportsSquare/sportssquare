@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Sports Square News</title>
+    <style>
+        body {
+      background-color: rgb(249, 251, 231);
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    nav ul {
+      list-style-type: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .flex-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .post-card {
+      border: 1px solid black;
+      padding: 20px;
+      width: 300px;
+      background-color: white;
+      border-radius: 10px;
+    }
+    aside.poll-box {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      font-family: 'Segoe UI', sans-serif;
+      max-width: 300px;
+      width: 100%;
+    }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        p {
+            line-height: 1.6;
+        }
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        strong {
+            color: #2980b9;
+        }
+        em {
+            color: #e74c3c;
+        }
+        #hero {
+            border: 3px solid black;
+            padding: 20px;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+            background-color: white;
+            border-radius: 10px;
+            text-align: center;
+        }
+        #hero h2 {
+            color: #2c3e50;
+        }
+        #hero h3 {
+            color: #34495e;
+        }
+        #hero form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #hero input[type="email"] {
+            width: 300px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #hero button {
+            width: 200px;
+            height: 50px;
+            background-color: #2ECC71;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        #hero button:hover {
+            background-color: #27ae60;
+        }
+        #hero button:disabled {
+            background-color: #95d7a5;
+            cursor: not-allowed;
+        }
+        @media (max-width: 600px) {
+            #hero {
+                width: 90%;
+            }
+            #hero input[type="email"] {
+                width: 100%;
+            }
+            #hero button {
+                width: 100%;
+            }
+        }
+        @media (max-width: 400px) {
+            .container {
+                padding: 10px;
+            }
+            #hero {
+                width: 100%;
+                padding: 15px;
+            }
+            #hero h2, #hero h3 {
+                font-size: 1.2em;
+            }
+            #hero input[type="email"], #hero button {
+                width: 90%;
+            }
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            #hero {
+                width: 95%;
+            }
+            #hero h2, #hero h3 {
+                font-size: 1.5em;
+            }
+            #hero input[type="email"], #hero button {
+                width: 80%;
+            }
+        }
+        @media (min-width: 769px) {
+            .container {
+                padding: 20px;
+            }
+            #hero {
+                width: 80%;
+            }
+            #hero h2, #hero h3 {
+                font-size: 1.8em;
+            }
+            #hero input[type="email"], #hero button {
+                width: 70%;
+            }
+        }
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1000px;
+            }
+            #hero {
+                width: 70%;
+            }
+            #hero h2, #hero h3 {
+                font-size: 2em;
+            }
+            #hero input[type="email"], #hero button {
+                width: 60%;
+            }
+        }
+        @media (min-width: 1600px) {
+            .container {
+                max-width: 1200px;
+            }
+            #hero {
+                width: 60%;
+            }
+            #hero h2, #hero h3 {
+                font-size: 2.2em;
+            }
+            #hero input[type="email"], #hero button {
+                width: 50%;
+            }
+        }
+        @media (min-width: 2000px) {
+            .container {
+                max-width: 1400px;
+            }
+            #hero {
+                width: 50%;
+            }
+            #hero h2, #hero h3 {
+                font-size: 2.5em;
+            }
+            #hero input[type="email"], #hero button {
+                width: 40%;
+            }
+        }
+        @media (min-width: 2400px) {
+            .container {
+                max-width: 1600px;
+            }
+            #hero {
+                width: 40%;
+            }
+            #hero h2, #hero h3 {
+                font-size: 2.8em;
+            }
+            #hero input[type="email"], #hero button {
+                width: 30%;
+            }
+        }  
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>About Sports Square</h1>
+        <p><strong>Your Hub for All Sports</strong></p>
+
+        <p>At <strong>Sports Square</strong>, we are dedicated to delivering comprehensive sports coverage, ensuring that every sport, from the most popular to the niche, receives the attention it deserves. Whether you're a casual fan or a die-hard enthusiast, our goal is to provide you with timely, accurate, and engaging sports content.</p>
+
+        <h2>What We Offer</h2>
+        <ul>
+            <li><strong>In-Depth Stories</strong>: Dive deep into the narratives that shape the sports world. From behind-the-scenes looks at teams like the Texans and Lions to detailed analyses, our stories offer unique perspectives that you won't find elsewhere.</li>
+            <li><strong>Collaborative Features</strong>: Through initiatives like <em>The Sports Summit</em>, we bring together multiple writers to provide diverse viewpoints on various topics, enriching your reading experience.</li>
+            <li><strong>Timely Information</strong>: Stay informed with factual and up-to-date information, making you the go-to person for sports discussions among your friends and colleagues.</li>
+            <li><strong>Consistent Delivery</strong>: Unless specified otherwise, expect new content every morning at 7:00 A.M. EST (12:00 P.M. GMT), ensuring you start your day with the latest in sports.</li>
+        </ul>
+
+        <h2>Our Coverage</h2>
+        <p>We pride ourselves on covering every sport in existence. From major leagues like the NFL, NBA, MLB, NHL, and WNBA to smaller and international leagues such as MLS, NWSL, and MILB, we've got you covered. Our expansive coverage ensures that fans of all sports find content tailored to their interests.</p>
+
+        <h2>Join Us</h2>
+        <p>Become a part of our growing community by subscribing to <strong>Sports Square</strong>. Whether you're looking to stay updated on your favorite team or explore new sports, we offer content that caters to all. Subscribe to learn more!</p>
+
+    </div>
+    <div id="hero" style="border: 3px solid black; padding: 20px; margin: 20px auto; width: 80%; max-width: 600px; background-color: white; border-radius: 10px; text-align: center;">
+        <h2>Where Sports Meet Their Match</h2>
+        <h3>Fresh takes, game-day insights, and behind-the-scenes sports stories — straight to your inbox.</h3>
+        <h2><em>Join the Square</em></h2>
+        <form action="https://formsubmit.co/sportssquareauthor@gmail.com" method="POST">
+          <input type="email" name="email" placeholder="Your email" required style="width: 300px; padding: 10px; margin-bottom: 10px;">
+          <input type="hidden" name="_next" value="https://sportssquare.netlify.app/subscribed">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_subject" value="New subscription from Sports Square">
+          <input type="hidden" name="_message" value="A new user has subscribed to Sports Square.">
+          <br>
+          <button type="submit" style="width:200px; height: 150px; background-color: #2ECC71; color: white; padding: 10px 20px; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">Subscribe</button>
+        </form>
+    </div>
+</body>
+</html>
