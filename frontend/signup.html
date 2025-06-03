@@ -136,7 +136,7 @@
         messageEl.textContent = `Login successful! Welcome back ${userCredential.user.email}`;
         // Redirect after login
         const params = new URLSearchParams(window.location.search);
-        const redirectUrl = params.get('redirect') || '../frontend/posts/so-long-pops.html';
+        const redirectUrl = params.get('redirect') || '../posts/so-long-pops.html';
         window.location.href = redirectUrl;
       } catch (error) {
         messageEl.style.color = 'red';
@@ -151,7 +151,7 @@
       if (user) {
         console.log('User logged in:', user.email);
         const params = new URLSearchParams(window.location.search);
-        const redirectUrl = params.get('redirect') || '../frontend/posts/so-long-pops.html';
+        const redirectUrl = params.get('redirect') || '../posts/so-long-pops.html';
         // Prevent redirect loop
         if (window.location.pathname !== new URL(redirectUrl, window.location.origin).pathname) {
           window.location.href = redirectUrl;
