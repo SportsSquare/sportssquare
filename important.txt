@@ -18,3 +18,93 @@ git push origin main
 
 Add the code above to every page
 
+
+<div id="premiumContent" style="display: none;">
+  <h2>Premium Sports Breakdown 🏀</h2>
+  <p>This exclusive analysis is available only to Sports Square members. Thanks for supporting us!</p>
+</div>
+const premiumContent = document.getElementById('premiumContent');
+
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    premiumContent.style.display = 'block';
+  } else {
+    premiumContent.style.display = 'none';
+  }
+});
+
+
+
+Article Template:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My New Article</title>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+      background-color: #f9fbf1;
+      color: #333;
+    }
+    h1, h2 {
+      color: #222;
+    }
+  </style>
+</head>
+<body>
+  <h1>My New Article</h1>
+  <p><em>By: Your Name</em></p>
+  
+  <p>Content goes here...</p>
+  <p>More content...</p>
+  <p>Keep scrolling until the bottom...</p>
+
+  <script type="module">
+    import { getFirestore, doc, setDoc, serverTimestamp, updateDoc, increment } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+    const ARTICLE_ID = "my-new-article"; // ✅ Change for each article
+    const ARTICLE_TITLE = "My New Article"; // ✅ Human-friendly name
+
+    const auth = getAuth();
+    const db = getFirestore();
+    let hasScrolledToBottom = false;
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) return;
+
+      window.addEventListener('scroll', async () => {
+        if (hasScrolledToBottom) return;
+
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight;
+        const winHeight = window.innerHeight;
+        const scrollPercent = (scrollTop + winHeight) / docHeight;
+
+        if (scrollPercent > 0.9) {
+          hasScrolledToBottom = true;
+
+          // Log user read
+          await setDoc(doc(db, "reads", `${user.uid}-${ARTICLE_ID}`), {
+            userId: user.uid,
+            articleId: ARTICLE_ID,
+            title: ARTICLE_TITLE,
+            timestamp: serverTimestamp(),
+            duration: 300 // Optional: Estimated read time in seconds
+          });
+
+          // Update global article read count
+          const articleRef = doc(db, "articles", ARTICLE_ID);
+          await setDoc(articleRef, { readCount: increment(1) }, { merge: true });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

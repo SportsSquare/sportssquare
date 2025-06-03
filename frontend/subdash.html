@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Subscriber Dashboard</title>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+      background-color: #f7f9f4;
+      color: #333;
+    }
+    h1, h2 {
+      color: #222;
+    }
+    .article-item {
+      background: #fff;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.05);
+    }
+    .logout {
+      float: right;
+      background: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to Your Dashboard</h1>
+  <button class="logout" id="logoutBtn">Logout</button>
+  <p id="userEmail">Loading user...</p>
+
+  <h2>Articles You've Read:</h2>
+  <div id="readArticles">Loading...</div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+      authDomain: "sportssquare-b96ed.firebaseapp.com",
+      projectId: "sportssquare-b96ed",
+      storageBucket: "sportssquare-b96ed.appspot.com",
+      messagingSenderId: "844736978057",
+      appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const readArticlesDiv = document.getElementById("readArticles");
+    const userEmail = document.getElementById("userEmail");
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await signOut(auth);
+      window.location.href = "signup.html"; // Redirect to login/signup
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        userEmail.textContent = "Not logged in.";
+        readArticlesDiv.innerHTML = "<p>Please log in to see your reading history.</p>";
+        return;
+      }
+
+      userEmail.textContent = `Logged in as: ${user.email}`;
+
+      try {
+        const globalRef = doc(db, "articles", "so-long-pops");
+        const globalSnap = await getDoc(globalRef);
+        const globalData = globalSnap.data();
+        const globalReadCount = globalData?.readCount || 0;
+
+        const q = query(collection(db, "reads"), where("userId", "==", user.uid));
+        const snapshot = await getDocs(q);
+
+        let html = `<p><strong>Total </strong> ${globalReadCount}</p>`;
+
+        if (snapshot.empty) {
+          html += "<p>You haven't finished reading any articles yet.</p>";
+        } else {
+          html += "<h3>Your Reading History:</h3><ul>";
+          snapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            const title = data.title || data.articleId;
+            const duration = data.duration || 0;
+            const mins = Math.round(duration / 60);
+            html += `
+              <li>
+                <strong>${title}</strong><br>
+                <small>Read on: ${data.timestamp?.toDate()?.toLocaleString() || 'Unknown'}</small><br>
+                <small>Time spent: ${mins > 0 ? mins + ' min' : '<1 min'}</small>
+              </li>
+            `;
+          });
+          html += "</ul>";
+        }
+
+        readArticlesDiv.innerHTML = html;
+      } catch (err) {
+        console.error("Error fetching read history:", err);
+        readArticlesDiv.innerHTML = "<p>Failed to load reading history.</p>";
+      }
+    });
+  </script>
+</body>
+</html>
+

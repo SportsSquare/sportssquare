@@ -313,5 +313,48 @@
   <footer class="footer">
     © 2025 Sports Square by Smayan Srikanth
   </footer>
+  <script type="module">
+    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+  
+    // Removed duplicate declarations of db and auth
+  
+    let hasScrolledToBottom = false;
+    const startTime = Date.now(); // Capture the page load time
+  
+    window.addEventListener('scroll', () => {
+      if (hasScrolledToBottom) return;
+  
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight;
+      const winHeight = window.innerHeight;
+  
+      const scrollPercent = (scrollTop + winHeight) / docHeight;
+  
+      if (scrollPercent > 0.9) {
+        hasScrolledToBottom = true;
+  
+        onAuthStateChanged(auth, async (user) => {
+          if (!user) return;
+  
+          const duration = Math.floor((Date.now() - startTime) / 1000); // Duration in seconds
+  
+          const userReadRef = doc(db, "reads", `${user.uid}-so-long-pops`);
+          await setDoc(userReadRef, {
+            userId: user.uid,
+            articleId: "so-long-pops",
+            title: "So Long Pops",
+            timestamp: serverTimestamp(),
+            duration
+          });
+  
+          // Increment global article read count
+          const globalRef = doc(db, "articles", "so-long-pops");
+          await setDoc(globalRef, { readCount: increment(1) }, { merge: true });
+        });
+      }
+    });
+  </script>
+  
 </body>
 </html>
