@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Notification Panel</title>
+  <style>
+    #admin-panel {
+      display: none;
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      padding: 16px;
+      max-width: 400px;
+      font-family: Arial, sans-serif;
+    }
+    input, textarea {
+      width: 100%;
+      margin-bottom: 12px;
+      padding: 8px;
+    }
+    button {
+      padding: 10px 16px;
+      background: green;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Welcome to Sports Square</h2>
+
+<div id="admin-panel">
+  <h3>Create Notification</h3>
+  <textarea id="message" rows="4" placeholder="Notification message"></textarea>
+  <button onclick="createNotification()">Post Notification</button>
+  <p id="status"></p>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+  authDomain: "sportssquare-b96ed.firebaseapp.com",
+  projectId: "sportssquare-b96ed",
+  storageBucket: "sportssquare-b96ed.firebasestorage.app",
+  messagingSenderId: "844736978057",
+  appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+};
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+
+  const adminUID = "ibLtQvJhIPN2icV7IyB1IUIgzN12"; // Replace with YOUR actual UID
+  const adminPanel = document.getElementById('admin-panel');
+  const status = document.getElementById('status');
+
+  auth.onAuthStateChanged(user => {
+    if (user && user.uid === adminUID) {
+      adminPanel.style.display = 'block';
+    } else {
+      adminPanel.innerHTML = '<p>You do not have permission to view this page.</p>';
+    }
+  });
+
+  function createNotification() {
+    const message = document.getElementById('message').value.trim();
+    if (!message) {
+      status.textContent = "Message cannot be empty.";
+      return;
+    }
+
+    const notification = {
+      message: message,
+      timestamp: Date.now(),
+      readBy: []
+    };
+
+    db.collection("notifications").add(notification)
+      .then(() => {
+        status.textContent = "Notification sent!";
+        document.getElementById('message').value = '';
+      })
+      .catch((error) => {
+        status.textContent = "Error: " + error.message;
+      });
+  }
+</script>
+
+</body>
+</html>
