@@ -24,13 +24,78 @@
       border: none;
       cursor: pointer;
     }
+    button:hover {
+      background: darkgreen;
+    }
+    #status {
+      margin-top: 10px;
+      color: red;
+    }
+    body {
+      background-color: #f9fbf7;
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    h2 {
+      color: #333;
+    }
+    h3 {
+      color: #555;
+    }
+    textarea {
+      resize: none;
+      font-family: Arial, sans-serif;
+    }
+    #admin-panel p {
+      color: red;
+      font-weight: bold;
+    }
+    @media (max-width: 600px) {
+      #admin-panel {
+        width: 90%;
+      }
+    }
+    @media (max-width: 400px) {
+      #admin-panel {
+        width: 100%;
+      }
+    }
+    h1 {
+      color: blue;
+      margin-bottom: 20px;
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    h3 {
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .message {
+      margin: 1rem 0;
+      color: red;
+      font-weight: bold;
+    }
+    .admin-panel {
+      display: none;
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      padding: 16px;
+      max-width: 400px;
+      font-family: Arial, sans-serif;
+      text-align: center
+    }
   </style>
 </head>
 <body>
 
 <h2>Welcome to Sports Square</h2>
 
-<div id="admin-panel">
+<div id="admin-panel" style="display: flex; flex-direction: column; align-items: center;">
+  <h1>Admin Notification Panel</h1>
+  <p>Only authorized users can access this panel.</p>
   <h3>Create Notification</h3>
   <textarea id="message" rows="4" placeholder="Notification message"></textarea>
   <button onclick="createNotification()">Post Notification</button>
@@ -91,6 +156,7 @@ const firebaseConfig = {
       });
   }
 </script>
+<script src="./notifications.js"></script>
 
 </body>
 </html>
