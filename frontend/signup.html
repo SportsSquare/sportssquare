@@ -141,7 +141,7 @@
           // Redirect after successful registration
           const params = new URLSearchParams(window.location.search);
           // Ensure the redirect URL points correctly to your article page
-          const redirectUrl = params.get('redirect') || '../frontend/posts/so-long-pops.html';
+          const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/posts/so-long-pops';
           window.location.href = redirectUrl;
         } catch (error) {
           messageEl.style.color = 'red';
@@ -177,7 +177,7 @@
           // Redirect after successful login
           const params = new URLSearchParams(window.location.search);
           // Ensure the redirect URL points correctly to your article page
-          const redirectUrl = params.get('redirect') || '../frontend/posts/so-long-pops.html';
+          const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/posts/so-long-pops';
           window.location.href = redirectUrl;
         } catch (error) {
           messageEl.style.color = 'red';
@@ -194,7 +194,7 @@
           console.log('User logged in (onAuthStateChanged):', user.email);
           // Redirect if user is already logged in when landing on this page
           const params = new URLSearchParams(window.location.search);
-          const redirectUrl = params.get('redirect') || '../frontend/posts/so-long-pops.html';
+          const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/posts/so-long-pops';
           // Only redirect if not already on the target page to prevent infinite loops
           if (!window.location.href.includes(redirectUrl)) {
             window.location.href = redirectUrl;
