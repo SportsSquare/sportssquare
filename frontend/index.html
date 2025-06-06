@@ -16,7 +16,24 @@
     gtag('js', new Date());
     gtag('config', 'G-6CR81XMZN5');
   </script>
-  <script src="./notifications.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+  <script>
+    // Your Firebase project configuration for index.html
+    // Replace these placeholder values with your actual Firebase project credentials!
+    const firebaseConfig = {
+      apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+      authDomain: "sportssquare-b96ed.firebaseapp.com",
+      projectId: "sportssquare-b96ed",
+      storageBucket: "sportssquare-b96ed.firebasestorage.app",
+      messagingSenderId: "844736978057",
+      appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
 
 
   <style>
@@ -144,14 +161,12 @@
   <h2>Latest Posts</h2>
 
   <div class="flex-section">
-    <!-- Post Section -->
     <div class="post-card">
       <h3><a href="./posts/so-long-pops.html" style="color:blue">So Long Pops</a></h3>
       <p>From Air Force Cadet to NBA Legend: The Unmatched Legacy of Coach Popovich</p>
       <p>By: <a href="./posts/smayan.html">Smayan Srikanth</a></p>
     </div>
 
-    <!-- Poll Section -->
     <aside class="poll-box">
       <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">🏀 Fan Poll</h3>
       <p style="margin-bottom: 1rem;">Who will win the NBA Finals?</p>
@@ -229,5 +244,6 @@
     fetchResults();
     setInterval(fetchResults, 30000);
   </script>
+  <script src="./notifications.js"></script>
 </body>
 </html>
