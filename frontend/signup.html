@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sign Up / Login - Sports Square</title>
   <style>
+    /* Basic styling for the body and overall container */
     body {
       font-family: 'Montserrat', sans-serif;
       max-width: 400px;
@@ -18,6 +19,7 @@
     h1, h2 {
       color: #333;
     }
+    /* Styling for input fields and buttons */
     input, button {
       width: calc(100% - 20px); /* Adjusted width for padding */
       margin: 8px 0;
@@ -27,25 +29,29 @@
       border-radius: 6px; /* Added rounded corners */
       box-sizing: border-box; /* Include padding and border in the element's total width and height */
     }
+    /* Styling for buttons specifically */
     button {
-      background-color: #2ECC71;
+      background-color: #2ECC71; /* Green background */
       border: none;
       color: white;
       font-weight: bold;
       cursor: pointer;
       border-radius: 6px;
-      transition: background-color 0.3s ease; /* Smooth transition for hover */
+      transition: background-color 0.3s ease; /* Smooth transition for hover effect */
     }
+    /* Hover effect for buttons */
     button:hover:not(:disabled) {
-      background-color: #27ae60;
+      background-color: #27ae60; /* Darker green on hover */
     }
+    /* Styling for disabled buttons */
     button:disabled {
-      background-color: #95d7a5;
+      background-color: #95d7a5; /* Lighter green for disabled state */
       cursor: not-allowed;
     }
+    /* Styling for message display (errors/success) */
     .message {
       margin: 1rem 0;
-      color: red;
+      color: red; /* Default to red for errors */
       font-weight: bold;
     }
   </style>
@@ -78,7 +84,8 @@
   <script>
     console.log("Script started."); // Debugging: Confirm script execution
 
-    // This is the ONLY place firebaseConfig should be declared.
+    // Firebase Configuration - This block defines your project settings.
+    // It should only appear ONCE in your entire HTML file.
     const firebaseConfig = {
       apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
       authDomain: "sportssquare-b96ed.firebaseapp.com",
@@ -88,85 +95,95 @@
       appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
     };
 
-    // Initialize Firebase.
+    // Initialize Firebase app and get auth instance.
+    // This also should only be called ONCE.
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    console.log("Firebase initialized."); // Debugging: Confirm Firebase init
+    console.log("Firebase initialized and auth instance retrieved."); // Debugging: Confirm Firebase init
 
+    // Self-executing async function to handle Firebase persistence and event listeners.
     (async () => {
       try {
+        // Set Firebase authentication persistence to local storage.
+        // This keeps the user logged in across browser sessions.
         await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
         console.log("Firebase persistence set to LOCAL.");
       } catch (error) {
         console.error("Error setting Firebase persistence:", error);
+        // Display error message to user if persistence fails (uncommon).
+        document.getElementById('message').style.color = 'red';
+        document.getElementById('message').textContent = `Authentication error: ${error.message}`;
       }
 
-      // Get references to DOM elements
+      // Get references to DOM elements for manipulation.
       const messageEl = document.getElementById('message');
       const registerBtn = document.getElementById('register-btn');
       const loginBtn = document.getElementById('login-btn');
       const authContainer = document.getElementById('auth-container');
       console.log("DOM elements retrieved:", { messageEl, registerBtn, loginBtn, authContainer });
 
-      // Event listener for the Register button
-      if (registerBtn) { // Defensive check
+      // Add event listener for the Register button.
+      if (registerBtn) { // Defensive check: ensure button exists before attaching listener.
           registerBtn.addEventListener('click', async () => {
             console.log("Register button clicked.");
-            messageEl.textContent = ''; // Clear previous messages
+            messageEl.textContent = ''; // Clear any previous messages.
             const email = document.getElementById('register-email').value.trim();
             const password = document.getElementById('register-password').value;
 
-            console.log("Register attempt with email:", email); // Log input, do not log password
+            console.log("Register attempt with email:", email); // Log email for debugging, but not password.
             
-            // Basic input validation
+            // Client-side input validation.
             if (!email || !password) {
               messageEl.style.color = 'red';
               messageEl.textContent = 'Please enter both email and password.';
               console.log("Validation failed: Email or password missing.");
-              return;
+              return; // Stop execution if validation fails.
             }
             if (password.length < 6) {
               messageEl.style.color = 'red';
               messageEl.textContent = 'Password should be at least 6 characters.';
               console.log("Validation failed: Password too short.");
-              return;
+              return; // Stop execution if validation fails.
             }
 
-            registerBtn.disabled = true; // Disable button to prevent multiple clicks
+            registerBtn.disabled = true; // Disable button to prevent multiple clicks during the async operation.
             try {
+              // Firebase API call to create a new user with email and password.
               const userCredential = await auth.createUserWithEmailAndPassword(email, password);
               console.log("createUserWithEmailAndPassword successful for user:", userCredential.user.email);
               messageEl.style.color = 'green';
               messageEl.textContent = `Registration successful! Welcome ${email}`;
 
-              // Redirect after successful registration
+              // Redirect after successful registration.
               const params = new URLSearchParams(window.location.search);
+              // Use the 'redirect' URL parameter if present, otherwise default.
               const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/posts/so-long-pops';
               console.log("Redirecting to:", redirectUrl);
-              window.location.href = redirectUrl;
+              window.location.href = redirectUrl; // Perform the redirect.
             } catch (error) {
+              // Catch and display any errors from Firebase (e.g., email-already-in-use, weak-password).
               messageEl.style.color = 'red';
               messageEl.textContent = `Error: ${error.message}`;
               console.error("Registration error:", error);
             } finally {
-              registerBtn.disabled = false; // Re-enable button
+              registerBtn.disabled = false; // Re-enable the button regardless of success or failure.
             }
           });
       } else {
-          console.error("Register button element not found. Check ID 'register-btn'.");
+          console.error("Register button element not found. Check ID 'register-btn' in your HTML.");
       }
 
-      // Event listener for the Login button
-      if (loginBtn) { // Defensive check
+      // Add event listener for the Login button.
+      if (loginBtn) { // Defensive check: ensure button exists.
           loginBtn.addEventListener('click', async () => {
             console.log("Login button clicked.");
-            messageEl.textContent = ''; // Clear previous messages
+            messageEl.textContent = ''; // Clear any previous messages.
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
 
-            console.log("Login attempt with email:", email); // Log input, do not log password
+            console.log("Login attempt with email:", email); // Log email, not password.
 
-            // Basic input validation
+            // Client-side input validation.
             if (!email || !password) {
               messageEl.style.color = 'red';
               messageEl.textContent = 'Please enter both email and password.';
@@ -174,55 +191,62 @@
               return;
             }
 
-            loginBtn.disabled = true; // Disable button to prevent multiple clicks
+            loginBtn.disabled = true; // Disable button during async operation.
             try {
+              // Firebase API call to sign in an existing user.
               const userCredential = await auth.signInWithEmailAndPassword(email, password);
               console.log("signInWithEmailAndPassword successful for user:", userCredential.user.email);
               messageEl.style.color = 'green';
               messageEl.textContent = `Login successful! Welcome back ${email}`;
 
-              // Redirect after successful login
+              // Redirect after successful login.
               const params = new URLSearchParams(window.location.search);
               const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/posts/so-long-pops';
               console.log("Redirecting to:", redirectUrl);
               window.location.href = redirectUrl;
             } catch (error) {
+              // Catch and display any errors from Firebase (e.g., user-not-found, wrong-password).
               messageEl.style.color = 'red';
               messageEl.textContent = `Error: ${error.message}`;
               console.error("Login error:", error);
             } finally {
-              loginBtn.disabled = false; // Re-enable button
+              loginBtn.disabled = false; // Re-enable the button.
             }
           });
       } else {
-          console.error("Login button element not found. Check ID 'login-btn'.");
+          console.error("Login button element not found. Check ID 'login-btn' in your HTML.");
       }
 
-      // Listen for authentication state changes
+      // Listener for Firebase authentication state changes.
+      // This runs on page load and whenever the user logs in/out.
       auth.onAuthStateChanged((user) => {
         if (user) {
           console.log('User logged in (onAuthStateChanged):', user.email);
           const params = new URLSearchParams(window.location.search);
           const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/posts/so-long-pops';
 
-          // Prevent unnecessary redirects if already on the target page
-          // This check is important to prevent infinite redirects if signup.html and the target page share the same domain root
-          if (window.location.href !== redirectUrl && !window.location.href.includes(redirectUrl.split('?')[0])) {
-            console.log("Redirecting due to authenticated state:", redirectUrl);
+          // Prevent unnecessary redirects if the user is already on the target page
+          // or a page equivalent to the target URL's base path (e.g., if a query param changes).
+          const currentPath = window.location.href.split('?')[0]; // Remove query params for comparison
+          const targetPath = redirectUrl.split('?')[0];
+          
+          if (currentPath !== targetPath) {
+            console.log("User already logged in, redirecting to:", redirectUrl);
             window.location.href = redirectUrl;
           } else {
-            console.log("Already on the target page or equivalent, no redirect needed.");
+            console.log("User already logged in and on the target page. No redirect needed.");
           }
         } else {
           console.log('User logged out (onAuthStateChanged). Displaying auth container.');
+          // If no user is logged in, ensure the authentication form is visible.
           if (authContainer) {
-              authContainer.style.display = 'block'; // Ensure the auth form is visible if logged out
+              authContainer.style.display = 'block';
           } else {
-              console.error("Auth container element not found. Check ID 'auth-container'.");
+              console.error("Auth container element not found. Check ID 'auth-container' in your HTML.");
           }
         }
       });
-    })();
+    })(); // End of self-executing async function.
   </script>
 </body>
 </html>
