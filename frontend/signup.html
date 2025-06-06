@@ -70,19 +70,15 @@
     <div class="message" id="message"></div>
   </div>
 
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <!-- Add Firestore compat SDK here as well, although it's not directly used in signup.html,
-       it ensures consistency if you decide to add Firestore ops later. -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
 
   <script>
     console.log("Script started."); // Debugging: Confirm script execution
 
-    // IMPORTANT: This Firebase config is now set to sportssquare-b96ed.
-    // Ensure your so-long-pops.html also uses this exact configuration.
+    // This is the ONLY place firebaseConfig should be declared.
     const firebaseConfig = {
       apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
       authDomain: "sportssquare-b96ed.firebaseapp.com",
@@ -92,117 +88,138 @@
       appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
     };
 
-    // Initialize Firebase. `firebase` object is globally available after firebase-app-compat.js is loaded.
+    // Initialize Firebase.
     const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth(); // Get the auth instance using firebase.auth()
-    // If you were to use Firestore on this page, you would initialize it like this:
-    // const db = firebase.firestore();
+    const auth = firebase.auth();
     console.log("Firebase initialized."); // Debugging: Confirm Firebase init
 
     (async () => {
-      // Set persistence to local storage so the user stays logged in
-      // Use firebase.auth.Auth.Persistence.LOCAL for compat libraries
-      await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-      console.log("Firebase persistence set."); // Debugging: Confirm persistence
+      try {
+        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+        console.log("Firebase persistence set to LOCAL.");
+      } catch (error) {
+        console.error("Error setting Firebase persistence:", error);
+      }
 
       // Get references to DOM elements
       const messageEl = document.getElementById('message');
       const registerBtn = document.getElementById('register-btn');
       const loginBtn = document.getElementById('login-btn');
       const authContainer = document.getElementById('auth-container');
-      console.log("DOM elements retrieved."); // Debugging: Confirm element retrieval
+      console.log("DOM elements retrieved:", { messageEl, registerBtn, loginBtn, authContainer });
 
       // Event listener for the Register button
-      registerBtn.addEventListener('click', async () => {
-        console.log("Register button clicked."); // Debugging: Confirm click event
-        messageEl.textContent = ''; // Clear previous messages
-        const email = document.getElementById('register-email').value.trim();
-        const password = document.getElementById('register-password').value;
+      if (registerBtn) { // Defensive check
+          registerBtn.addEventListener('click', async () => {
+            console.log("Register button clicked.");
+            messageEl.textContent = ''; // Clear previous messages
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value;
 
-        // Basic input validation
-        if (!email || !password) {
-          messageEl.style.color = 'red';
-          messageEl.textContent = 'Please enter both email and password.';
-          return;
-        }
-        if (password.length < 6) {
-          messageEl.style.color = 'red';
-          messageEl.textContent = 'Password should be at least 6 characters.';
-          return;
-        }
+            console.log("Register attempt with email:", email); // Log input, do not log password
+            
+            // Basic input validation
+            if (!email || !password) {
+              messageEl.style.color = 'red';
+              messageEl.textContent = 'Please enter both email and password.';
+              console.log("Validation failed: Email or password missing.");
+              return;
+            }
+            if (password.length < 6) {
+              messageEl.style.color = 'red';
+              messageEl.textContent = 'Password should be at least 6 characters.';
+              console.log("Validation failed: Password too short.");
+              return;
+            }
 
-        registerBtn.disabled = true; // Disable button to prevent multiple clicks
-        try {
-          // Create user with email and password
-          await auth.createUserWithEmailAndPassword(email, password);
-          messageEl.style.color = 'green';
-          messageEl.textContent = `Registration successful! Welcome ${email}`;
-          console.log("Registration successful."); // Debugging: Confirm registration success
+            registerBtn.disabled = true; // Disable button to prevent multiple clicks
+            try {
+              const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+              console.log("createUserWithEmailAndPassword successful for user:", userCredential.user.email);
+              messageEl.style.color = 'green';
+              messageEl.textContent = `Registration successful! Welcome ${email}`;
 
-          // Redirect after successful registration
-          const params = new URLSearchParams(window.location.search);
-          // Ensure the redirect URL points correctly to your article page
-          const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/posts/so-long-pops';
-          window.location.href = redirectUrl;
-        } catch (error) {
-          messageEl.style.color = 'red';
-          messageEl.textContent = `Error: ${error.message}`;
-          console.error("Registration error:", error); // Debugging: Log registration error
-        } finally {
-          registerBtn.disabled = false; // Re-enable button
-        }
-      });
+              // Redirect after successful registration
+              const params = new URLSearchParams(window.location.search);
+              const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/posts/so-long-pops';
+              console.log("Redirecting to:", redirectUrl);
+              window.location.href = redirectUrl;
+            } catch (error) {
+              messageEl.style.color = 'red';
+              messageEl.textContent = `Error: ${error.message}`;
+              console.error("Registration error:", error);
+            } finally {
+              registerBtn.disabled = false; // Re-enable button
+            }
+          });
+      } else {
+          console.error("Register button element not found. Check ID 'register-btn'.");
+      }
 
       // Event listener for the Login button
-      loginBtn.addEventListener('click', async () => {
-        console.log("Login button clicked."); // Debugging: Confirm click event
-        messageEl.textContent = ''; // Clear previous messages
-        const email = document.getElementById('login-email').value.trim();
-        const password = document.getElementById('login-password').value;
+      if (loginBtn) { // Defensive check
+          loginBtn.addEventListener('click', async () => {
+            console.log("Login button clicked.");
+            messageEl.textContent = ''; // Clear previous messages
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
 
-        // Basic input validation
-        if (!email || !password) {
-          messageEl.style.color = 'red';
-          messageEl.textContent = 'Please enter both email and password.';
-          return;
-        }
+            console.log("Login attempt with email:", email); // Log input, do not log password
 
-        loginBtn.disabled = true; // Disable button to prevent multiple clicks
-        try {
-          // Sign in user with email and password
-          await auth.signInWithEmailAndPassword(email, password);
-          messageEl.style.color = 'green';
-          messageEl.textContent = `Login successful! Welcome back ${email}`;
-          console.log("Login successful."); // Debugging: Confirm login success
+            // Basic input validation
+            if (!email || !password) {
+              messageEl.style.color = 'red';
+              messageEl.textContent = 'Please enter both email and password.';
+              console.log("Validation failed: Email or password missing.");
+              return;
+            }
 
-          // Redirect after successful login
-          const params = new URLSearchParams(window.location.search);
-          // Ensure the redirect URL points correctly to your article page
-          const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/posts/so-long-pops';
-          window.location.href = redirectUrl;
-        } catch (error) {
-          messageEl.style.color = 'red';
-          messageEl.textContent = `Error: ${error.message}`;
-          console.error("Login error:", error); // Debugging: Log login error
-        } finally {
-          loginBtn.disabled = false; // Re-enable button
-        }
-      });
+            loginBtn.disabled = true; // Disable button to prevent multiple clicks
+            try {
+              const userCredential = await auth.signInWithEmailAndPassword(email, password);
+              console.log("signInWithEmailAndPassword successful for user:", userCredential.user.email);
+              messageEl.style.color = 'green';
+              messageEl.textContent = `Login successful! Welcome back ${email}`;
+
+              // Redirect after successful login
+              const params = new URLSearchParams(window.location.search);
+              const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/posts/so-long-pops';
+              console.log("Redirecting to:", redirectUrl);
+              window.location.href = redirectUrl;
+            } catch (error) {
+              messageEl.style.color = 'red';
+              messageEl.textContent = `Error: ${error.message}`;
+              console.error("Login error:", error);
+            } finally {
+              loginBtn.disabled = false; // Re-enable button
+            }
+          });
+      } else {
+          console.error("Login button element not found. Check ID 'login-btn'.");
+      }
 
       // Listen for authentication state changes
       auth.onAuthStateChanged((user) => {
         if (user) {
           console.log('User logged in (onAuthStateChanged):', user.email);
-          // Redirect if user is already logged in when landing on this page
           const params = new URLSearchParams(window.location.search);
           const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/posts/so-long-pops';
-          // Only redirect if not already on the target page to prevent infinite loops
-          if (!window.location.href.includes(redirectUrl)) {
+
+          // Prevent unnecessary redirects if already on the target page
+          // This check is important to prevent infinite redirects if signup.html and the target page share the same domain root
+          if (window.location.href !== redirectUrl && !window.location.href.includes(redirectUrl.split('?')[0])) {
+            console.log("Redirecting due to authenticated state:", redirectUrl);
             window.location.href = redirectUrl;
+          } else {
+            console.log("Already on the target page or equivalent, no redirect needed.");
           }
         } else {
-          console.log('User logged out (onAuthStateChanged).');
-          authContainer.style.display = 'block';
+          console.log('User logged out (onAuthStateChanged). Displaying auth container.');
+          if (authContainer) {
+              authContainer.style.display = 'block'; // Ensure the auth form is visible if logged out
+          } else {
+              console.error("Auth container element not found. Check ID 'auth-container'.");
+          }
         }
       });
     })();
