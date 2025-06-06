@@ -16,10 +16,13 @@
     "url": "https://github.com/SportsSquare/sportssquare/issues"
   },
   "homepage": "https://github.com/SportsSquare/sportssquare#readme",
-  "description": "",
   "dependencies": {
     "@capacitor/android": "^7.2.0",
     "@capacitor/cli": "^7.2.0",
-    "@capacitor/core": "^7.2.0"
-  }
+    "@capacitor/core": "^7.2.0",
+    "express": "^5.1.0",
+    "firebase": "^11.8.1",
+    "socket.io": "^4.8.1"
+  },
+  "description": ""
 }
