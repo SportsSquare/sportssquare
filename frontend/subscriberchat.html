@@ -5,69 +5,317 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Chat with Admin Controls, Display Names & Editing</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    padding: 20px;
-  }
-  h2 {
-    text-align: center;
-  }
-  #messages {
-    border: 1px solid #ccc;
-    padding: 10px;
-    height: 300px;
-    overflow-y: auto;
-    margin-bottom: 20px;
-    background: white;
-  }
-  .message {
-    margin-bottom: 10px;
-    padding: 8px;
-    border-radius: 5px;
-    background: #fafafa;
-    position: relative;
-  }
-  .admin-controls {
-    margin-top: 6px;
-  }
-  input[type="text"] {
-    padding: 5px;
-  }
-  button {
-    padding: 5px 10px;
-    margin-left: 4px;
-    cursor: pointer;
-  }
-  #adminPanel {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #e9ecef;
-    border-radius: 5px;
-  }
-  #userStatus {
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
-  .message strong {
-    color: #007bff;
-    cursor: default;
-  }
-  .message small {
-    color: #6c757d;
-    margin-left: 6px;
-  }
-  .message .admin-controls button:hover {
-    background-color: #007bff;
-    color: white;
-  }
-  #profileSection {
-    margin-bottom: 15px;
-  }
-  #profileSection input {
-    width: 70%;
-  }
+    body {
+      background-color: rgb(249, 251, 231);
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    nav ul {
+      list-style-type: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .flex-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .post-card {
+      border: 1px solid black;
+      padding: 20px;
+      width: 300px;
+      background-color: white;
+      border-radius: 10px;
+    }
+    aside.poll-box {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      font-family: 'Segoe UI', sans-serif;
+      max-width: 300px;
+      width: 100%;
+    }
+    aside.poll-box h3 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      color: #333;
+    }
+    aside.poll-box ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    aside.poll-box li {
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      background: #f9f9f9;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    aside.poll-box li:hover {
+      background: #e0e0e0;
+    }
+    .message {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    .message strong {
+      color: #333;
+    }
+    .message small {
+      color: #666;
+      font-size: 0.8em;
+    }
+    .message .admin-controls {
+      display: none;
+      margin-top: 5px;
+    }
+    .message .admin-controls button {
+      margin-right: 5px;
+      padding: 2px 5px;
+      font-size: 0.8em;
+    }
+    #adminPanel {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+    }
+    #adminPanel h3 {
+      margin-top: 0;
+    }
+    #adminPanel input {
+      width: 70%;
+      padding: 5px;
+      margin-right: 5px;
+    }
+    #adminPanel button {
+      padding: 5px 10px;
+      font-size: 0.9em;
+    }
+    #profileSection {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+    }
+    #profileSection input {
+      width: 70%;
+      padding: 5px;
+      margin-right: 5px;
+    }
+    #profileSection button {
+      padding: 5px 10px;
+      font-size: 0.9em;
+    }
+    #userStatus {
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+    #messages {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 5px;
+    }
+    #msgInput {
+      width: 70%;
+      padding: 5px;
+      margin-right: 5px;
+    }
+    #sendBtn {
+      padding: 5px 10px;
+      font-size: 0.9em;
+    }
+    #banUserIdInput {
+      width: 60%;
+      padding: 5px;
+      margin-right: 5px;
+    }
+    #banUserBtn, #unbanUserBtn {
+      padding: 5px 10px;
+      font-size: 0.9em;
+    }
+    .message input[type="text"] {
+      width: 80%;
+      padding: 5px;
+      margin-right: 5px;
+    }
+    .message button {
+      padding: 5px 10px;
+      font-size: 0.9em;
+    }
+    .message .edited-label {
+      font-style: italic;
+      color: #888;
+    }
+    .message .admin-controls {
+      display: flex;
+      gap: 5px;
+      margin-top: 5px;
+    }
+    .message .admin-controls button {
+      padding: 3px 6px;
+      font-size: 0.8em;
+    }
+    .message .admin-controls small {
+      display: block;
+      margin-top: 5px;
+      color: #666;
+    }
+    #loginBtn {
+      padding: 5px 10px;
+      font-size: 0.9em;
+      margin-left: 10px;
+    }
+    #loginBtn:hover {
+      background-color: #ddd;
+    }
+    #displayNameInput {
+      width: 70%;
+      padding: 5px;
+      margin-right: 5px;
+    }
+    #saveDisplayNameBtn {
+      padding: 5px 10px;
+      font-size: 0.9em;
+    }
+    #saveDisplayNameBtn:hover {
+      background-color: #ddd;
+    }
+    #userStatus, #profileSection, #adminPanel {
+      margin-bottom: 20px;
+    }
+    #messages {
+      margin-bottom: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 5px;
+    }
+    #msgInput {
+      width: 70%;
+      padding: 5px;
+      margin-right: 5px;
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    #sendBtn {
+      padding: 5px 10px;
+      font-size: 0.9em;
+      background-color: #3ee243;
+    color: black;
+      border: none;
+      border-radius: 5px;
+    }
+    #banUserIdInput {
+      width: 60%;
+      padding: 5px;
+      margin-right: 5px;
+    }
+    #banUserBtn, #unbanUserBtn {
+      padding: 5px 10px;
+      font-size: 0.9em;
+    }
+    #banUserBtn:hover, #unbanUserBtn:hover {
+      background-color: #ddd;
+    }
+    #loginBtn {
+      padding: 5px 10px;
+      font-size: 0.9em;
+      margin-left: 10px;
+        background-color: #3ee243;
+        color: black;
+        border: none;
+        border-radius: 5px;
+    }
+    #loginBtn:hover {
+      background-color: #ddd;
+    }
+    #displayNameInput {
+      width: 70%;
+      padding: 5px;
+      margin-right: 5px;
+    }
+    #saveDisplayNameBtn {
+      padding: 5px 10px;
+      font-size: 0.9em;
+    }
+    #saveDisplayNameBtn:hover {
+      background-color: #ddd;
+    }
+    #userStatus, #profileSection, #adminPanel {
+      margin-bottom: 20px;
+    }
+    #messages {
+      margin-bottom: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 5px;
+    }
+    #msgInput {
+      width: 70%;
+      padding: 5px;
+      margin-right: 5px;
+    }
+    #sendBtn {
+      padding: 5px 10px;
+      font-size: 0.9em;
+    }
+    #banUserIdInput {
+      width: 60%;
+      padding: 5px;
+      margin-right: 5px;
+    }
+    #banUserBtn, #unbanUserBtn {
+      padding: 5px 10px;
+      font-size: 0.9em;
+    }
+    #banUserBtn:hover, #unbanUserBtn:hover {
+      background-color: #ddd;
+    }
+    #loginBtn {
+      padding: 5px 10px;
+      font-size: 0.9em;
+      margin-left: 10px;
+    }
+    #loginBtn:hover {
+      background-color: #ddd;
+    }
+    #displayNameInput {
+      width: 70%;
+      padding: 5px;
+      margin-right: 5px;
+    }
+    #saveDisplayNameBtn {
+      padding: 5px 10px;
+      font-size: 0.9em;
+    }
+    #saveDisplayNameBtn:hover {
+      background-color: #ddd;
+    }
 </style>
 </head>
 <body>
@@ -340,6 +588,6 @@
     unbanUser(uid);
   };
 </script>
-
+<script src="./notifications.js"></script>
 </body>
 </html>
