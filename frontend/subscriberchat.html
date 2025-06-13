@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Chat with Admin Controls, Display Names & Editing</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    padding: 20px;
+  }
+  h2 {
+    text-align: center;
+  }
+  #messages {
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 300px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    background: white;
+  }
+  .message {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    background: #fafafa;
+    position: relative;
+  }
+  .admin-controls {
+    margin-top: 6px;
+  }
+  input[type="text"] {
+    padding: 5px;
+  }
+  button {
+    padding: 5px 10px;
+    margin-left: 4px;
+    cursor: pointer;
+  }
+  #adminPanel {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+  }
+  #userStatus {
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  .message strong {
+    color: #007bff;
+    cursor: default;
+  }
+  .message small {
+    color: #6c757d;
+    margin-left: 6px;
+  }
+  .message .admin-controls button:hover {
+    background-color: #007bff;
+    color: white;
+  }
+  #profileSection {
+    margin-bottom: 15px;
+  }
+  #profileSection input {
+    width: 70%;
+  }
+</style>
+</head>
+<body>
+
+<h2>Chat Room</h2>
+
+<div id="userStatus">Loading user...</div>
+
+<div id="profileSection" style="display:none;">
+  <input type="text" id="displayNameInput" placeholder="Set your display name" />
+  <button id="saveDisplayNameBtn">Save Display Name</button>
+</div>
+
+<div id="messages"></div>
+
+<div>
+  <input type="text" id="msgInput" placeholder="Type a message..." style="width:75%" />
+  <button id="sendBtn">Send</button>
+</div>
+
+<div id="adminPanel" style="display:none;">
+  <h3>Admin Controls</h3>
+  <input type="text" id="banUserIdInput" placeholder="User UID to ban/unban" style="width: 70%" />
+  <button id="banUserBtn">Ban User</button>
+  <button id="unbanUserBtn">Unban User</button>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+
+<script>
+  // Your Firebase config here
+  const firebaseConfig = {
+    apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+    authDomain: "sportssquare-b96ed.firebaseapp.com",
+    databaseURL: "https://sportssquare-b96ed-default-rtdb.firebaseio.com",
+    projectId: "sportssquare-b96ed",
+    storageBucket: "sportssquare-b96ed.firebasestorage.app",
+    messagingSenderId: "844736978057",
+    appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  const auth = firebase.auth();
+  const db = firebase.database();
+
+  const userStatus = document.getElementById('userStatus');
+  const messagesDiv = document.getElementById('messages');
+  const msgInput = document.getElementById('msgInput');
+  const sendBtn = document.getElementById('sendBtn');
+
+  const adminPanel = document.getElementById('adminPanel');
+  const banUserIdInput = document.getElementById('banUserIdInput');
+  const banUserBtn = document.getElementById('banUserBtn');
+  const unbanUserBtn = document.getElementById('unbanUserBtn');
+
+  const profileSection = document.getElementById('profileSection');
+  const displayNameInput = document.getElementById('displayNameInput');
+  const saveDisplayNameBtn = document.getElementById('saveDisplayNameBtn');
+
+  let currentUser = null;
+  let isAdmin = false;
+
+  function escapeHTML(text) {
+    return text.replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[c]);
+  }
+
+  function updateUserStatus(user) {
+    if (user) {
+      currentUser = user;
+      // Load display name from DB
+      db.ref('users/' + user.uid).once('value').then(snap => {
+        const displayName = snap.val()?.displayName || user.displayName || user.email || 'Anonymous';
+        userStatus.textContent = `Logged in as: ${displayName} (UID: ${user.uid})`;
+        displayNameInput.value = displayName;
+        profileSection.style.display = 'block';
+      });
+      checkAdmin(user.uid);
+    } else {
+      userStatus.innerHTML = `Not logged in. <button id="loginBtn">Log In</button>`;
+      document.getElementById('loginBtn').onclick = () => {
+        auth.signInAnonymously();
+      };
+      currentUser = null;
+      isAdmin = false;
+      adminPanel.style.display = 'none';
+      profileSection.style.display = 'none';
+    }
+  }
+
+  function checkAdmin(uid) {
+    db.ref('admins/' + uid).once('value').then(snap => {
+      isAdmin = snap.exists() && snap.val() === true;
+      adminPanel.style.display = isAdmin ? 'block' : 'none';
+      loadMessages(); // reload messages on admin change for controls
+    });
+  }
+
+  auth.onAuthStateChanged(user => {
+    updateUserStatus(user);
+    loadMessages();
+  });
+
+  saveDisplayNameBtn.onclick = () => {
+    if (!currentUser) return alert('Log in first');
+    const newName = displayNameInput.value.trim();
+    if (!newName) return alert('Display name cannot be empty');
+    db.ref('users/' + currentUser.uid).update({ displayName: newName })
+      .then(() => {
+        alert('Display name saved!');
+        userStatus.textContent = `Logged in as: ${newName} (UID: ${currentUser.uid})`;
+        loadMessages(); // reload to update usernames in messages
+      })
+      .catch(console.error);
+  };
+
+  sendBtn.onclick = async () => {
+    if (!currentUser) {
+      alert('Please log in to chat.');
+      return;
+    }
+    const bannedSnap = await db.ref('bannedUsers/' + currentUser.uid).get();
+    if (bannedSnap.exists() && bannedSnap.val() === true) {
+      alert('You are banned from chatting.');
+      return;
+    }
+    const text = msgInput.value.trim();
+    if (!text) return;
+
+    const userSnap = await db.ref('users/' + currentUser.uid).once('value');
+    const displayName = userSnap.val()?.displayName || currentUser.displayName || currentUser.email || 'Anonymous';
+
+    const messageData = {
+      text,
+      username: displayName,
+      uid: currentUser.uid,
+      timestamp: Date.now(),
+      ip: "N/A"
+    };
+    await db.ref('messages').push(messageData);
+    msgInput.value = '';
+  };
+
+  function loadMessages() {
+    messagesDiv.innerHTML = '';
+    db.ref('messages').off();
+
+    db.ref('messages').on('child_added', snap => {
+      addMessageToDOM(snap.key, snap.val());
+    });
+    db.ref('messages').on('child_changed', snap => {
+      updateMessageInDOM(snap.key, snap.val());
+    });
+    db.ref('messages').on('child_removed', snap => {
+      const el = document.getElementById('msg-' + snap.key);
+      if (el) el.remove();
+    });
+  }
+
+  function addMessageToDOM(key, msg) {
+    if (document.getElementById('msg-' + key)) return; // prevent duplicates
+    const div = document.createElement('div');
+    div.className = 'message';
+    div.id = 'msg-' + key;
+
+    const time = new Date(msg.timestamp).toLocaleTimeString();
+    const userName = escapeHTML(msg.username);
+    const text = escapeHTML(msg.text);
+    const editedLabel = msg.edited ? ' <em>(edited)</em>' : '';
+
+    let html = `<strong title="UID: ${msg.uid}">${userName}</strong> <small>${time}${editedLabel}</small><br><span id="msg-text-${key}">${text}</span>`;
+
+    if (currentUser && currentUser.uid === msg.uid) {
+      html += ` <button onclick="startEditMessage('${key}')">Edit</button>`;
+    }
+    if (isAdmin) {
+      html += `<div class="admin-controls">
+        <button onclick="banUser('${msg.uid}')">Ban User</button>
+        <button onclick="unbanUser('${msg.uid}')">Unban User</button>
+        <button onclick="deleteMessage('${key}')">Delete Msg</button><br>
+        <small>IP: ${msg.ip}</small>
+      </div>`;
+    }
+
+    div.innerHTML = html;
+    messagesDiv.appendChild(div);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+
+  function updateMessageInDOM(key, msg) {
+    const span = document.getElementById('msg-text-' + key);
+    if (span) {
+      span.textContent = msg.text;
+      // update edited label
+      const msgDiv = document.getElementById('msg-' + key);
+      if (msgDiv) {
+        const timeSmall = msgDiv.querySelector('small');
+        if (timeSmall) {
+          const time = new Date(msg.timestamp).toLocaleTimeString();
+          const editedLabel = msg.edited ? ' (edited)' : '';
+          timeSmall.innerHTML = time + editedLabel;
+        }
+      }
+    }
+  }
+
+  window.startEditMessage = function(messageKey) {
+    const span = document.getElementById('msg-text-' + messageKey);
+    if (!span) return;
+    const oldText = span.textContent;
+    span.innerHTML = `<input type="text" id="edit-input-${messageKey}" value="${oldText}" style="width:80%" /> 
+                      <button onclick="saveEditMessage('${messageKey}')">Save</button> 
+                      <button onclick="cancelEditMessage('${messageKey}', '${oldText.replace(/'/g,"\\'")}')">Cancel</button>`;
+  };
+
+  window.saveEditMessage = function(messageKey) {
+    const input = document.getElementById('edit-input-' + messageKey);
+    if (!input) return;
+    const newText = input.value.trim();
+    if (!newText) return alert('Message cannot be empty');
+    db.ref('messages/' + messageKey).update({ text: newText, edited: true })
+      .then(() => {
+        loadMessages();
+      })
+      .catch(console.error);
+  };
+
+  window.cancelEditMessage = function(messageKey, oldText) {
+    const span = document.getElementById('msg-text-' + messageKey);
+    if (span) {
+      span.textContent = oldText;
+    }
+  };
+
+  window.banUser = function(uid) {
+    if (!isAdmin) return alert('Admins only');
+    if (!uid) return alert('UID required');
+    db.ref('bannedUsers/' + uid).set(true)
+      .then(() => alert('User banned'))
+      .catch(console.error);
+  };
+
+  window.unbanUser = function(uid) {
+    if (!isAdmin) return alert('Admins only');
+    if (!uid) return alert('UID required');
+    db.ref('bannedUsers/' + uid).remove()
+      .then(() => alert('User unbanned'))
+      .catch(console.error);
+  };
+
+  window.deleteMessage = function(messageKey) {
+    if (!isAdmin) return alert('Admins only');
+    db.ref('messages/' + messageKey).remove()
+      .catch(console.error);
+  };
+
+  banUserBtn.onclick = () => {
+    const uid = banUserIdInput.value.trim();
+    if (!uid) return alert('Enter a UID');
+    banUser(uid);
+  };
+  unbanUserBtn.onclick = () => {
+    const uid = banUserIdInput.value.trim();
+    if (!uid) return alert('Enter a UID');
+    unbanUser(uid);
+  };
+</script>
+
+</body>
+</html>
