@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Recorder with Pitch/Tempo Adjustment for Embedding</title>
+    <title>Audio Recorder with Episode Metadata & Pitch Adjustment</title>
     <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -37,21 +37,71 @@
         input[type="range"]:hover {
             opacity: 1; /* Full opacity on hover */
         }
+        /* Style for loading/error states */
+        .auth-status-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8fafc;
+            text-align: center;
+        }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
-    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-2xl border border-gray-200">
+
+    <!-- Loading/Auth Status Message - Initially visible -->
+    <div id="authStatus" class="auth-status-container">
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-200">
+            <h1 class="text-3xl font-extrabold text-blue-600 mb-4" id="authStatusHeading">Authenticating...</h1>
+            <p class="text-gray-700 mb-6" id="authStatusMessage">Attempting to establish connection and authenticate access.</p>
+            <p id="authErrorMessage" class="text-red-600 font-medium hidden"></p>
+        </div>
+    </div>
+
+    <!-- Main Content - Initially hidden until Firebase authentication succeeds -->
+    <div id="mainContent" class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-2xl border border-gray-200 hidden">
         <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-6">Record Audio & Adjust Pitch/Tempo</h1>
 
-        <!-- Post Text Area (for reference while reading) -->
+        <!-- Metadata Input Fields (NEW) -->
+        <div class="mb-6 space-y-4">
+            <div>
+                <label for="episodeTitle" class="block text-gray-700 text-sm font-medium mb-2">Episode Title:</label>
+                <input type="text" id="episodeTitle"
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out"
+                       placeholder="e.g., NFL Draft Recap 2025">
+            </div>
+            <div>
+                <label for="episodeCategory" class="block text-gray-700 text-sm font-medium mb-2">Category:</label>
+                <select id="episodeCategory"
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out">
+                    <option value="">Select a Category</option>
+                    <option value="NFL">NFL</option>
+                    <option value="NBA">NBA</option>
+                    <option value="MLB">MLB</option>
+                    <option value="NHL">NHL</option>
+                    <option value="Article Read-Aloud">Article Read-Aloud</option>
+                    <option value="Today's Daily News">Today's Daily News</option>
+                </select>
+            </div>
+            <div>
+                <label for="episodeDescription" class="block text-gray-700 text-sm font-medium mb-2">Episode Description / Show Notes:</label>
+                <textarea id="episodeDescription"
+                          class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out h-32 resize-y"
+                          placeholder="Provide a brief summary or show notes for this episode."></textarea>
+            </div>
+        </div>
+
+        <!-- Original Post Text Area (for reference while reading) -->
         <div class="mb-6">
             <label for="postText" class="block text-gray-700 text-sm font-medium mb-2">
-                Your Article Content (for reference while reading):
+                Original Article Content (for your reference while recording):
             </label>
             <textarea id="postText"
                       class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out h-40 resize-y"
-                      placeholder="Paste the post you want to read here, or just keep it blank."></textarea>
+                      placeholder="Paste the original article text you want to read here. (This content is NOT included in the embed code for the public page; use Episode Description instead)."></textarea>
         </div>
+
 
         <!-- Recording Controls -->
         <div class="flex gap-4 mb-6">
@@ -96,19 +146,54 @@
                 </button>
             </div>
 
-            <h2 class="text-xl font-semibold text-gray-800 mb-3 mt-8">Copy this HTML Code to Embed:</h2>
+            <h2 class="text-xl font-semibold text-gray-800 mb-3 mt-8">Copy this FULL Episode Card HTML to Embed:</h2>
             <textarea id="embedCodeArea" readonly
-                      class="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 font-mono text-sm h-32 resize-y cursor-text select-all"
+                      class="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 font-mono text-sm h-48 resize-y cursor-text select-all"
                       aria-label="HTML code to embed recorded audio"></textarea>
             <button id="copyCodeBtn"
                     class="mt-4 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50">
-                Copy Embed Code
+                Copy Full Episode Card HTML
             </button>
         </div>
     </div>
 
     <script type="module">
+        // Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // Firebase Configuration (Hardcoded with your provided values)
+        const firebaseConfig = {
+            apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+            authDomain: "sportssquare-b96ed.firebaseapp.com",
+            databaseURL: "https://sportssquare-b96ed-default-rtdb.firebaseio.com",
+            projectId: "sportssquare-b96ed",
+            storageBucket: "sportssquare-b96ed.firebasestorage.app",
+            messagingSenderId: "844736978057",
+            appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+        };
+
+        // Your specific UID (Only this user can access the recorder)
+        const OWNER_UID = "ibLtQvJhIPN2icV7IyB1IUIgzN12";
+
+        let app;
+        let auth;
+        let currentUserId = null; // Will be set after authentication
+        let authReady = false; // Flag to indicate if authentication is complete
+
         // UI Elements
+        const mainContentDiv = document.getElementById('mainContent');
+        const authStatusDiv = document.getElementById('authStatus');
+        const authStatusHeading = document.getElementById('authStatusHeading');
+        const authStatusMessage = document.getElementById('authStatusMessage');
+        const authErrorMessageDiv = document.getElementById('authErrorMessage');
+
+        // NEW Metadata Fields
+        const episodeTitleInput = document.getElementById('episodeTitle');
+        const episodeCategorySelect = document.getElementById('episodeCategory');
+        const episodeDescriptionTextarea = document.getElementById('episodeDescription');
+        const postText = document.getElementById('postText'); // Renamed for clarity as "Original Article Content"
+
         const startRecordingBtn = document.getElementById('startRecordingBtn');
         const stopRecordingBtn = document.getElementById('stopRecordingBtn');
         const statusDiv = document.getElementById('status');
@@ -160,6 +245,59 @@
             messageArea.classList.add('hidden');
         }
 
+        function showAuthStatus(heading, msg, isError = false) {
+            authStatusHeading.textContent = heading;
+            authStatusMessage.textContent = msg;
+            if (isError) {
+                authStatusHeading.classList.remove('text-blue-600');
+                authStatusHeading.classList.add('text-red-600');
+                authErrorMessageDiv.textContent = msg;
+                authErrorMessageDiv.classList.remove('hidden');
+            } else {
+                authStatusHeading.classList.remove('text-red-600');
+                authStatusHeading.classList.add('text-blue-600');
+                authErrorMessageDiv.classList.add('hidden');
+            }
+            authStatusDiv.classList.remove('hidden');
+            mainContentDiv.classList.add('hidden');
+        }
+
+        // --- Firebase Initialization and Auth ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Initialize Firebase App with hardcoded config
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+
+                // Listen for auth state changes to control access
+                onAuthStateChanged(auth, async (user) => {
+                    if (user && user.uid === OWNER_UID) {
+                        currentUserId = user.uid;
+                        authReady = true;
+                        authStatusDiv.classList.add('hidden'); // Hide authentication status
+                        mainContentDiv.classList.remove('hidden'); // Show main content
+                        showMessage("Authenticated successfully. Ready to record.", "success");
+                    } else if (user && user.uid !== OWNER_UID) {
+                        // Authenticated but not the owner
+                        showAuthStatus("Access Denied", "You are authenticated, but only the owner can access this tool.", true);
+                    }
+                    else {
+                        // User is not authenticated or a custom token failed to sign them in.
+                        // Since we require OWNER_UID, we show access denied.
+                        showAuthStatus("Access Denied", "Authentication required. Only the owner can access this tool.", true);
+                    }
+                });
+
+                // Initialize slider display
+                pitchRateValueDisplay.textContent = `${parseFloat(pitchRateSlider.value).toFixed(2)}x`;
+
+            } catch (error) {
+                console.error("Error initializing Firebase:", error);
+                showAuthStatus("Initialization Failed", `Firebase setup error: ${error.message}. Recorder will not function.`, true);
+            }
+        });
+
+
         // --- Recording Functions ---
 
         async function startRecording() {
@@ -196,22 +334,13 @@
                     generatePitchedEmbedBtn.disabled = false;
                     generatePitchedEmbedBtn.classList.remove('disabled-btn');
 
-                    // Automatically generate embed code for the *original* audio initially
-                    // User will click a separate button to generate for the pitched version.
-                    blobToBase64(originalAudioBlob)
-                        .then(base64Audio => {
-                            const embedCode = `<audio controls src="${base64Audio}" type="${originalAudioBlob.type}"></audio>`;
-                            embedCodeArea.value = embedCode;
-                        })
-                        .catch(e => {
-                            console.error('Error generating original Base64 embed:', e);
-                            embedCodeArea.value = `Error generating embed code for original audio: ${e.message}`;
-                        });
+                    // No longer generate embed code for original here, wait for dedicated button
+                    embedCodeArea.value = ''; // Clear previous embed code
 
                     // Clean up stream tracks
                     stream.getTracks().forEach(track => track.stop());
 
-                    statusDiv.textContent = 'Recording stopped. Adjust pitch/tempo or copy embed code.';
+                    statusDiv.textContent = 'Recording stopped. Adjust pitch/tempo and generate embed code.';
                 };
 
                 mediaRecorder.start(); // Start recording
@@ -264,7 +393,16 @@
                 return;
             }
 
-            showMessage("Processing audio with pitch adjustment...", "info");
+            const episodeTitle = episodeTitleInput.value.trim();
+            const episodeCategory = episodeCategorySelect.value;
+            const episodeDescription = episodeDescriptionTextarea.value.trim();
+
+            if (!episodeTitle || !episodeCategory || !episodeDescription) {
+                showMessage("Please fill in Episode Title, Category, and Description before generating embed code.", "error");
+                return;
+            }
+
+            showMessage("Processing audio with pitch adjustment and generating embed code...", "info");
             generatePitchedEmbedBtn.disabled = true;
             generatePitchedEmbedBtn.classList.add('disabled-btn');
             embedCodeArea.value = 'Generating new audio and embed code...';
@@ -307,11 +445,36 @@
                     downloadLink.download = `pitched-audio-${Date.now()}.webm`;
                     downloadLink.textContent = 'Download Pitched Audio'; // Change text to reflect pitched audio
 
-                    // Generate and display the new embed code
-                    const embedCode = `<audio controls src="${base64Audio}" type="${newAudioBlob.type}"></audio>`;
-                    embedCodeArea.value = embedCode;
+                    // Generate the FULL episode card HTML (NEW)
+                    const currentDate = new Date();
+                    const formattedDate = currentDate.toLocaleString(); // e.g., "6/18/2025, 2:22:00 PM"
+                    const dataDateAttribute = currentDate.toISOString().slice(0, 19); // YYYY-MM-DDTHH:MM:SS for sorting
 
-                    showMessage("Pitched audio generated and embed code updated!", "success");
+                    const episodeCardHTML = `
+<div class="episode-card" data-category="${episodeCategory}" data-date="${dataDateAttribute}">
+    <div class="flex justify-between items-center mb-2">
+        <h2 class="text-xl font-bold text-blue-800">Episode: ${episodeTitle}</h2>
+        <span class="text-sm font-semibold text-purple-700 bg-purple-100 px-3 py-1 rounded-full">${episodeCategory}</span>
+    </div>
+    <p class="text-gray-700 text-base leading-relaxed mb-2">
+        **Date:** ${formattedDate}<br>
+        ${episodeDescription}
+    </p>
+    <audio controls class="w-full">
+        <source src="${base64Audio}" type="${newAudioBlob.type}">
+        Your browser does not support the audio element.
+    </audio>
+    <div class="flex justify-end mt-4">
+        <a href="${base64Audio}" download="${episodeTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}-${Date.now()}.webm"
+           class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50">
+            Download Episode
+        </a>
+    </div>
+</div>
+`;
+                    embedCodeArea.value = episodeCardHTML.trim(); // Trim whitespace for cleaner copy
+
+                    showMessage("Pitched audio generated and FULL episode card HTML updated! Copy and paste this into your public page.", "success");
                     generatePitchedEmbedBtn.disabled = false;
                     generatePitchedEmbedBtn.classList.remove('disabled-btn');
 
@@ -343,7 +506,7 @@
             embedCodeArea.select();
             try {
                 document.execCommand('copy'); // Fallback for navigator.clipboard.writeText due to iframe restrictions
-                showMessage("HTML embed code copied to clipboard!", "success");
+                showMessage("FULL Episode Card HTML copied to clipboard!", "success");
             } catch (err) {
                 console.error('Failed to copy text:', err);
                 showMessage("Failed to copy code. Please manually select and copy.", "error");
