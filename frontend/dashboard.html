@@ -1,77 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
-     crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard - Online Users</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { margin-bottom: 20px; }
+    table { border-collapse: collapse; width: 100%; max-width: 600px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f4f4f4; }
+    .online { color: green; font-weight: bold; }
+    .offline { color: red; font-weight: bold; }
+  </style>
 </head>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-6CR81XMZN5');
-</script>
-<script src="./notifications.js"></script>
-<style>
-    body {
-        background-color: rgb(249, 251, 231);
-        font-family: 'Montserrat', sans-serif;
-        text-align: center;
-        padding: 50px;
-    }
-    h1 {
-        color: blue;
-    }
-</style>
 <body>
-    <h1>Sports Square Admin Dashboard</h1>
-    <div class="solongpopsclicks">0</div>
-    <div class="solongpopsviews">0</div>
-</body>
-<script>
-    const userName = prompt("Username (for admin access):");
-    const password = prompt("Password (for admin access):");
-    if (userName !== "Smayan" || password !== "SSAdmin123") {
-        alert("Access denied. Incorrect username or password.");
-        window.location.href = "https://sportssquare.netlify.app";
-    } else {
-        alert("Access granted. Welcome to the admin dashboard!");
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-      fetch('so-long-pops.html')
-        .then(response => response.text())
-        .then(data => {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(data, 'text/html');
+  <h1>Admin Dashboard: Online Users</h1>
+  <div id="statusMessage">Checking admin privileges...</div>
+  <table id="usersTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>User UID</th>
+        <th>Status</th>
+        <th>Last Changed</th>
+      </tr>
+    </thead>
+    <tbody id="usersList"></tbody>
+  </table>
 
-          const clicksElement = doc.querySelector('#solongpopsclicks');
-          const viewsElement = doc.querySelector('#solongpopsviews');
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
 
-          if (clicksElement && viewsElement) {
-            const statsContainer = document.getElementById('stats-container');
+  <!-- Your config -->
+  <script src="./firebase-config.js"></script>
+  <script src="./presence.js"></script>
 
-            const clicksDisplay = document.createElement('p');
-            clicksDisplay.textContent = `Clicks: ${clicksElement.textContent}`;
-            statsContainer.appendChild(clicksDisplay);
+  <script>
+    const statusMessage = document.getElementById('statusMessage');
+    const usersTable = document.getElementById('usersTable');
+    const usersList = document.getElementById('usersList');
 
-            const viewsDisplay = document.createElement('p');
-            viewsDisplay.textContent = `Views: ${viewsElement.textContent}`;
-            statsContainer.appendChild(viewsDisplay);
+    // Wait for auth state
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        statusMessage.textContent = 'You must be logged in as an admin to view this page.';
+        return;
+      }
+
+      // Check if user is admin in database
+      const adminRef = db.ref('admins/' + user.uid);
+      const snapshot = await adminRef.once('value');
+      const isAdmin = snapshot.val();
+
+      if (!isAdmin) {
+        statusMessage.textContent = 'Access denied. You are not an admin.';
+        return;
+      }
+
+      statusMessage.textContent = 'Welcome Admin! Loading user statuses...';
+      usersTable.style.display = 'table';
+
+      // Listen for changes in /status
+      const statusRef = db.ref('status');
+      statusRef.on('value', (snapshot) => {
+        const statuses = snapshot.val() || {};
+        usersList.innerHTML = '';
+
+        // Iterate over users
+        Object.entries(statuses).forEach(([uid, status]) => {
+          const tr = document.createElement('tr');
+
+          // User UID cell
+          const uidTd = document.createElement('td');
+          uidTd.textContent = uid;
+          tr.appendChild(uidTd);
+
+          // Status cell
+          const statusTd = document.createElement('td');
+          const state = status.state || 'offline';
+          statusTd.textContent = state;
+          statusTd.className = state === 'online' ? 'online' : 'offline';
+          tr.appendChild(statusTd);
+
+          // Last changed cell (formatted)
+          const lastChangedTd = document.createElement('td');
+          const timestamp = status.last_changed;
+          if (timestamp) {
+            const date = new Date(timestamp);
+            lastChangedTd.textContent = date.toLocaleString();
           } else {
-            console.error('Could not find required elements in so-long-pops.html');
+            lastChangedTd.textContent = 'N/A';
           }
-        })
-        .catch(error => console.error('Error fetching so-long-pops.html:', error));
-    });
-</script>
-<footer style="margin-top: 20px;">
-  <p>&copy; 2025 Sports Square. All rights reserved.</p>
-  <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
-</footer>
-<p><a href="./sitemap.html">Sitemap</p></a>
+          tr.appendChild(lastChangedTd);
 
+          usersList.appendChild(tr);
+        });
+
+        statusMessage.textContent = 'User statuses updated.';
+      });
+    });
+  </script>
+</body>
 </html>

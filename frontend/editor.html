@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sports Square Rich Text Editor</title>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: rgb(249, 251, 231);
+      color: #333;
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+      text-align: center;
+      /* Initially hide the body to prevent content flickering before auth check */
+      display: none;
+    }
+    #loadingMessage {
+        display: block; /* Show loading message initially */
+        text-align: center;
+        padding-top: 50px;
+        font-size: 1.2rem;
+        color: #555;
+    }
+    #accessDeniedMessage {
+        display: none; /* Hide access denied message initially */
+        text-align: center;
+        padding-top: 50px;
+        color: #e74c3c;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+    }
+    #toolbar {
+      margin-bottom: 10px;
+    }
+    #toolbar button {
+      background: #2ECC71;
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      margin-right: 5px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+    #content {
+      border: 1px solid #ccc;
+      min-height: 200px;
+      padding: 10px;
+      text-align: left;
+      font-size: 1rem;
+      background: white;
+      border-radius: 4px;
+      overflow-y: auto;
+    }
+    button#submitBtn {
+      margin-top: 15px;
+      padding: 12px 24px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #userStatus {
+      margin-bottom: 15px;
+      font-weight: bold;
+      color: #2ECC71;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+</head>
+<body>
+
+  <div id="loadingMessage">Loading editor...</div>
+
+  <div id="accessDeniedMessage">
+    <h1>Access Denied</h1>
+    <p>You do not have permission to access this page. Please log in with an authorized account.</p>
+    <button onclick="window.location.href='/login.html'">Go to Login</button>
+  </div>
+
+  <div id="editorContent" style="display: none;">
+    <h1>Sports Square Rich Text Editor</h1>
+
+    <div id="userStatus">Checking authentication...</div>
+
+    <input type="text" id="title" placeholder="Post Title" />
+    <input type="text" id="tags" placeholder="Tags (comma separated)" />
+
+    <div id="toolbar">
+      <button type="button" onclick="format('bold')" title="Bold (Ctrl+B)">B</button>
+      <button type="button" onclick="format('italic')" title="Italic (Ctrl+I)"><i>I</i></button>
+      <button type="button" onclick="format('underline')" title="Underline">U</button>
+      <button type="button" onclick="formatBlock('h1')" title="Heading 1">H1</button>
+      <button type="button" onclick="formatBlock('h2')" title="Heading 2">H2</button>
+      <button type="button" onclick="formatBlock('h3')" title="Heading 3">H3</button>
+      <button type="button" onclick="insertLink()" title="Insert Link">Link</button>
+    </div>
+
+    <div id="content" contenteditable="true" aria-label="Post content"></div>
+
+    <button id="submitBtn" disabled>Submit Post</button>
+  </div>
+
+  <script>
+    // Initialize Firebase (replace with your config)
+    const firebaseConfig = {
+      apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+      authDomain: "sportssquare-b96ed.firebaseapp.com",
+      databaseURL: "https://sportssquare-b96ed-default-rtdb.firebaseio.com",
+      projectId: "sportssquare-b96ed",
+      storageBucket: "sportssquare-b96ed.firebasestorage.app",
+      messagingSenderId: "844736978057",
+      appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    // Elements for controlling visibility
+    const loadingMessageEl = document.getElementById('loadingMessage');
+    const accessDeniedMessageEl = document.getElementById('accessDeniedMessage');
+    const editorContentEl = document.getElementById('editorContent');
+
+    const userStatusEl = document.getElementById('userStatus');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Admin UID (replace with your actual UID)
+    const ADMIN_UID = 'ibLtQvJhIPN2icV7IyB1IUIgzN12';
+
+    // Show/hide submit button and editor content based on auth state and UID
+    auth.onAuthStateChanged(user => {
+      loadingMessageEl.style.display = 'none'; // Hide loading message once auth state is known
+
+      if (user && user.uid === ADMIN_UID) {
+        // User is the specific admin. Show the editor.
+        userStatusEl.textContent = `Signed in as: ${user.email}`;
+        submitBtn.disabled = false;
+        editorContentEl.style.display = 'block'; // Show the editor content
+        document.body.style.display = 'block'; // Ensure body is visible
+        accessDeniedMessageEl.style.display = 'none'; // Hide access denied message
+      } else {
+        // User is not signed in OR is signed in but not the admin. Deny access.
+        userStatusEl.textContent = 'You do not have permission.';
+        submitBtn.disabled = true;
+        editorContentEl.style.display = 'none'; // Hide the editor content
+        document.body.style.display = 'block'; // Ensure body is visible for the message
+        accessDeniedMessageEl.style.display = 'block'; // Show access denied message
+      }
+    });
+
+    // --- Rest of your editor functions (unchanged) ---
+
+    // Formatting helpers
+    function format(command) {
+      document.execCommand(command, false, null);
+      document.getElementById('content').focus();
+    }
+
+    function formatBlock(tag) {
+      document.execCommand('formatBlock', false, tag);
+      document.getElementById('content').focus();
+    }
+
+    function insertLink() {
+      const url = prompt('Enter URL:', 'https://');
+      if (url && url !== 'https://') {
+        document.execCommand('createLink', false, url);
+      }
+      document.getElementById('content').focus();
+    }
+
+    // Sanitize title to make a file-friendly key
+    function sanitizeTitle(str) {
+      return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/[&<>"']/g, m => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[m]);
+    }
+
+    // Download file helper
+    function downloadFile(filename, content) {
+      const blob = new Blob([content], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    async function submitPost() {
+      const user = auth.currentUser;
+      // This check is redundant due to UI hiding, but good for robustness
+      if (!user || user.uid !== ADMIN_UID) {
+        alert('Access denied. You are not authorized to submit posts.');
+        return;
+      }
+
+      const title = document.getElementById('title').value.trim();
+      const tagsInput = document.getElementById('tags').value.trim();
+      const contentEl = document.getElementById('content');
+      const content = contentEl.innerHTML.trim();
+
+      if (!title || !content) {
+        alert('Please enter both title and content.');
+        return;
+      }
+
+      const tags = tagsInput.split(',')
+        .map(t => t.trim())
+        .filter(t => t.length > 0);
+
+      const postKey = sanitizeTitle(title);
+      const timestamp = Date.now();
+
+      // Prepare updates for tags node
+      const updates = {};
+      tags.forEach(tag => {
+        updates[`tags/${tag}/${postKey}`] = { title, timestamp };
+      });
+
+      try {
+        // Update tags
+        await db.ref().update(updates);
+        console.log('Tags updated in Firebase');
+
+        // Save post content under /posts
+        await db.ref(`posts/${postKey}`).set({
+          title,
+          content,
+          tags,
+          timestamp,
+          authorUid: user.uid,
+          authorEmail: user.email
+        });
+        console.log('Post content saved in Firebase');
+
+      } catch (err) {
+        console.error('Error saving post or tags:', err);
+        alert('Error saving post: ' + err.message);
+        return;
+      }
+
+      // Prepare downloadable HTML preserving formatting
+      const postHtml = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>${escapeHtml(title)}</title>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: rgb(249, 251, 231);
+      color: #333;
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+    }
+    h1, h2, h3 {
+      color: #222;
+    }
+    blockquote {
+      border-left: 4px solid #888;
+      margin-left: 0;
+      padding-left: 1rem;
+      font-style: italic;
+      color: #555;
+    }
+    a {
+      color: #2ECC71;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>${escapeHtml(title)}</h1>
+  <p><em>Tags: ${tags.map(escapeHtml).join(', ')}</em></p>
+  <div>${content}</div>
+</body>
+</html>
+`;
+
+      downloadFile(postKey + '.html', postHtml);
+      alert('Post saved as HTML file and uploaded to Firebase.');
+
+      // Optionally reset form
+      document.getElementById('title').value = '';
+      document.getElementById('tags').value = '';
+      contentEl.innerHTML = '';
+    }
+
+    submitBtn.addEventListener('click', submitPost);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tags - Sports Square</title>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: rgb(249, 251, 231);
+      color: #333;
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+    }
+    h1 {
+      color: #222;
+      text-align: center;
+    }
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .tag {
+      background-color: #2ECC71;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+      font-weight: bold;
+    }
+    .posts-list {
+      max-width: 600px;
+      margin: auto;
+    }
+    .posts-list h2 {
+      text-align: center;
+    }
+    .post-item {
+      background: white;
+      border-radius: 5px;
+      padding: 1rem;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+    }
+    .post-item a {
+      color: #2ECC71;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+</head>
+<body>
+
+  <h1>Tags - Sports Square</h1>
+
+  <div class="tag-list" id="tagList"></div>
+
+  <div class="posts-list" id="postsList"></div>
+
+  <script>
+    // Initialize Firebase (same config as editor.html)
+    const firebaseConfig = {
+    apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+    authDomain: "sportssquare-b96ed.firebaseapp.com",
+    databaseURL: "https://sportssquare-b96ed-default-rtdb.firebaseio.com",
+    projectId: "sportssquare-b96ed",
+    storageBucket: "sportssquare-b96ed.firebasestorage.app",
+    messagingSenderId: "844736978057",
+    appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+  };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const tagListEl = document.getElementById('tagList');
+    const postsListEl = document.getElementById('postsList');
+
+    // Load all tags and show them
+    db.ref('tags').once('value').then(snapshot => {
+      const tags = snapshot.val() || {};
+      // Clear
+      tagListEl.innerHTML = '';
+
+      Object.keys(tags).forEach(tag => {
+        const tagBtn = document.createElement('div');
+        tagBtn.classList.add('tag');
+        tagBtn.textContent = tag;
+        tagBtn.onclick = () => showPostsForTag(tag);
+        tagListEl.appendChild(tagBtn);
+      });
+
+      if(Object.keys(tags).length === 0) {
+        tagListEl.textContent = 'No tags found.';
+      }
+    });
+
+    // Show posts for selected tag
+    function showPostsForTag(tag) {
+      postsListEl.innerHTML = `<h2>Posts tagged with "${tag}"</h2>`;
+      db.ref(`tags/${tag}`).once('value').then(snapshot => {
+        const posts = snapshot.val() || {};
+        if (Object.keys(posts).length === 0) {
+          postsListEl.innerHTML += '<p>No posts found for this tag.</p>';
+          return;
+        }
+
+        Object.entries(posts)
+          // Sort by timestamp descending
+          .sort((a, b) => b[1].timestamp - a[1].timestamp)
+          .forEach(([postKey, meta]) => {
+            // postKey = sanitized title
+            // meta.title is full title
+            const postDiv = document.createElement('div');
+            postDiv.classList.add('post-item');
+            const link = document.createElement('a');
+            // MODIFIED LINE HERE:
+            link.href = `/frontend/posts/${postKey}.html`; // Link to posts under /frontend/posts
+            link.target = '_blank';
+            link.textContent = meta.title;
+            postDiv.appendChild(link);
+            postsListEl.appendChild(postDiv);
+          });
+      });
+    }
+  </script>
+
+</body>
+</html>

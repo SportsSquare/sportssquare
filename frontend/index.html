@@ -17,22 +17,29 @@
     gtag('config', 'G-6CR81XMZN5');
   </script>
 
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
   <script>
-    // Your Firebase project configuration for index.html
-    // Replace these placeholder values with your actual Firebase project credentials!
+    // Your Firebase project configuration
     const firebaseConfig = {
       apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
       authDomain: "sportssquare-b96ed.firebaseapp.com",
+      databaseURL: "https://sportssquare-b96ed-default-rtdb.firebaseio.com", // Essential for Realtime DB
       projectId: "sportssquare-b96ed",
       storageBucket: "sportssquare-b96ed.firebasestorage.app",
       messagingSenderId: "844736978057",
       appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
     };
-    // Initialize Firebase
+    // Initialize Firebase App
     firebase.initializeApp(firebaseConfig);
+
+    // Get Firebase services instances (accessible globally in this script block)
+    const auth = firebase.auth();
+    // const db = firebase.database(); // Uncomment if directly used in this index.html script
+    // const firestore = firebase.firestore(); // Uncomment if directly used in this index.html script
   </script>
 
 
@@ -74,50 +81,85 @@
       max-width: 300px;
       width: 100%;
     }
+    #dashboardButton {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: #2ECC71;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      display: none; /* Hidden by default */
+      z-index: 1000;
+    }
   </style>
 </head>
 
 <body>
-    <div style="text-align: center; display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 20px;">
+  <div style="text-align: center; display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 20px;">
         <h1 style="color:blue; margin: 0;">Sports Square</h1>
         <button onclick="location.href='./signup.html'" style="padding: 10px 20px; background-color: #2ECC71; color: white; padding: 10px 20px; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">Signup</button>
         <button onclick="location.href='./signup.html'" style="padding: 10px 20px; background-color: #2ECC71; color: white; padding: 10px 20px; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">Login</button>
     </div>
+    <button id="dashboardButton">Dashboard</button>
 
   <input type="text" id="search" placeholder="Search for posts..." style="width: 300px; padding: 10px; margin-bottom: 20px;">
 
   <script>
-    document.getElementById('search').addEventListener('input', function () {
-      const search = this.value;
-      this.addEventListener('keypress', function (event) {
-        if (event.key === 'Enter') {
-          const lower = search.toLowerCase();
-          if (["so longpops", "so long pops", "solongpops", "solong pops"].includes(lower)) {
-            window.location.href = './posts/so-long-pops.html';
-          } else if (["smayan", "smayan srikanth"].includes(lower)) {
-            window.location.href = './posts/smayan.html';
-          } else if (["sports calendar", "calendar"].includes(lower)) {
-            window.location.href = './sportscalendar.html';
-          } else if (["dashboard"].includes(lower)) {
-            window.location.href = './dashboard.html';
-          } else if (["subscribed"].includes(lower)) {
-            window.location.href = './subscribed.html';
-          }
+    // Search bar functionality
+    document.getElementById('search').addEventListener('keypress', function (event) {
+      if (event.key === 'Enter') {
+        const search = this.value.toLowerCase();
+        if (["so longpops", "so long pops", "solongpops", "solong pops"].includes(search)) {
+          window.location.href = './posts/so-long-pops.html';
+        } else if (["smayan", "smayan srikanth"].includes(search)) {
+          window.location.href = './posts/smayan.html';
+        } else if (["sports calendar", "calendar"].includes(search)) {
+          window.location.href = './sportscalendar.html';
+        } else if (["dashboard"].includes(search)) {
+          console.log('Search for "dashboard" entered! Attempting redirect to /frontend/editor.html'); // Debug log
+          window.location.href = '/frontend/editor.html'; // Redirect to your editor page
+        } else if (["subscribed"].includes(search)) {
+          window.location.href = './subscribed.html';
         }
-      });
+      }
+    });
+
+    // Dashboard button logic
+    const dashboardButton = document.getElementById('dashboardButton');
+    const ADMIN_UID = 'ibLtQvJhIPN2icV7IyB1IUIgzN12'; // Your specific admin UID
+
+    // Listen for authentication state changes to show/hide the button
+    auth.onAuthStateChanged(user => {
+      if (user && user.uid === ADMIN_UID) {
+        dashboardButton.style.display = 'block'; // Show the button
+        console.log('Dashboard button should be visible. User is admin.'); // Debug log
+      } else {
+        dashboardButton.style.display = 'none'; // Hide the button
+        console.log('Dashboard button hidden. User is not admin or not logged in.'); // Debug log
+      }
+    });
+
+    // Add click event listener to the dashboard button for redirection
+    dashboardButton.addEventListener('click', () => {
+      console.log('Dashboard button clicked! Attempting redirect to /frontend/editor.html'); // Debug log
+      window.location.href = 'sportssquare.netlify.app/editor'; // Redirect to your editor page
     });
   </script>
 
   <nav style="margin: 20px 0; background-color: rgb(255, 208, 0);">
     <ul>
       <li><a href="./index.html">Home</a></li>
-      <li><a href="">Posts</a></li>
+      <li><a href="./tags.html">Posts</a></li>
       <li><a href="./sportscalendar.html">Calendar</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="contact.html">Contact</a></li>
       <li><a href="collaborations.html">Collaborations</a></li>
       <li><a href="./careers.html">Careers</a></li>
-      <li><a href="./subscriberchat.html">Subscriber Chat</li></a>
+      <li><a href="./subscriberchat.html">Subscriber Chat</a></li>
     </ul>
   </nav>
 
@@ -192,6 +234,7 @@
     </footer>
 
   <script>
+    // Google Sheets Poll Form Logic
     const form = document.getElementById('pollForm');
     const resultDiv = document.getElementById('pollResult');
     const countsDiv = document.getElementById('pollCounts');
