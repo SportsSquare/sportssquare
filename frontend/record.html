@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Recorder with Pitch/Tempo Adjustment for Embedding</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the disabled button */
+        .disabled-btn {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .disabled-btn:hover {
+            background-color: #ccc; /* Prevent hover effect on disabled buttons */
+        }
+        /* Custom styles for the audio player */
+        audio {
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 8px;
+            background-color: #f3f4f6; /* Light gray background */
+            padding: 10px; /* Add some padding */
+        }
+        /* Custom styles for the range slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #d1d5db; /* Gray background */
+            border-radius: 4px;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+        input[type="range"]:hover {
+            opacity: 1; /* Full opacity on hover */
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-2xl border border-gray-200">
+        <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-6">Record Audio & Adjust Pitch/Tempo</h1>
+
+        <!-- Post Text Area (for reference while reading) -->
+        <div class="mb-6">
+            <label for="postText" class="block text-gray-700 text-sm font-medium mb-2">
+                Your Article Content (for reference while reading):
+            </label>
+            <textarea id="postText"
+                      class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out h-40 resize-y"
+                      placeholder="Paste the post you want to read here, or just keep it blank."></textarea>
+        </div>
+
+        <!-- Recording Controls -->
+        <div class="flex gap-4 mb-6">
+            <button id="startRecordingBtn"
+                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                Start Recording
+            </button>
+            <button id="stopRecordingBtn" disabled
+                    class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 disabled-btn">
+                Stop Recording
+            </button>
+        </div>
+
+        <!-- Status and Output -->
+        <div id="status" class="text-center text-gray-600 mb-4">Ready to record.</div>
+        <p id="messageArea" class="text-center font-medium mt-4"></p>
+
+        <div id="audioOutput" class="mt-8 hidden">
+            <h2 class="text-xl font-semibold text-gray-800 mb-3">Recorded Audio Preview:</h2>
+            <audio id="audioPlayer" controls class="w-full mb-4"></audio>
+
+            <!-- Pitch Adjustment Controls -->
+            <div class="mb-6 bg-gray-100 p-4 rounded-lg">
+                <label for="pitchRateSlider" class="block text-gray-700 text-sm font-medium mb-2">
+                    Pitch/Tempo Adjustment: <span id="pitchRateValueDisplay" class="font-bold text-blue-700">1.00x</span>
+                </label>
+                <input type="range" id="pitchRateSlider" min="0.5" max="1.5" step="0.01" value="1.0"
+                       class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer range-lg">
+                <p class="text-xs text-gray-500 mt-1">
+                    (Lower values = lower pitch & slower tempo; Higher values = higher pitch & faster tempo)
+                </p>
+            </div>
+
+            <div class="flex gap-4 mb-6">
+                <a id="downloadLink" download="recorded-audio.webm"
+                   class="flex-1 text-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                    Download Original Audio
+                </a>
+                <button id="generatePitchedEmbedBtn" disabled
+                        class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 disabled-btn">
+                    Generate Pitched Embed Code
+                </button>
+            </div>
+
+            <h2 class="text-xl font-semibold text-gray-800 mb-3 mt-8">Copy this HTML Code to Embed:</h2>
+            <textarea id="embedCodeArea" readonly
+                      class="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 font-mono text-sm h-32 resize-y cursor-text select-all"
+                      aria-label="HTML code to embed recorded audio"></textarea>
+            <button id="copyCodeBtn"
+                    class="mt-4 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50">
+                Copy Embed Code
+            </button>
+        </div>
+    </div>
+
+    <script type="module">
+        // UI Elements
+        const startRecordingBtn = document.getElementById('startRecordingBtn');
+        const stopRecordingBtn = document.getElementById('stopRecordingBtn');
+        const statusDiv = document.getElementById('status');
+        const audioOutputDiv = document.getElementById('audioOutput');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const pitchRateSlider = document.getElementById('pitchRateSlider');
+        const pitchRateValueDisplay = document.getElementById('pitchRateValueDisplay');
+        const downloadLink = document.getElementById('downloadLink');
+        const embedCodeArea = document.getElementById('embedCodeArea');
+        const copyCodeBtn = document.getElementById('copyCodeBtn');
+        const messageArea = document.getElementById('messageArea');
+        const generatePitchedEmbedBtn = document.getElementById('generatePitchedEmbedBtn');
+
+        let mediaRecorder;
+        let originalAudioChunks = [];
+        let originalAudioBlob; // Stores the raw recorded audio Blob
+        let audioContext; // Web Audio API AudioContext
+        let audioSource; // AudioBufferSourceNode for processing
+
+        // --- Helper Functions ---
+
+        // Function to convert Blob to Base64 string for embedding
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    resolve(reader.result); // This will include the data:audio/webm;base64, prefix
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        // Function to display messages to the user
+        function showMessage(text, type = 'info') {
+            messageArea.textContent = text;
+            messageArea.className = 'text-center font-medium mt-4'; // Reset classes
+            if (type === 'error') {
+                messageArea.classList.add('text-red-600');
+            } else if (type === 'success') {
+                messageArea.classList.add('text-green-600');
+            } else { // info
+                messageArea.classList.add('text-gray-600');
+            }
+            messageArea.classList.remove('hidden');
+        }
+
+        function hideMessage() {
+            messageArea.classList.add('hidden');
+        }
+
+        // --- Recording Functions ---
+
+        async function startRecording() {
+            hideMessage(); // Clear any previous messages
+            try {
+                // Request microphone access
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                mediaRecorder = new MediaRecorder(stream);
+                originalAudioChunks = []; // Clear previous recordings
+
+                // Event fires when data is available (audio chunks)
+                mediaRecorder.ondataavailable = event => {
+                    originalAudioChunks.push(event.data);
+                };
+
+                // Event fires when recording stops
+                mediaRecorder.onstop = () => {
+                    // Combine chunks into a single Blob
+                    originalAudioBlob = new Blob(originalAudioChunks, { type: 'audio/webm' }); // Common format
+
+                    // Create a URL for the Blob for immediate playback
+                    const audioUrl = URL.createObjectURL(originalAudioBlob);
+                    audioPlayer.src = audioUrl;
+                    audioPlayer.controls = true;
+                    audioPlayer.playbackRate = parseFloat(pitchRateSlider.value); // Apply current slider value to preview
+
+                    // Set download link attributes (for the original recording)
+                    downloadLink.href = audioUrl;
+                    downloadLink.download = `original-audio-${Date.now()}.webm`;
+
+                    // Show the audio output section and enable processing button
+                    audioOutputDiv.classList.remove('hidden');
+                    generatePitchedEmbedBtn.disabled = false;
+                    generatePitchedEmbedBtn.classList.remove('disabled-btn');
+
+                    // Automatically generate embed code for the *original* audio initially
+                    // User will click a separate button to generate for the pitched version.
+                    blobToBase64(originalAudioBlob)
+                        .then(base64Audio => {
+                            const embedCode = `<audio controls src="${base64Audio}" type="${originalAudioBlob.type}"></audio>`;
+                            embedCodeArea.value = embedCode;
+                        })
+                        .catch(e => {
+                            console.error('Error generating original Base64 embed:', e);
+                            embedCodeArea.value = `Error generating embed code for original audio: ${e.message}`;
+                        });
+
+                    // Clean up stream tracks
+                    stream.getTracks().forEach(track => track.stop());
+
+                    statusDiv.textContent = 'Recording stopped. Adjust pitch/tempo or copy embed code.';
+                };
+
+                mediaRecorder.start(); // Start recording
+                statusDiv.textContent = 'Recording...';
+                startRecordingBtn.disabled = true;
+                startRecordingBtn.classList.add('disabled-btn');
+                stopRecordingBtn.disabled = false;
+                stopRecordingBtn.classList.remove('disabled-btn');
+                audioOutputDiv.classList.add('hidden'); // Hide previous output
+                embedCodeArea.value = ''; // Clear previous embed code
+                generatePitchedEmbedBtn.disabled = true; // Disable until new recording is ready
+                generatePitchedEmbedBtn.classList.add('disabled-btn');
+                pitchRateSlider.value = 1.0; // Reset pitch slider on new recording
+                pitchRateValueDisplay.textContent = '1.00x';
+            } catch (err) {
+                console.error('Error accessing microphone:', err);
+                showMessage(`Error: Could not access microphone. Please ensure it's connected and you've granted permission. (${err.message})`, "error");
+                statusDiv.textContent = 'Error accessing microphone.';
+                startRecordingBtn.disabled = false;
+                startRecordingBtn.classList.remove('disabled-btn');
+                stopRecordingBtn.disabled = true;
+                stopRecordingBtn.classList.add('disabled-btn');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                startRecordingBtn.disabled = false;
+                startRecordingBtn.classList.remove('disabled-btn');
+                stopRecordingBtn.disabled = true;
+                stopRecordingBtn.classList.add('disabled-btn');
+                statusDiv.textContent = 'Processing audio...';
+            }
+        }
+
+        // --- Pitch Adjustment & Re-processing for Embed ---
+
+        pitchRateSlider.addEventListener('input', () => {
+            const rate = parseFloat(pitchRateSlider.value);
+            pitchRateValueDisplay.textContent = `${rate.toFixed(2)}x`;
+            if (audioPlayer.src) {
+                audioPlayer.playbackRate = rate; // Update preview playback rate
+            }
+        });
+
+        async function processAndGeneratePitchedAudio() {
+            if (!originalAudioBlob) {
+                showMessage("No audio recorded yet. Please record something first.", "error");
+                return;
+            }
+
+            showMessage("Processing audio with pitch adjustment...", "info");
+            generatePitchedEmbedBtn.disabled = true;
+            generatePitchedEmbedBtn.classList.add('disabled-btn');
+            embedCodeArea.value = 'Generating new audio and embed code...';
+
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const arrayBuffer = await originalAudioBlob.arrayBuffer();
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.playbackRate.value = parseFloat(pitchRateSlider.value); // Set the pitch/tempo here
+
+                // Use MediaStreamDestination to capture the output of the Web Audio API graph
+                const destination = audioContext.createMediaStreamDestination();
+                source.connect(destination);
+
+                const options = { mimeType: 'audio/webm' };
+                const mediaRecorderForProcessing = new MediaRecorder(destination.stream, options);
+                let processedAudioChunks = [];
+
+                mediaRecorderForProcessing.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        processedAudioChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorderForProcessing.onstop = async () => {
+                    const newAudioBlob = new Blob(processedAudioChunks, { type: 'audio/webm' });
+                    const base64Audio = await blobToBase64(newAudioBlob);
+
+                    // Update player with new processed audio for final preview
+                    audioPlayer.src = URL.createObjectURL(newAudioBlob);
+                    audioPlayer.playbackRate = 1.0; // Reset preview player rate to normal for the new Blob
+                    pitchRateSlider.value = 1.0; // Reset slider
+                    pitchRateValueDisplay.textContent = '1.00x';
+
+                    // Update download link for the new processed audio
+                    downloadLink.href = URL.createObjectURL(newAudioBlob);
+                    downloadLink.download = `pitched-audio-${Date.now()}.webm`;
+                    downloadLink.textContent = 'Download Pitched Audio'; // Change text to reflect pitched audio
+
+                    // Generate and display the new embed code
+                    const embedCode = `<audio controls src="${base64Audio}" type="${newAudioBlob.type}"></audio>`;
+                    embedCodeArea.value = embedCode;
+
+                    showMessage("Pitched audio generated and embed code updated!", "success");
+                    generatePitchedEmbedBtn.disabled = false;
+                    generatePitchedEmbedBtn.classList.remove('disabled-btn');
+
+                    // Disconnect and close context
+                    source.disconnect();
+                    audioContext.close();
+                };
+
+                source.start(0); // Start playing the audio buffer
+                mediaRecorderForProcessing.start(); // Start recording the output
+
+                // Stop recording after the original audio buffer finishes playing
+                source.onended = () => {
+                    mediaRecorderForProcessing.stop();
+                };
+
+            } catch (error) {
+                console.error("Error processing audio:", error);
+                showMessage(`Failed to process audio: ${error.message}. Try recording again.`, "error");
+                generatePitchedEmbedBtn.disabled = false;
+                generatePitchedEmbedBtn.classList.remove('disabled-btn');
+                embedCodeArea.value = 'Error generating embed code.';
+            }
+        }
+
+
+        // --- Copy to Clipboard ---
+        copyCodeBtn.addEventListener('click', () => {
+            embedCodeArea.select();
+            try {
+                document.execCommand('copy'); // Fallback for navigator.clipboard.writeText due to iframe restrictions
+                showMessage("HTML embed code copied to clipboard!", "success");
+            } catch (err) {
+                console.error('Failed to copy text:', err);
+                showMessage("Failed to copy code. Please manually select and copy.", "error");
+            }
+        });
+
+        // --- Event Listeners ---
+        startRecordingBtn.addEventListener('click', startRecording);
+        stopRecordingBtn.addEventListener('click', stopRecording);
+        generatePitchedEmbedBtn.addEventListener('click', processAndGeneratePitchedAudio);
+
+        // Initialize slider display
+        pitchRateValueDisplay.textContent = `${parseFloat(pitchRateSlider.value).toFixed(2)}x`;
+    </script>
+</body>
+</html>
