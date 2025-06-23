@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sports Square Social</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #eef2f5;
+      }
+      #topbar {
+        background: #0d6efd;
+        color: #fff;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+      }
+      button {
+        background: transparent;
+        border: none;
+        color: #fff;
+        margin-left: 10px;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      button:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      .view {
+        display: none;
+        max-width: 800px;
+        margin: 20px auto;
+      }
+      .view.active {
+        display: block;
+      }
+      .post {
+        background: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .meta {
+        font-size: 0.9em;
+        color: #555;
+        display: flex;
+        align-items: center;
+      }
+      .username {
+        cursor: pointer;
+        color: #0d6efd;
+        font-weight: bold;
+      }
+      .date {
+        margin-left: 10px;
+        color: #888;
+        font-size: 0.85em;
+      }
+      .delete-btn {
+        background: #dc3545;
+        color: #fff;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 4px;
+        margin-left: auto;
+        cursor: pointer;
+      }
+      .actions {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+      }
+      .actions button {
+        background: #f1f3f5;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .actions button:hover {
+        background: #e2e6ea;
+      }
+      .repost-badge {
+        font-size: 0.85em;
+        color: #6c757d;
+        margin-bottom: 5px;
+      }
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+      }
+      .modal {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 400px;
+        width: 90%;
+        position: relative;
+      }
+      .modal .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 18px;
+        cursor: pointer;
+        color: #888;
+      }
+      input,
+      textarea {
+        width: 100%;
+        margin-top: 10px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      input[type="file"] {
+        padding: 3px;
+      }
+      #adminPanel .admin-item {
+        background: #fff;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 6px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="topbar">
+      <span>Sports Square Social</span>
+      <div>
+        <button id="feedBtn" disabled>Feed</button>
+        <button id="dmBtn">DMs</button>
+        <button id="postBtn">New Post</button>
+        <button id="settingsBtn">Settings</button>
+        <button id="adminBtn" style="display: none">Admin</button>
+        <button id="backBtn" style="display: none">Back</button>
+      </div>
+    </div>
+
+    <div id="content">
+      <div id="feed" class="view active">
+        <div id="posts"></div>
+      </div>
+      <div id="profileFeed" class="view">
+        <h2 id="profileUserEmail"></h2>
+        <button id="followBtn" style="margin-bottom: 15px"></button>
+        <div id="userPosts"></div>
+      </div>
+      <div id="dmContainer" class="view">
+        <h3>DMs</h3>
+        <input id="userSearch" placeholder="Search by email..." />
+        <div id="userResults"></div>
+        <hr />
+        <div id="conversations"></div>
+        <div id="chatMessages" style="margin: 10px 0"></div>
+        <input id="chatInput" placeholder="Message..." />
+        <button id="sendChatBtn">Send</button>
+      </div>
+      <div id="adminPanel" class="view">
+        <h2>Admin Dashboard</h2>
+        <div id="adminUsers"><h3>Users</h3></div>
+        <div id="adminStats">
+          <h3>Stats</h3>
+          <p>Loading...</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="postModal" class="modal-overlay">
+      <div class="modal">
+        <span class="close" id="postModalClose">&times;</span>
+        <h3>New Post</h3>
+        <textarea id="modalPostText" rows="4"></textarea>
+        <input type="file" id="modalPostImage" />
+        <button id="modalPostSend">Post</button>
+      </div>
+    </div>
+
+    <div id="settingsModal" class="modal-overlay">
+      <div class="modal">
+        <span class="close" id="settingsModalClose">&times;</span>
+        <h3>Settings</h3>
+        <input id="displayNameInput" placeholder="Display Name" />
+        <input id="emailInput" type="email" placeholder="Email" />
+        <input id="passwordInput" type="password" placeholder="New Password" />
+        <button id="saveSettingsBtn">Save</button>
+      </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+    <script>
+      const adminUID = "ibLtQvJhIPN2icV7IyB1IUIgzN12";
+      firebase.initializeApp({
+        apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+        authDomain: "sportssquare-b96ed.firebaseapp.com",
+        projectId: "sportssquare-b96ed",
+        storageBucket: "sportssquare-b96ed.appspot.com",
+        messagingSenderId: "844736978057",
+        appId: "1:844736978057:web:76c8db520d3c27bdeb7a58",
+      });
+      const auth = firebase.auth(),
+        db = firebase.firestore(),
+        storage = firebase.storage();
+
+      let currentUser,
+        following = new Set(),
+        conversations = [],
+        currentConvId,
+        currentProfileUID;
+      const getEl = (id) => document.getElementById(id);
+
+      const feed = getEl("feed"),
+        postsDiv = getEl("posts"),
+        profileFeed = getEl("profileFeed"),
+        profileUserEmail = getEl("profileUserEmail"),
+        userPosts = getEl("userPosts"),
+        followBtn = getEl("followBtn"),
+        dmContainer = getEl("dmContainer"),
+        usrSearch = getEl("userSearch"),
+        usrResults = getEl("userResults"),
+        convDiv = getEl("conversations"),
+        chatDiv = getEl("chatMessages"),
+        chatInput = getEl("chatInput"),
+        sendBtn = getEl("sendChatBtn"),
+        adminBtn = getEl("adminBtn"),
+        adminPanel = getEl("adminPanel"),
+        adminUsers = getEl("adminUsers"),
+        adminStats = getEl("adminStats"),
+        feedBtn = getEl("feedBtn"),
+        dmBtn = getEl("dmBtn"),
+        postBtn = getEl("postBtn"),
+        settingsBtn = getEl("settingsBtn"),
+        backBtn = getEl("backBtn"),
+        postModal = getEl("postModal"),
+        postModalClose = getEl("postModalClose"),
+        modalText = getEl("modalPostText"),
+        modalImage = getEl("modalPostImage"),
+        modalSend = getEl("modalPostSend"),
+        settingsModal = getEl("settingsModal"),
+        settingsClose = getEL("settingsModalClose"),
+        displayNameInput = getEl("displayNameInput"),
+        emailInput = getEl("emailInput"),
+        passwordInput = getEl("passwordInput"),
+        saveSettingsBtn = getEl("saveSettingsBtn");
+
+      function escapeHtml(t) {
+        const d = document.createElement("div");
+        d.textContent = t;
+        return d.innerHTML;
+      }
+
+      function switchView(view) {
+        document.querySelectorAll(".view").forEach((v) => {
+          v === view ? v.classList.add("active") : v.classList.remove("active");
+        });
+      }
+
+      auth.onAuthStateChanged(async (u) => {
+        if (!u) return (location.href = "./frontend/signup.html");
+        currentUser = u;
+        if (u.uid === adminUID) adminBtn.style.display = "inline-block";
+        const ud = await db.collection("users").doc(u.uid).get();
+        if (!ud.exists)
+          await db
+            .collection("users")
+            .doc(u.uid)
+            .set({ email: u.email, following: [], displayName: u.displayName || "" });
+        await loadFollowing();
+        showFeed();
+      });
+
+      async function loadFollowing() {
+        const ud = await db.collection("users").doc(currentUser.uid).get();
+        following = new Set(ud.exists ? ud.data().following || [] : []);
+      }
+
+      function showFeed() {
+        switchView(feed);
+        backBtn.style.display = "none";
+        feedBtn.disabled = true;
+        dmBtn.disabled = false;
+        postBtn.style.display = "inline";
+        settingsBtn.style.display = "inline";
+        adminBtn.style.display = currentUser.uid === adminUID ? "inline-block" : "none";
+        currentProfileUID = null;
+        loadPosts();
+      }
+
+      feedBtn.onclick = showFeed;
+
+      dmBtn.onclick = () => {
+        switchView(dmContainer);
+        backBtn.style.display = "none";
+        dmBtn.disabled = true;
+        feedBtn.disabled = false;
+        postBtn.style.display = "none";
+        settingsBtn.style.display = "none";
+        adminBtn.style.display = "none";
+        loadConversations();
+      };
+
+      postBtn.onclick = () => (postModal.style.display = "flex");
+      postModalClose.onclick = () => (postModal.style.display = "none");
+
+      settingsBtn.onclick = () => {
+        displayNameInput.value = currentUser.displayName || "";
+        emailInput.value = currentUser.email || "";
+        passwordInput.value = "";
+        settingsModal.style.display = "flex";
+      };
+      settingsClose.onclick = () => (settingsModal.style.display = "none");
+
+      backBtn.onclick = showFeed;
+
+      adminBtn.onclick = async () => {
+        const [us, ps, dm] = await Promise.all([
+          db.collection("users").get(),
+          db.collection("posts").get(),
+          db.collection("dms").get(),
+        ]);
+        adminUsers.innerHTML = "<h3>Users</h3>";
+        us.docs.forEach((d) => {
+          adminUsers.innerHTML += `<div class="admin-item">${d.data().email} <button class="delete-btn" data-uid="${
+            d.id
+          }">Delete User</button></div>`;
+        });
+        adminStats.innerHTML = `<h3>Stats</h3><p>Users: ${us.size}</p><p>Posts: ${ps.size}</p><p>DMs: ${dm.size}</p>`;
+        switchView(adminPanel);
+      };
+
+      modalSend.onclick = async () => {
+        const txt = modalText.value.trim();
+        if (!txt) return alert("Text required");
+        modalSend.disabled = true;
+        let imgUrl = "";
+        if (modalImage.files[0]) {
+          const s = await storage
+            .ref(`postImages/${currentUser.uid}_${Date.now()}_${modalImage.files[0].name}`)
+            .put(modalImage.files[0]);
+          imgUrl = await s.ref.getDownloadURL();
+        }
+        await db.collection("posts").add({
+          uid: currentUser.uid,
+          userEmail: currentUser.email,
+          text: txt,
+          imageUrl: imgUrl,
+          likes: [],
+          repostCount: 0,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        modalSend.disabled = false;
+        postModal.style.display = "none";
+        showFeed();
+      };
+
+      saveSettingsBtn.onclick = async () => {
+        try {
+          const n = displayNameInput.value.trim(),
+            e = emailInput.value.trim(),
+            p = passwordInput.value;
+          if (n !== currentUser.displayName) await currentUser.updateProfile({ displayName: n });
+          if (e !== currentUser.email) await currentUser.updateEmail(e);
+          if (p) await currentUser.updatePassword(p);
+          await db.collection("users").doc(currentUser.uid).update({ displayName: n, email: e });
+          alert("Saved");
+          settingsModal.style.display = "none";
+        } catch (e) {
+          alert("Error:" + e.message);
+        }
+      };
+
+      async function loadPosts() {
+        let q = db.collection("posts").orderBy("createdAt", "desc").limit(30);
+        if (following.size)
+          q = db.collection("posts").where("uid", "in", Array.from(following)).orderBy("createdAt", "desc").limit(30);
+        q.onSnapshot((snap) => {
+          renderPosts(
+            snap.docs.map((d) => ({ id: d.id, ...d.data() })),
+            postsDiv
+          );
+        });
+      }
+
+      function renderPosts(posts, container) {
+        container.innerHTML = "";
+        posts.forEach((p) => {
+          const d = p.createdAt ? p.createdAt.toDate().toLocaleString() : "";
+          const liked = p.likes?.includes(currentUser.uid);
+          const rc = p.repostCount || 0;
+          const badge = p.repostOf
+            ? `<div class="repost-badge">🔁 Reposted from ${escapeHtml(p.repostOf.username)}</div>`
+            : "";
+          const html = `${badge}<div class="meta"><span class="username" data-uid="${
+            p.uid
+          }">${escapeHtml(p.userEmail)}</span><span class="date">${d}</span>${
+            currentUser.uid === adminUID
+              ? `<button class="delete-btn" data-pid="${p.id}">Delete</button>`
+              : ""
+          }</div><div class="content">${escapeHtml(p.text)}</div>${
+            p.imageUrl
+              ? `<img src="${p.imageUrl}" style="max-width:100%;border-radius:6px;margin-top:8px;">`
+              : ``
+          }<div class="actions"><button class="likeBtn">${
+            liked ? "Unlike" : "Like"
+          } (${p.likes?.length || 0})</button><button class="commentToggleBtn">Comments</button><button class="repostBtn">Repost (${rc})</button></div><div id="commentsDiv-${
+            p.id
+          }" style="display:none;"></div>`;
+          const el = document.createElement("div");
+          el.className = "post";
+          el.innerHTML = html;
+          container.appendChild(el);
+
+          el.querySelector(".username").onclick = () => showUserProfile(p.uid);
+          el.querySelector(".delete-btn")?.onclick = async () => {
+            if (confirm("Delete post?")) await db.collection("posts").doc(p.id).delete();
+          };
+          el.querySelector(".likeBtn").onclick = async () => {
+            const ref = db.collection("posts").doc(p.id);
+            liked
+              ? await ref.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) })
+              : await ref.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
+          };
+          el.querySelector(".commentToggleBtn").onclick = () => {
+            const cd = getEl(`commentsDiv-${p.id}`);
+            cd.style.display = cd.style.display == "block" ? "none" : "block";
+            if (cd.style.display == "block") loadComments(p.id);
+          };
+          el.querySelector(".repostBtn").onclick = async () => {
+            const r = {
+              uid: currentUser.uid,
+              userEmail: currentUser.email,
+              text: p.text,
+              imageUrl: p.imageUrl || "",
+              likes: [],
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              repostOf: { uid: p.uid, username: p.userEmail || "Unknown" },
+              repostCount: 0,
+            };
+            await db.collection("posts").add(r);
+            await db.collection("posts").doc(p.id).update({ repostCount: rc + 1 });
+          };
+        });
+      }
+
+      async function loadComments(pid) {
+        const cd = getEl(`commentsDiv-${pid}`);
+        const snap = await db.collection("posts").doc(pid).collection("comments").orderBy("createdAt").get();
+        cd.innerHTML = `<div id="commentsList-${pid}"></div><input id="commentInput-${pid}" placeholder="Comment..."><button data-id="${pid}" class="postCommentBtn">Post</button>`;
+        const cl = getEl(`commentsList-${pid}`);
+        snap.forEach((doc) => {
+          const c = doc.data(),
+            t = c.createdAt ? c.createdAt.toDate().toLocaleString() : "";
+          cl.innerHTML += `<div class="comment"><b>${escapeHtml(c.username)}</b>: ${escapeHtml(
+            c.text
+          )} <small>(${t})</small>${
+            currentUser.uid === adminUID
+              ? ` <button class="delete-btn" data-pid="${pid}" data-cid="${doc.id}">Delete</button>`
+              : ""
+          }</div>`;
+        });
+        cd.querySelector(".postCommentBtn").onclick = async (e) => {
+          const txt = getEl(`commentInput-${e.target.dataset.id}`).value.trim();
+          if (txt)
+            await db
+              .collection("posts")
+              .doc(e.target.dataset.id)
+              .collection("comments")
+              .add({
+                uid: currentUser.uid,
+                username: currentUser.email,
+                text: txt,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              });
+          loadComments(e.target.dataset.id);
+        };
+        cd.querySelectorAll(".delete-btn").forEach((btn) => {
+          btn.onclick = async () => {
+            if (confirm("Delete comment?"))
+              await db.collection("posts").doc(btn.dataset.pid).collection("comments").doc(btn.dataset.cid).delete();
+            loadComments(btn.dataset.pid);
+          };
+        });
+      }
+
+      async function showUserProfile(uid) {
+        currentProfileUID = uid;
+        switchView(profileFeed);
+        backBtn.style.display = "inline";
+        feedBtn.disabled = false;
+        dmBtn.disabled = false;
+        postBtn.style.display = "none";
+        settingsBtn.style.display = "none";
+        adminBtn.style.display = "none";
+        const ud = await db.collection("users").doc(uid).get();
+        profileUserEmail.textContent = ud.exists ? ud.data().email : "Unknown";
+        if (uid === currentUser.uid) followBtn.style.display = "none";
+        else {
+          followBtn.style.display = "inline";
+          let isF = (await db.collection("users").doc(currentUser.uid).get()).data().following?.includes(uid);
+          followBtn.textContent = isF ? "Unfollow" : "Follow";
+          followBtn.onclick = async () => {
+            const ref = db.collection("users").doc(currentUser.uid);
+            if (isF) await ref.update({ following: firebase.firestore.FieldValue.arrayRemove(uid) });
+            else await ref.update({ following: firebase.firestore.FieldValue.arrayUnion(uid) });
+            isF = !isF;
+            followBtn.textContent = isF ? "Unfollow" : "Follow";
+            await loadFollowing();
+          };
+        }
+        const snap = await db.collection("posts").where("uid", "==", uid).orderBy("createdAt", "desc").get();
+        renderPosts(
+          snap.docs.map((d) => ({ id: d.id, ...d.data() })),
+          userPosts
+        );
+      }
+
+      async function loadConversations() {
+        const snap = await db
+          .collection("dms")
+          .where("participants", "array-contains", currentUser.uid)
+          .orderBy("createdAt", "desc")
+          .get();
+        convDiv.innerHTML = "";
+        conversations = snap.docs.map((d) => ({
+          id: d.id,
+          other: d.data().participants.find((uid) => uid !== currentUser.uid),
+        }));
+        conversations.forEach((c) => {
+          const div = document.createElement("div");
+          div.textContent = c.other;
+          div.onclick = () => openConversation(c.id, c.other);
+          convDiv.appendChild(div);
+        });
+        if (conversations[0]) openConversation(conversations[0].id, conversations[0].other);
+      }
+
+      function openConversation(cid, other) {
+        currentConvId = cid;
+        chatDiv.innerHTML = "";
+        // Removed the line that was causing the "Invalid left-hand side in assignment" error.
+        // This means the conversation list items will no longer have an 'active' class
+        // applied or removed based on whether they match 'other'.
+        
+        db.collection("dms")
+          .doc(cid)
+          .collection("messages")
+          .orderBy("createdAt")
+          .onSnapshot((snap) => {
+            chatDiv.innerHTML = "";
+            snap.forEach((doc) => {
+              const m = doc.data();
+              const s = m.uid === currentUser.uid ? "You" : m.username;
+              const t = m.createdAt?.toDate().toLocaleTimeString() || "";
+              const d = document.createElement("div");
+              d.textContent = `[${t}] ${s}: ${m.text}`;
+              chatDiv.appendChild(d);
+            });
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+          });
+      }
+
+      sendBtn.onclick = async () => {
+        const txt = chatInput.value.trim();
+        if (txt && currentConvId) {
+          await db
+            .collection("dms")
+            .doc(currentConvId)
+            .collection("messages")
+            .add({
+              uid: currentUser.uid,
+              username: currentUser.email,
+              text: txt,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+          chatInput.value = "";
+        }
+      };
+
+      usrSearch.oninput = async () => {
+        usrResults.innerHTML = "";
+        const q = usrSearch.value.trim().toLowerCase();
+        if (!q) return;
+        const snap = await db
+          .collection("users")
+          .orderBy("email")
+          .startAt(q)
+          .endAt(q + "\uf8ff")
+          .limit(10)
+          .get();
+        snap.forEach((doc) => {
+          const u = doc.data();
+          if (u.email === currentUser.email) return;
+          const div = document.createElement("div");
+          div.textContent = u.email;
+          div.onclick = () => {
+            const ex = conversations.find((c) => c.other === doc.id);
+            if (ex) openConversation(ex.id, ex.other);
+            else {
+              db.collection("dms")
+                .add({
+                  participants: [currentUser.uid, doc.id],
+                  createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                })
+                .then(loadConversations);
+            }
+            usrResults.innerHTML = "";
+            usrSearch.value = "";
+          };
+          usrResults.appendChild(div);
+        });
+      };
+    </script>
+  </body>
+</html>
