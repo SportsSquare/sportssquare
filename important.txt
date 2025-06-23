@@ -2,7 +2,7 @@ cd ~/Desktop/Sports\ Square
 git add .
 git commit -m "Describe your changes"
 git push origin main
-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
+
 
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
