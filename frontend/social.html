@@ -634,7 +634,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
         <div id="feedLoading">Loading more posts...</div>
       </div>
       <div id="profileFeed" class="view">
-        <img id="profilePicture" src="https://via.placeholder.com/120" alt="Profile Picture">
+        <img id="profilePicture" src="" alt="Profile Picture">
         <h2 id="profileUserDisplayName"></h2>
         <p id="profileUserEmail"></p>
         <p id="profileBio"></p>
@@ -880,7 +880,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
             following: [],
             blockedUsers: [],
             displayName: u.displayName || "", // Initialize with Firebase Auth display name
-            profileImageUrl: "https://via.placeholder.com/120", // Default placeholder image
+            profileImageUrl: "", // Default placeholder image
             bio: "",
             tagPreferences: {},
             followedUserPreferences: {},
@@ -891,7 +891,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
               displayNameModal.style.display = "flex";
           } else {
               currentUser.displayName = u.displayName;
-              currentUser.profileImageUrl = "https://via.placeholder.com/120"; // Set default for current session
+              currentUser.profileImageUrl = ""; // Set default for current session
               currentUser.bio = '';
               showRulesPopup();
           }
@@ -902,7 +902,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
           userFeedPreferences.tagPreferences = data.tagPreferences || {};
           userFeedPreferences.followedUserPreferences = data.followedUserPreferences || {};
           userFeedPreferences.myAccountWeight = data.myAccountWeight || 20;
-          currentUser.profileImageUrl = data.profileImageUrl || 'https://via.placeholder.com/120'; // Ensure default if empty
+          currentUser.profileImageUrl = data.profileImageUrl || ''; // Ensure default if empty
           currentUser.bio = data.bio || '';
           currentUser.displayName = u.displayName || data.displayName || u.email; // Ensure display name is current
           showRulesPopup(); // Show rules for existing users if they haven't seen it
@@ -1025,7 +1025,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
                   const item = document.createElement('div');
                   item.className = 'suggested-user-item';
                   item.innerHTML = `
-                      <img src="https://via.placeholder.com/50" alt="Profile Picture">
+                      <img src="" alt="Profile Picture">
                       <span class="email" data-uid="${user.uid}">${escapeHtml(user.displayName || user.email)}</span>
                       <button class="follow-btn" data-uid="${user.uid}">Follow</button>
                   `;
@@ -1123,7 +1123,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
             b = bioInput.value.trim(),
             p = passwordInput.value;
           
-          let profileImgUrl = "https://via.placeholder.com/120"; // Always use placeholder
+          let profileImgUrl = ""; // Always use placeholder
           // Removed profile picture upload logic
 
           if (n !== currentUser.displayName) {
@@ -1594,7 +1594,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
         profileUserDisplayName.textContent = userData.displayName || "Unknown User";
         profileUserEmail.textContent = userData.email || "";
         profileBioEl.textContent = userData.bio || "No bio available.";
-        profilePictureEl.src = userData.profileImageUrl || "https://via.placeholder.com/120"; // Use default if no image URL
+        profilePictureEl.src = userData.profileImageUrl || ""; // Use default if no image URL
 
         getEl("userStats").style.display = "flex"; 
         postsCountSpan.textContent = (await db.collection("posts").where("uid", "==", uid).get()).size;
