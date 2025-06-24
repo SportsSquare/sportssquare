@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us</title>
+  <style>
+    body {
+      background-color: rgb(249, 251, 231);
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    #chat-container {
+      display: none; /* Initially hidden */
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    #chat-log {
+      margin-bottom: 20px;
+      text-align: left;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+    }
+    #chat-log p {
+      margin: 5px 0;
+    }
+    #chat-log .user {
+      color: blue;
+    }
+    #chat-log .bot {
+      color: green;
+    }
+    input[type="text"] {
+      width: calc(100% - 100px);
+      padding: 10px;
+      margin-right: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #2ECC71;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #27ae60;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-container">
+    <div id="chat-log">
+      <p class="bot">Welcome! How can I assist you today?</p>
+    </div>
+    <input type="text" id="user-input" placeholder="Type your question here...">
+    <button id="send-button">Send</button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Hide all existing content
+      document.body.innerHTML = '<div id="chat-container">' + document.getElementById('chat-container').innerHTML + '</div>';
+      document.getElementById('chat-container').style.display = 'block';
+
+      const chatLog = document.getElementById('chat-log');
+      const userInput = document.getElementById('user-input');
+      const sendButton = document.getElementById('send-button');
+
+      sendButton.addEventListener('click', () => {
+        const userMessage = userInput.value.trim();
+        if (userMessage) {
+          // Display user message
+          const userMessageElement = document.createElement('p');
+          userMessageElement.classList.add('user');
+          userMessageElement.textContent = `You: ${userMessage}`;
+          chatLog.appendChild(userMessageElement);
+
+          // Display bot response
+          const botMessageElement = document.createElement('p');
+          botMessageElement.classList.add('bot');
+          botMessageElement.textContent = `Bot: ${getBotResponse(userMessage)}`;
+          chatLog.appendChild(botMessageElement);
+
+          // Clear input field
+          userInput.value = '';
+          chatLog.scrollTop = chatLog.scrollHeight; // Scroll to the bottom
+        }
+      });
+
+      function getBotResponse(message) {
+        // Define responses for specific questions
+        const responses = {
+          "hello": "Hi there! How can I help you?",
+          "how are you": "I'm just a bot, but I'm here to assist you!",
+          "what is your name": "I'm your friendly assistant.",
+          "bye": "Goodbye! Have a great day!",
+          "What is Sports Square?": "Sports Square is a platform for sports enthusiasts to connect, share, and stay updated on the latest in sports.",
+          "What can I do here?": "You can read articles, follow your favorite teams, and engage with other sports fans.",
+          "How do I contact support?": "You can contact support by filling out the contact form on our website or by emailing us at sportssquareauthor@gmail.com. You can also submit a request on the contact form.",
+          "How do I subscribe to updates?": "You can subscribe to updates by filling out your email and pressing that big button on our front page.",
+          "What sports do you cover?": "Every single one",
+          
+        };
+
+        // Return a response or a default message
+        return responses[message.toLowerCase()] || "I'm not sure how to answer that. Can you rephrase?";
+      }
+    });
+  </script>
+</body>
+</html>
