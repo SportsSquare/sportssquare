@@ -865,7 +865,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
       }
 
       auth.onAuthStateChanged(async (u) => {
-        if (!u) return (location.href = "./frontend/signup.html");
+        if (!u) return (location.href = "./signup.html");
         currentUser = u;
         if (u.uid === adminUID) adminBtn.style.display = "inline-block";
         logoutBtn.onclick = () => { auth.signOut().then(() => { console.log('Signed out'); }).catch(error => console.error('Sign out error', error)); };
