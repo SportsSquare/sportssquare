@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Welcome to Sports Square</title>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <!-- Removed Tailwind CSS CDN as per your request not to change CSS setup for this file -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid #e0e0e0;
+        }
+        h1 {
+            color: #1a202c;
+            font-size: 2.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        p {
+            color: #4a5568;
+            font-size: 1.125rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        input[type="text"] {
+            width: 100%;
+            max-width: 350px;
+            padding: 12px 16px;
+            margin-top: 1rem;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            text-align: center;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            outline: none;
+        }
+        input[type="text"]:focus {
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+        }
+        button {
+            background-color: #48bb78; /* Lime Green */
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-out;
+            margin-top: 2rem;
+            display: inline-block; /* For better centering */
+        }
+        button:hover {
+            background-color: #38a169;
+            transform: translateY(-1px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .message-box {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            display: none;
+            word-break: break-word; /* Ensure messages wrap */
+        }
+        .message-box.success {
+            background-color: #e6ffed;
+            color: #2f855a;
+            border: 1px solid #68d391;
+        }
+        .message-box.error {
+            background-color: #fff5f5;
+            color: #c53030;
+            border: 1px solid #fc8181;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Sports Square</h1>
+        <p>Enter your **favorite sports teams (comma-separated)** to get personalized article recommendations!</p>
+        <p>Type the names of your favorite teams below:</p>
+        <input type="text" id="searchInput" placeholder="e.g., Lakers, Warriors, Spurs, Celtics">
+        <div id="resultDiv" class="mt-4"></div>
+        <div id="messageBox" class="message-box"></div>
+        <button id="savePrefButton" style="display: none;">Save Preferences</button>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const resultDiv = document.getElementById('resultDiv');
+        const savePrefButton = document.getElementById('savePrefButton');
+        const messageBox = document.getElementById('messageBox');
+
+        // Firebase Configuration (REPLACE WITH YOUR ACTUAL CONFIG)
+        const firebaseConfig = {
+            apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+            authDomain: "sportssquare-b96ed.firebaseapp.com",
+            databaseURL: "https://sportssquare-b96ed-default-rtdb.firebaseio.com",
+            projectId: "sportssquare-b96ed",
+            storageBucket: "sportssquare-b96ed.firebasestorage.app",
+            messagingSenderId: "844736978057",
+            appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+        };
+
+        // Initialize Firebase
+        const appFirebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : firebaseConfig;
+        const app = firebase.initializeApp(appFirebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+
+        // Function to display messages to the user
+        function showMessage(message, type) {
+            messageBox.textContent = message;
+            messageBox.className = `message-box ${type}`;
+            messageBox.style.display = 'block';
+        }
+
+        // Authenticate user (using anonymous sign-in if no initial token)
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                console.log("Authenticated as:", currentUser.uid);
+                // Try to load existing preferences from 'userPreferences' collection
+                try {
+                    const userDoc = await db.collection("userPreferences").doc(currentUser.uid).get();
+                    if (userDoc.exists) {
+                        const userData = userDoc.data();
+                        // Now expecting 'favoriteTeams' as an array
+                        if (userData.favoriteTeams && Array.isArray(userData.favoriteTeams) && userData.favoriteTeams.length > 0) {
+                            searchInput.value = userData.favoriteTeams.join(', '); // Display as comma-separated string
+                            displayTeamRecommendation(userData.favoriteTeams); // Pass the array
+                            showMessage(`Welcome back! Your favorite teams are currently set to: "${userData.favoriteTeams.join(', ')}".`, 'success');
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error loading user preferences:", error);
+                    showMessage(`Failed to load your saved preferences: ${error.message}. Please ensure your Firebase security rules allow reading from 'userPreferences'.`, 'error');
+                }
+            } else {
+                try {
+                    // Use __initial_auth_token if available for sign-in, otherwise sign in anonymously
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await auth.signInWithCustomToken(__initial_auth_token);
+                    } else {
+                        await auth.signInAnonymously();
+                    }
+                    console.log("Firebase auth successful (anonymous or custom token).");
+                } catch (error) {
+                    console.error("Firebase auth failed:", error);
+                    showMessage(`Authentication failed: ${error.message}. Please try again later.`, 'error');
+                }
+            }
+        });
+
+
+        // Function to display team-specific recommendations
+        // Now accepts an array of team names
+        function displayTeamRecommendation(teamNames) {
+            resultDiv.innerHTML = ''; // Clear previous results
+            savePrefButton.style.display = 'inline-block'; // Always show button if there's input
+
+            if (!teamNames || teamNames.length === 0) {
+                resultDiv.innerHTML = '<p class="text-gray-600 text-lg">Please enter your favorite teams.</p>';
+                savePrefButton.style.display = 'none';
+                return;
+            }
+
+            let recommendationHtml = `<p class="text-green-600 text-lg">Based on your teams: ${teamNames.map(t => `<span style="font-weight: bold; text-transform: capitalize;">${t}</span>`).join(', ')}, here are some articles you might enjoy:</p><ul class="list-disc list-inside text-gray-700 mt-2">`;
+
+            // Example recommendations - expand this logic with real data or LLM calls later
+            teamNames.forEach(team => {
+                const lowerTeam = team.toLowerCase();
+                if (lowerTeam.includes('spurs')) {
+                    recommendationHtml += `
+                        <li><a href="https://sportssquare.netlify.app/posts/so-long-pops" target="_blank" class="text-blue-600 hover:underline">So Long Pops (A Tribute To the Great Gregg Popovich)</a></li>
+                        <li><a href="https://www.sportssquarenews.com/p/victor-wembanyama-out-for-the-season?utm_source=publication-search" target="_blank" class="text-blue-600 hover:underline">The Spurs Can't Catch A Break, Can They?</a></li>
+                        <li><a href="https://www.sportssquarenews.com/p/tank-wars-the-race-for-cooper-flagg?utm_source=publication-search" target="_blank" class="text-blue-600 hover:underline">Tank Wars || The Race For Cooper Flagg Is On!</a></li>
+                    `;
+                } else if (lowerTeam.includes('warriors') || lowerTeam.includes('golden state')) {
+                    recommendationHtml += `<li><a href="#" target="_blank" class="text-blue-600 hover:underline">Article about Golden State Warriors (Placeholder)</a></li>`;
+                }
+                // Add more team-specific recommendations here
+            });
+
+            if (recommendationHtml === `<p class="text-green-600 text-lg">Based on your teams: ${teamNames.map(t => `<span style="font-weight: bold; text-transform: capitalize;">${t}</span>`).join(', ')}, here are some articles you might enjoy:</p><ul class="list-disc list-inside text-gray-700 mt-2">`) {
+                recommendationHtml += `<li>No specific recommendations for these teams yet. Check back later!</li>`;
+            }
+
+            recommendationHtml += `</ul>`;
+            resultDiv.innerHTML = recommendationHtml;
+        }
+
+        // Listen for input changes in the search box
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            messageBox.style.display = 'none'; // Hide messages
+
+            if (query) {
+                // Parse comma-separated teams
+                const teams = query.split(',').map(team => team.trim()).filter(team => team !== '');
+                displayTeamRecommendation(teams);
+            } else {
+                resultDiv.innerHTML = '';
+                savePrefButton.style.display = 'none'; // Hide button if input is empty
+            }
+        });
+
+        // Handle save preference button click
+        savePrefButton.addEventListener('click', async () => {
+            const inputVal = searchInput.value.trim();
+            if (!inputVal) {
+                showMessage("Please enter at least one team name before saving.", 'error');
+                return;
+            }
+
+            const favoriteTeams = inputVal.split(',').map(team => team.trim().toLowerCase()).filter(team => team !== '');
+
+            if (!currentUser) {
+                showMessage("User not authenticated. Please try refreshing the page or logging in.", 'error');
+                return;
+            }
+
+            savePrefButton.disabled = true; // Disable button to prevent multiple clicks
+            try {
+                // Update the user's document in Firestore within the 'userPreferences' collection
+                await db.collection("userPreferences").doc(currentUser.uid).set({
+                    favoriteTeams: favoriteTeams // Save as an array
+                }, { merge: true }); // Use merge to only update this field
+
+                showMessage(`Your favorite teams "${favoriteTeams.join(', ')}" have been saved!`, 'success');
+                console.log(`Favorite teams "${favoriteTeams.join(', ')}" saved for user ${currentUser.uid}`);
+
+                // --- Client-side call to FormSubmit for email notification ---
+                // IMPORTANT: Replace 'your_admin_email@example.com' with the actual email
+                // address where you want to receive notifications.
+                const formSubmitEndpoint = `https://formsubmit.co/sportssquareauthor@gmail.com`;
+
+                try {
+                    const response = await fetch(formSubmitEndpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            _subject: `New Sports Square Team Preferences from ${currentUser.email || currentUser.uid}`, // Email subject updated
+                            userId: currentUser.uid,
+                            userEmail: currentUser.email,
+                            userName: currentUser.displayName || 'N/A',
+                            favoriteTeams: favoriteTeams.join(', ') // Send as comma-separated string for email readability
+                        })
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result && result.success) {
+                            console.log('Email notification successfully triggered via FormSubmit.');
+                        } else {
+                            console.error('FormSubmit reported an issue:', result);
+                            showMessage(`Preference saved, but FormSubmit reported an issue. Check console.`, 'error');
+                        }
+                    } else {
+                        const errorData = await response.json();
+                        console.error('Failed to trigger email notification via FormSubmit:', response.status, errorData);
+                        showMessage(`Preference saved, but failed to trigger FormSubmit notification: ${errorData.message || 'Unknown error'}`, 'error');
+                    }
+                } catch (fetchError) {
+                    console.error('Network error during FormSubmit notification fetch:', fetchError);
+                    showMessage(`Preference saved, but network error prevented FormSubmit notification.`, 'error');
+                }
+
+            } catch (error) {
+                console.error("Error saving preference to Firestore:", error);
+                showMessage(`Failed to save preference: ${error.message}`, 'error');
+            } finally {
+                savePrefButton.disabled = false; // Re-enable button
+            }
+        });
+    </script>
+</body>
+</html>
