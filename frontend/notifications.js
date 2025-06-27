@@ -133,7 +133,7 @@ if (window.firebase) {
                 : (typeof n.timestamp === 'number' ? new Date(n.timestamp).toLocaleString() : 'N/A');
 
             return `
-                <div class="notification-item ${!isRead(n) ? 'unread' : ''}" data-id="${n.id}" style="padding:8px; border-bottom:1px solid #eee; cursor:pointer; ${!isRead(n) ? 'font-weight:bold; background-color:#f0f8ff;' : ''}">
+                <div class="notification-item ${!isRead(n) ? 'unread' : ''}" data-id="${n.id}" style="padding:8px; border-bottom:1px solid #eee; cursor:pointer; ${!isRead(n) ? 'font-weight:bold; background-color:black;' : ''}">
                     ${n.message}<br>
                     <small>${time}</small>
                 </div>
@@ -188,3 +188,30 @@ if (window.firebase) {
 
     console.error("Firebase global object not found. Ensure Firebase SDKs are loaded and initialized before notifications.js");
 }
+// Change all notification text color to black
+function forceNotificationTextBlack() {
+    // Adjust the selector below to match your notification text elements
+    const notificationTexts = document.querySelectorAll('.notification-text');
+    notificationTexts.forEach(el => {
+      el.style.color = 'black';
+      el.style.opacity = '1';
+      el.style.filter = 'none';
+    });
+  }
+  
+  // Call it after notifications render / on page load
+  window.addEventListener('load', () => {
+    forceNotificationTextBlack();
+  });
+  // Force all notifications text color to black
+document.querySelectorAll('.notification-item, #notifications-container, #notification-badge').forEach(el => {
+  el.style.color = 'black';
+});
+// After rendering notifications to the DOM, force text color black
+document.querySelectorAll('.notification-item').forEach(el => {
+    el.style.color = 'black';
+  });
+  document.querySelectorAll('.notification-item').forEach(el => {
+    el.style.setProperty('color', 'black', 'important');
+  });
+  
