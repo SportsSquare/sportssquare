@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smayan Srikanth - Sports Square</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
+     crossorigin="anonymous"></script>
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6CR81XMZN5');
+</script>
+<style>
+    /* Color variables for consistency */
+    :root {
+        /* Top color: Black */
+        --background-dark: #000000;
+        /* 2nd level color: Midnight Blue */
+        --accent-dark: #191970;
+
+        /* Neon colors remain vibrant */
+        --neon-green: #00ff00;
+        --neon-blue: #00ffff;
+        --neon-yellow: #faff00;
+        /* Text colors adjusted for dark background */
+        --text-light: #e0e0e0;
+        --text-lighter: #b0b0b0; /* For less prominent text */
+        --button-text-dark: #000000; /* Dark text for neon buttons */
+    }
+
+    body {
+        background-color: var(--background-dark); /* Dark background */
+        font-family: 'Montserrat', sans-serif;
+        color: var(--text-light); /* Light text for readability */
+        text-align: center;
+        padding: 50px 20px; /* Add horizontal padding */
+        line-height: 1.6;
+        min-height: 100vh; /* Ensure it takes full viewport height */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    .author-container {
+        background-color: var(--accent-dark); /* Midnight blue container */
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+        border: 2px solid var(--neon-blue); /* Neon blue border */
+        max-width: 800px;
+        width: 100%;
+        margin-bottom: 30px;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        color: var(--neon-green); /* Neon green for main heading */
+        font-size: 3.5rem; /* Larger font size for name */
+        font-weight: bold;
+        margin-bottom: 30px;
+        text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        line-height: 1.2;
+    }
+
+    nav {
+        background-color: var(--neon-yellow); /* Neon yellow nav bar */
+        padding: 10px 0;
+        margin-bottom: 30px;
+        border-radius: 50px; /* Pill shape for nav bar */
+        box-shadow: 0 0 15px var(--neon-yellow); /* Yellow glow */
+        display: flex;
+        justify-content: center;
+        gap: 25px; /* Space between links */
+        width: 100%;
+        max-width: 600px; /* Max width for nav */
+    }
+
+    nav a {
+        color: var(--button-text-dark); /* Dark text on neon background */
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1em;
+        padding: 8px 15px;
+        border-radius: 25px; /* Pill shape for individual links */
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    nav a:hover {
+        background-color: rgba(0, 0, 0, 0.2); /* Slight dark overlay on hover */
+        color: var(--accent-dark); /* Midnight blue text on hover */
+    }
+
+    p {
+        color: var(--text-light); /* Light text for paragraphs */
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+        text-align: left; /* Align paragraphs to left for readability */
+    }
+
+    p a {
+        color: var(--neon-blue); /* Neon blue for links in paragraphs */
+        text-decoration: underline;
+        font-weight: bold;
+    }
+
+    p a:hover {
+        color: var(--neon-green); /* Neon green on link hover */
+    }
+
+    /* Footer styling */
+    footer {
+        margin-top: auto; /* Push footer to the bottom */
+        padding: 30px;
+        background-color: var(--neon-yellow);
+        box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+        color: var(--button-text-dark);
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 1px;
+        width: 100%; /* Ensure footer takes full width */
+        text-align: center;
+    }
+
+    footer p {
+        margin: 5px 0;
+        font-size: 1.1em;
+        color: var(--button-text-dark);
+    }
+    footer a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    footer a:hover {
+        color: var(--neon-green);
+    }
+
+    /* Sitemap link outside footer (if you plan to add one later) */
+    body > p:last-of-type {
+        margin-top: 20px;
+        margin-bottom: 20px; /* Add some margin for the sitemap link */
+    }
+    body > p:last-of-type a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    body > p:last-of-type a:hover {
+        color: var(--neon-green);
+    }
+
+    /* Media Queries for responsiveness */
+    @media (max-width: 768px) {
+        .author-container {
+            padding: 30px;
+        }
+        h1 {
+            font-size: 2.8rem;
+        }
+        nav {
+            gap: 15px;
+            padding: 8px 0;
+            max-width: 100%; /* Allow nav to take full width */
+        }
+        nav a {
+            font-size: 1em;
+            padding: 6px 12px;
+        }
+        p {
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        body {
+            padding: 20px 10px;
+        }
+        .author-container {
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+        nav {
+            flex-direction: column; /* Stack nav links vertically */
+            gap: 10px;
+            padding: 10px;
+            border-radius: 10px; /* Less rounded for stacked */
+        }
+        nav a {
+            width: calc(100% - 30px); /* Full width with padding */
+            text-align: center;
+        }
+        p {
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+<body>
+    <div class="author-container">
+        <h1>Smayan Srikanth</h1>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="smayan.html">Author</a>
+            <a href="../sportscalendar.html">Calendar</a>
+            <a href="../about.html">About</a>
+            <a href="../contact.html">Contact</a>
+        </nav>
+        <p>Smayan Srikanth is a passionate sports writer and analyst, dedicated to bringing fresh perspectives and in-depth analysis to the world of sports. With a keen eye for detail and a love for storytelling, Smayan aims to engage readers with insightful articles that explore the nuances of various sports.</p>
+        <p>Smayan's writing covers a wide range of topics, from player profiles and game analyses to the cultural impact of sports. With a background in journalism and a lifelong passion for athletics, Smayan strives to connect with readers through compelling narratives and thought-provoking commentary.</p>
+        <p>Whether it's the thrill of a last-minute goal, the drama of a championship match, or the inspiring stories of athletes overcoming challenges, Smayan's articles aim to capture the essence of sports and its ability to unite people across the globe.</p>
+        <p>Smayan is currently the lead writer and CEO of Sports Square. He is also the Los Angeles Dodgers beat writer for LWOSports.com. Smayan is open to writing for anyone.</p>
+        <p>For inquiries, collaborations, or to share your thoughts on sports, feel free to reach out via email at <a href="mailto:sportssquareauthor@gmail.com">sportssquareauthor@gmail.com!</a></p>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script>
+        // IMPORTANT: This Firebase config must match the configuration across all your pages.
+        const firebaseConfig = {
+          apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+          authDomain: "sportssquare-b96ed.firebaseapp.com",
+          projectId: "sportssquare-b96ed",
+          storageBucket: "sportssquare-b96ed.firebasestorage.app",
+          messagingSenderId: "844736978057",
+          appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+        };
+
+        // Initialize Firebase if it hasn't been initialized already
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+            console.log("Firebase App initialized.");
+        } else {
+            console.log("Firebase App already initialized.");
+        }
+    </script>
+
+    <script src="../notifications.js"></script>
+
+    <footer>
+        <p>&copy; 2025 Sports Square. All rights reserved.</p>
+        <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+    </footer>
+    <p><a href="../sitemap.html">Sitemap</a></p>
+</body>
+</html>

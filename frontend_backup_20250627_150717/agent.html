@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us</title>
+  <style>
+    body {
+      background-color: rgb(249, 251, 231);
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    #chat-container {
+      display: none; /* Initially hidden */
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    #chat-log {
+      margin-bottom: 20px;
+      text-align: left;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+    }
+    #chat-log p {
+      margin: 5px 0;
+    }
+    #chat-log .user {
+      color: blue;
+    }
+    #chat-log .bot {
+      color: green;
+    }
+    input[type="text"] {
+      width: calc(100% - 100px);
+      padding: 10px;
+      margin-right: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #2ECC71;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #27ae60;
+    }
+    :root {
+      /* Dark background as requested */
+      --background-dark: #1a1a2e;
+      /* Neon colors remain vibrant */
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+      /* Text colors adjusted for dark background */
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0; /* For less prominent text */
+      --accent-dark: #0f3460; /* Dark accent for cards/containers */
+      --button-text-dark: #1a1a2e; /* Text color for neon buttons */
+      --input-text-color: #e0e0e0; /* Input text on dark background */
+      --placeholder-color: #888; /* Placeholder text */
+    }
+
+    body {
+      background-color: var(--background-dark);
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      padding: 50px;
+      color: var(--text-light); /* Light text on dark background */
+      margin: 0;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-container">
+    <div id="chat-log">
+      <p class="bot">Welcome! How can I assist you today?</p>
+    </div>
+    <input type="text" id="user-input" placeholder="Type your question here...">
+    <button id="send-button">Send</button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Hide all existing content
+      document.body.innerHTML = '<div id="chat-container">' + document.getElementById('chat-container').innerHTML + '</div>';
+      document.getElementById('chat-container').style.display = 'block';
+
+      const chatLog = document.getElementById('chat-log');
+      const userInput = document.getElementById('user-input');
+      const sendButton = document.getElementById('send-button');
+
+      sendButton.addEventListener('click', () => {
+        const userMessage = userInput.value.trim();
+        if (userMessage) {
+          // Display user message
+          const userMessageElement = document.createElement('p');
+          userMessageElement.classList.add('user');
+          userMessageElement.textContent = `You: ${userMessage}`;
+          chatLog.appendChild(userMessageElement);
+
+          // Display bot response
+          const botMessageElement = document.createElement('p');
+          botMessageElement.classList.add('bot');
+          botMessageElement.textContent = `Bot: ${getBotResponse(userMessage)}`;
+          chatLog.appendChild(botMessageElement);
+
+          // Clear input field
+          userInput.value = '';
+          chatLog.scrollTop = chatLog.scrollHeight; // Scroll to the bottom
+        }
+      });
+
+      function getBotResponse(message) {
+        // Define responses for specific questions
+        const responses = {
+          "hello": "Hi there! How can I help you?",
+          "how are you": "I'm just a bot, but I'm here to assist you!",
+          "what is your name": "I'm your friendly assistant.",
+          "bye": "Goodbye! Have a great day!",
+          "What is Sports Square?": "Sports Square is a platform for sports enthusiasts to connect, share, and stay updated on the latest in sports.",
+          "What can I do here?": "You can read articles, follow your favorite teams, and engage with other sports fans.",
+          "How do I contact support?": "You can contact support by filling out the contact form on our website or by emailing us at sportssquareauthor@gmail.com. You can also submit a request on the contact form.",
+          "How do I subscribe to updates?": "You can subscribe to updates by filling out your email and pressing that big button on our front page.",
+          "What sports do you cover?": "Every single one",
+            "How can I contribute content?": "You can contribute content by submitting articles or blog posts through our submission form. We welcome contributions from all sports enthusiasts!",
+            "What is the latest news?": "You can find the latest news on our homepage.",
+            "How do I create an account?": "You can create an account by clicking on the 'Sign Up' button on our homepage and filling out the registration form.",
+            "How do I reset my password?": "You can reset your password by contacting us. The Sports Square team is still working on a forgot password function!",
+            "How do I delete my account?": "To delete your account, please contact us and we will assist you with the process.",
+            "What are the community guidelines?": "Our community guidelines promote respectful and constructive discussions. Please avoid hate speech, harassment, and spam. We encourage positive interactions and sharing of sports knowledge.",
+            "How do I report inappropriate content?": "You can report inappropriate content by clicking the 'Report' button next to the content or by contacting our support team directly.",
+            "How do I follow a team?": "You can follow a team by going to our recommend page and entering your favorite team. We plan to develop something to use wth that feature!",
+            "How do I unsubscribe from updates?": "You can unsubscribe from updates by clicking the 'Unsubscribe' link in any of our emails or by contacting us directly.",
+
+
+
+        };
+
+        // Return a response or a default message
+        return responses[message.toLowerCase()] || "I'm not sure how to answer that. If this is an emergency, please contact us directly in the contact page!";
+      }
+    });
+  </script>
+  <footer style="margin-top: 20px; color: #e0e0e0;">
+    <p style="color: #e0e0e0";>&copy; 2025 Sports Square. All rights reserved.</p>
+    <p style="color: #e0e0e0";>Follow us on <a href="https://x.com/Sports__Square" target="_blank" style="color: #00ffff;">X</a></p>
+</footer>
+<p><a href="./sitemap.html" style="color: #00ffff;">Sitemap</a></p>
+</body>
+</html>

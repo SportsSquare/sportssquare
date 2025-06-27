@@ -1,16 +1,13 @@
-// notifications.js - Corrected to work with Firebase already initialized in signup.html
 
-// No need to define firebaseConfig or load SDKs here, as signup.html already does it.
-// We assume firebase.initializeApp() has already been called in signup.html's script.
 
-// Wait for Firebase to be ready (it should be, since signup.html loads it first)
-// A simple check like this ensures global 'firebase' object is available.
+
+
+
 if (window.firebase) {
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Create notification UI elements if not already present
-    // This part is safe to keep as it only creates DOM elements.
+
     if (!document.getElementById('notification-btn')) {
         const btn = document.createElement('div');
         btn.id = 'notification-btn';
@@ -47,44 +44,76 @@ if (window.firebase) {
     const badge = document.getElementById('notification-badge');
     const notificationsContainer = document.getElementById('notifications');
 
-    let currentUser = null;
-    let notifications = [];
+    let currentUser = null; // Tracks the currently logged-in user
+    let allNotifications = []; // Stores all site-wide notifications from the 'notifications' collection
+    let readNotificationIds = new Set(); // Stores IDs of notifications read by the current user
+
+
+    window.notificationListeners = {
+        unsubscribeSiteWide: () => {},
+        unsubscribeReadStatus: () => {},
+        unsubscribeAll: function() {
+            this.unsubscribeSiteWide();
+            this.unsubscribeReadStatus();
+            console.log("All notification listeners unsubscribed.");
+        }
+    };
+
 
     auth.onAuthStateChanged(user => {
-        if (user) {
-            currentUser = user;
-            startListeningNotifications();
-        } else {
-            currentUser = null;
-            badge.style.display = 'none';
-            notificationsContainer.style.display = 'none';
-            notificationsContainer.innerHTML = '';
-        }
+        currentUser = user; // Update the currentUser variable
+
+        window.notificationListeners.unsubscribeAll();
+
+        startListeningNotifications();
     });
 
     function startListeningNotifications() {
-        // Ensure 'notifications' collection exists in Firestore and has proper security rules.
-        db.collection('notifications')
+        console.log("Starting notification listeners...");
+
+
+        window.notificationListeners.unsubscribeSiteWide = db.collection('notifications')
             .orderBy('timestamp', 'desc')
             .onSnapshot(snapshot => {
-                notifications = [];
+                allNotifications = []; // Clear previous notifications
                 snapshot.forEach(doc => {
-                    notifications.push({ id: doc.id, ...doc.data() });
+                    allNotifications.push({ id: doc.id, ...doc.data() });
                 });
-                updateNotificationUI();
+                updateNotificationUI(); // Update UI whenever site-wide notifications change
+                console.log("Site-wide notifications updated.");
             }, error => {
-                console.error("Error listening to notifications:", error);
-                // Optionally show a user-friendly message
+                console.error("Error listening to site-wide notifications:", error);
+
             });
+
+
+        if (currentUser) {
+            window.notificationListeners.unsubscribeReadStatus = db.collection('users').doc(currentUser.uid).collection('readNotifications')
+                .onSnapshot(snapshot => {
+                    readNotificationIds.clear(); // Clear previous read status
+                    snapshot.forEach(doc => {
+                        readNotificationIds.add(doc.id); // Add the notification ID to the set of read IDs
+                    });
+                    updateNotificationUI(); // Update UI whenever user's read status changes
+                    console.log("User-specific read notifications updated.");
+                }, error => {
+                    console.error("Error listening to user's read notifications:", error);
+                });
+        } else {
+
+            readNotificationIds.clear();
+            updateNotificationUI();
+            console.log("No user logged in, user-specific read notifications listener not active.");
+        }
     }
 
     function isRead(notification) {
-        if (!currentUser || !notification.readBy) return false;
-        return notification.readBy.includes(currentUser.uid);
+        return readNotificationIds.has(notification.id);
     }
 
     function updateNotificationUI() {
-        const unreadCount = notifications.filter(n => !isRead(n)).length;
+
+        const unreadCount = allNotifications.filter(n => !isRead(n)).length;
         if (unreadCount > 0) {
             badge.textContent = unreadCount;
             badge.style.display = 'inline-block';
@@ -92,17 +121,16 @@ if (window.firebase) {
             badge.style.display = 'none';
         }
 
-        if (notifications.length === 0) {
+        if (allNotifications.length === 0) {
             notificationsContainer.innerHTML = '<p style="text-align: center; margin: 10px;">No notifications</p>';
             return;
         }
 
-        notificationsContainer.innerHTML = notifications.map(n => {
-            // Check if timestamp is a Firebase Timestamp object or a number
+        notificationsContainer.innerHTML = allNotifications.map(n => {
+
             const time = n.timestamp && typeof n.timestamp.toDate === 'function'
                 ? n.timestamp.toDate().toLocaleString()
                 : (typeof n.timestamp === 'number' ? new Date(n.timestamp).toLocaleString() : 'N/A');
-
 
             return `
                 <div class="notification-item ${!isRead(n) ? 'unread' : ''}" data-id="${n.id}" style="padding:8px; border-bottom:1px solid #eee; cursor:pointer; ${!isRead(n) ? 'font-weight:bold; background-color:#f0f8ff;' : ''}">
@@ -115,32 +143,41 @@ if (window.firebase) {
 
     notificationsContainer.addEventListener('click', e => {
         const item = e.target.closest('.notification-item');
-        if (!item) return;
+        if (!item) return; // Not a notification item
         const id = item.getAttribute('data-id');
-        markAsRead(id);
+        markAsRead(id); // Call function to mark this notification as read
     });
+
 
     function markAsRead(notificationId) {
         if (!currentUser) {
             console.warn("Cannot mark as read: No user logged in.");
+
+
             return;
         }
-        const notifRef = db.collection('notifications').doc(notificationId);
-        notifRef.update({
-            readBy: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+
+
+        db.collection('users').doc(currentUser.uid).collection('readNotifications').doc(notificationId).set({
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
-            console.log("Notification marked as read:", notificationId);
+            console.log("Notification marked as read by user:", notificationId);
+
+
         }).catch(error => {
             console.error("Error marking notification as read:", error);
+
         });
     }
 
     notificationBtn.addEventListener('click', () => {
+
         notificationsContainer.style.display = notificationsContainer.style.display === 'block' ? 'none' : 'block';
-        // When opening, mark all currently visible notifications as read if they aren't
+
+
         if (notificationsContainer.style.display === 'block' && currentUser) {
-            notifications.forEach(n => {
-                if (!isRead(n)) {
+            allNotifications.forEach(n => {
+                if (!isRead(n)) { // Only try to mark if it's currently showing as unread
                     markAsRead(n.id);
                 }
             });
@@ -148,5 +185,6 @@ if (window.firebase) {
     });
 
 } else {
-    console.error("Firebase global object not found. Ensure Firebase SDKs are loaded before notifications.js");
+
+    console.error("Firebase global object not found. Ensure Firebase SDKs are loaded and initialized before notifications.js");
 }

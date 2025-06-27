@@ -6,6 +6,7 @@
     <title>Sports Calendar</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
      crossorigin="anonymous"></script>
+     <link rel="icon" type="image/x-icon" href="./favicon.ico">
 </head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
 <script>
@@ -33,16 +34,64 @@
         align-items: center;
         margin-top: 20px;
     }
+    nav {
+        background-color: rgba(255, 0, 0, 0.6);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px; 
+        padding: 20px 0; 
+        max-width: 100%; 
+    }
+    nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    nav li {
+        margin: 0 10px; 
+    }
+    nav a {
+        color: var(--neon-blue);
+        text-decoration: none;
+        font-size: 1.2rem; 
+        padding: 10px 15px; 
+        border-radius: 6px; 
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    nav a:hover {
+        background-color: rgba(0, 255, 255, 0.1); 
+        color: var(--neon-green); 
+    }
+    nav a:active {
+        background-color: rgba(0, 255, 255, 0.2); 
+        color: var(--neon-yellow); 
+    }
 </style>
 <body>
-    <!-- Firebase SDKs: include these ONCE per page -->
+    <nav>
+        <ul>
+          <li><a href="./index.html">Home</a></li>
+          <li><a href="./tags.html">Posts</a></li>
+          <li><a href="./sportscalendar.html">Calendar</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="./subscriberchat.html">Subscriber Chat</a></li>
+          <li><a href="./podcast.html">Podcast</a></li>
+          <li><a href="./social.html">Social Media</a></li>
+        </ul>
+      </nav>
+    
 <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
 
-<!-- Your config and presence scripts -->
-<script src="/path/to/firebase-config.js"></script>
-<script src="/path/to/presence.js"></script>
+
+<script src="./firebase-config.js"></script>
+<script src="./presence.js"></script>
 
 <h1>Find Your Favorite Team</h1>
 <div id="teams">
@@ -101,10 +150,10 @@
         background-color: #0056b3;
     }
 </style>
-<footer style="margin-top: 20px;">
-    <p>&copy; 2025 Sports Square. All rights reserved.</p>
-    <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+<footer style="margin-top: 20px; color: #e0e0e0;">
+    <p style="color: #e0e0e0";>&copy; 2025 Sports Square. All rights reserved.</p>
+    <p style="color: #e0e0e0";>Follow us on <a href="https://x.com/Sports__Square" target="_blank" style="color: #00ffff;">X</a></p>
 </footer>
-<p><a href="./sitemap.html">Sitemap</p></a>
+<p><a href="./sitemap.html" style="color: #00ffff;">Sitemap</a></p>
 </body>
 </html>

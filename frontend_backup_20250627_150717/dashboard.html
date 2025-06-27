@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard - Online Users</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { margin-bottom: 20px; }
+    table { border-collapse: collapse; width: 100%; max-width: 600px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f4f4f4; }
+    .online { color: green; font-weight: bold; }
+    .offline { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Admin Dashboard: Online Users</h1>
+  <div id="statusMessage">Checking admin privileges...</div>
+  <table id="usersTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>User UID</th>
+        <th>Status</th>
+        <th>Last Changed</th>
+      </tr>
+    </thead>
+    <tbody id="usersList"></tbody>
+  </table>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+
+  <!-- Your config -->
+  <script src="./firebase-config.js"></script>
+  <script src="./presence.js"></script>
+
+  <script>
+    const statusMessage = document.getElementById('statusMessage');
+    const usersTable = document.getElementById('usersTable');
+    const usersList = document.getElementById('usersList');
+
+    // Wait for auth state
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        statusMessage.textContent = 'You must be logged in as an admin to view this page.';
+        return;
+      }
+
+      // Check if user is admin in database
+      const adminRef = db.ref('admins/' + user.uid);
+      const snapshot = await adminRef.once('value');
+      const isAdmin = snapshot.val();
+
+      if (!isAdmin) {
+        statusMessage.textContent = 'Access denied. You are not an admin.';
+        return;
+      }
+
+      statusMessage.textContent = 'Welcome Admin! Loading user statuses...';
+      usersTable.style.display = 'table';
+
+      // Listen for changes in /status
+      const statusRef = db.ref('status');
+      statusRef.on('value', (snapshot) => {
+        const statuses = snapshot.val() || {};
+        usersList.innerHTML = '';
+
+        // Iterate over users
+        Object.entries(statuses).forEach(([uid, status]) => {
+          const tr = document.createElement('tr');
+
+          // User UID cell
+          const uidTd = document.createElement('td');
+          uidTd.textContent = uid;
+          tr.appendChild(uidTd);
+
+          // Status cell
+          const statusTd = document.createElement('td');
+          const state = status.state || 'offline';
+          statusTd.textContent = state;
+          statusTd.className = state === 'online' ? 'online' : 'offline';
+          tr.appendChild(statusTd);
+
+          // Last changed cell (formatted)
+          const lastChangedTd = document.createElement('td');
+          const timestamp = status.last_changed;
+          if (timestamp) {
+            const date = new Date(timestamp);
+            lastChangedTd.textContent = date.toLocaleString();
+          } else {
+            lastChangedTd.textContent = 'N/A';
+          }
+          tr.appendChild(lastChangedTd);
+
+          usersList.appendChild(tr);
+        });
+
+        statusMessage.textContent = 'User statuses updated.';
+      });
+    });
+  </script>
+</body>
+</html>

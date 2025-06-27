@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eagles Schedule</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
+     crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-6CR81XMZN5');
+    </script>
+    </head>
+<body>
+
+<style>
+    :root {
+      /* Top color: Black */
+      --background-dark: #000000;
+      /* 2nd level color: Midnight Blue */
+      --accent-dark: #191970;
+
+      /* Neon colors remain vibrant */
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+      /* Text colors adjusted for dark background */
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0; /* For less prominent text */
+      --button-text-dark: #000000; /* Dark text for neon buttons */
+      --input-text-color: #e0e0e0; /* Input text on dark background */
+      --placeholder-color: #888; /* Placeholder text */
+    }
+
+    body {
+        background-color: var(--background-dark);
+        font-family: 'Montserrat', sans-serif;
+        text-align: center;
+        padding: 50px;
+        color: var(--text-light); /* Light text for readability */
+        margin: 0;
+        line-height: 1.6;
+    }
+    h1 {
+        font-family: 'Montserrat', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--neon-green); /* Neon green for main heading */
+        text-shadow: 0 0 8px var(--neon-green), 0 0 15px var(--neon-green);
+        margin-bottom: 20px;
+        font-size: 3em; /* Adjust size for impact */
+    }
+    .calendar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+        color: var(--text-light); /* Ensure text within calendar div is light */
+        font-size: 1.1em;
+        margin-bottom: 30px;
+    }
+    iframe {
+        border: solid 2px var(--neon-blue) !important; /* Neon blue border for iframe */
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); /* Matching neon glow */
+        border-radius: 10px; /* Slightly rounded corners for consistency */
+        max-width: 95%; /* Ensure iframe is responsive */
+        height: 600px; /* Fixed height as per your original code */
+        width: 800px; /* Fixed width as per your original code */
+    }
+
+    /* Footer styling */
+    footer {
+        margin-top: 60px;
+        padding: 30px;
+        background-color: var(--neon-yellow);
+        box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+        color: var(--button-text-dark);
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 1px;
+    }
+
+    footer p {
+        margin: 5px 0;
+        font-size: 1.1em;
+        color: var(--button-text-dark);
+    }
+    footer a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    footer a:hover {
+        color: var(--neon-green);
+    }
+
+    /* Sitemap link outside footer */
+    body > p:last-of-type { /* Targets the sitemap link specifically if it's the last paragraph in body */
+        margin-top: 20px;
+        margin-bottom: 0;
+    }
+    body > p:last-of-type a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    body > p:last-of-type a:hover {
+        color: var(--neon-green);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 850px) {
+        iframe {
+            width: 100%; /* Make iframe fluid on smaller screens */
+        }
+    }
+    @media (max-width: 768px) {
+        body {
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2.2em;
+        }
+    }
+</style>
+    <h1>NFL Eagles Schedule</h1>
+    <div class="calendar">
+        <p>ALL TIMES EASTERN STANDARD TIME</p>
+    </div>
+    <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=America%2FNew_York&showPrint=0&src=nfl_--m-05tg3_%2550hiladelphia%2B%2545agles%23sports@group.v.calendar.google.com&color=%23795548" style="border:solid 1px #777" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+    <footer>
+        <p>&copy; 2025 Sports Square. All rights reserved.</p>
+        <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+    </footer>
+    <p><a href="./sitemap.html">Sitemap</a></p>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <script src="./firebase-config.js"></script>
+
+    <script src="./notifications.js"></script>
+    </body>
+</html>

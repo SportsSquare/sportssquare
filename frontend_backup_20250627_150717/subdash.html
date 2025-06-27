@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Subscriber Dashboard - Sports Square</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    /* Your original neon-themed CSS */
+    :root {
+      --background-dark: #000000;
+      --accent-dark: #191970;
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0;
+      --button-text-dark: #000000;
+    }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-dark);
+      color: var(--text-light);
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .dashboard-container {
+      background-color: var(--accent-dark);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      border: 2px solid var(--neon-blue);
+      max-width: 900px;
+      width: 100%;
+      margin-bottom: 30px;
+      box-sizing: border-box;
+    }
+    h1 {
+      color: var(--neon-green);
+      font-size: 2.8rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+    h2 {
+      color: var(--neon-blue);
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 5px var(--neon-blue);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .logout {
+      float: right;
+      background-color: #ff6666;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 10px rgba(255, 102, 102, 0.3);
+    }
+    .logout:hover {
+      background-color: #e60000;
+      box-shadow: 0 4px 15px rgba(255, 0, 0, 0.5);
+    }
+    #userEmail {
+      color: var(--text-lighter);
+      font-size: 1.1em;
+      margin-top: 15px;
+      text-align: left;
+      padding-left: 20px;
+    }
+    #userEmail::before {
+      content: "👤 ";
+    }
+    .article-item {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      text-align: left;
+    }
+    .article-item strong {
+      color: var(--neon-yellow);
+      font-size: 1.1em;
+    }
+    .article-item small {
+      color: var(--text-lighter);
+    }
+    .preference-section {
+      padding-top: 2rem;
+      margin-top: 3rem;
+      border-top: 2px solid var(--neon-green);
+      text-align: center;
+    }
+    #favoriteTeamDisplay {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--neon-yellow);
+      display: block;
+      margin-top: 0.8rem;
+      text-shadow: 0 0 8px var(--neon-yellow);
+    }
+    .message-box {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.95em;
+      display: none;
+      word-break: break-word;
+      text-align: center;
+      font-weight: bold;
+    }
+    .message-box.success {
+      background-color: rgba(0, 255, 0, 0.2);
+      color: var(--neon-green);
+      border: 1px solid var(--neon-green);
+    }
+    .message-box.error {
+      background-color: rgba(255, 0, 0, 0.2);
+      color: #ff6666;
+      border: 1px solid #ff6666;
+    }
+    .message-box.info {
+      background-color: rgba(0, 255, 255, 0.2);
+      color: var(--neon-blue);
+      border: 1px solid var(--neon-blue);
+    }
+    .contact-admin {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+      color: var(--text-lighter);
+      font-size: 1rem;
+      line-height: 1.5;
+      text-align: center;
+      border: 1px dashed var(--neon-blue);
+    }
+    .contact-admin a {
+      color: var(--neon-yellow);
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+    .contact-admin a:hover {
+      color: var(--neon-green);
+      text-decoration: underline;
+      text-shadow: 0 0 5px var(--neon-green);
+    }
+    .contact-admin #displayUserId {
+      color: var(--neon-green);
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+    }
+    footer {
+      margin-top: auto;
+      padding: 30px;
+      background-color: var(--neon-yellow);
+      box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+      color: var(--button-text-dark);
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: 1px;
+      width: 100%;
+      text-align: center;
+    }
+    footer p {
+      margin: 5px 0;
+      font-size: 1.1em;
+      color: var(--button-text-dark);
+    }
+    footer a {
+      color: var(--neon-blue);
+      text-decoration: underline;
+      font-weight: bold;
+    }
+    footer a:hover {
+      color: var(--neon-green);
+    }
+    body > p:last-of-type {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    body > p:last-of-type a {
+      color: var(--neon-blue);
+      text-decoration: underline;
+      font-weight: bold;
+    }
+    body > p:last-of-type a:hover {
+      color: var(--neon-green);
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <h1>Welcome to Your Dashboard</h1>
+    <button class="logout" id="logoutBtn">Logout</button>
+    <p id="userEmail">Loading user...</p>
+
+    <h2>Your Reading History:</h2>
+    <div id="readArticles">Loading...</div>
+
+    <h3>Simulate Reading an Article</h3>
+    <button id="markReadBtn" style="margin-bottom:20px;">Mark Article "Amazing Article" as Read</button>
+
+    <div class="preference-section">
+      <h2>Your Favorite Team:</h2>
+      <span id="favoriteTeamDisplay">Loading...</span>
+      <div id="favoriteTeamMessage" class="message-box"></div>
+
+      <div class="contact-admin">
+        <p>To change your favorite team, please contact the administrator at <a href="mailto:sportssquareauthor@gmail.com">sportssquareauthor@gmail.com</a> with your user details.</p>
+        <p>Your User ID: <span id="displayUserId">Loading...</span></p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+      authDomain: "sportssquare-b96ed.firebaseapp.com",
+      projectId: "sportssquare-b96ed",
+      storageBucket: "sportssquare-b96ed.appspot.com",
+      messagingSenderId: "844736978057",
+      appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const userEmail = document.getElementById("userEmail");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const readArticlesDiv = document.getElementById("readArticles");
+    const markReadBtn = document.getElementById("markReadBtn");
+    const favoriteTeamDisplay = document.getElementById('favoriteTeamDisplay');
+    const favoriteTeamMessage = document.getElementById('favoriteTeamMessage');
+    const displayUserId = document.getElementById('displayUserId');
+
+    let currentUser = null;
+
+    function showMessage(message, type, targetElement) {
+      targetElement.textContent = message;
+      targetElement.className = `message-box ${type}`;
+      targetElement.style.display = 'block';
+      setTimeout(() => {
+        targetElement.style.display = 'none';
+        targetElement.textContent = '';
+      }, 5000);
+    }
+
+    logoutBtn.onclick = async () => {
+      await signOut(auth);
+      window.location.href = "signup.html";
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        userEmail.textContent = "Not logged in.";
+        readArticlesDiv.textContent = "Please log in to see your reading history.";
+        favoriteTeamDisplay.textContent = 'N/A';
+        displayUserId.textContent = 'N/A';
+        markReadBtn.disabled = true;
+        return;
+      }
+      currentUser = user;
+      userEmail.textContent = `Logged in as: ${user.email}`;
+      displayUserId.textContent = user.uid;
+      markReadBtn.disabled = false;
+
+      // Load reading history
+      loadReadingHistory();
+
+      // Load favorite team
+      try {
+        const userPrefDoc = await getDoc(doc(db, "userPreferences", user.uid));
+        if (userPrefDoc.exists() && userPrefDoc.data().favoriteTeam) {
+          favoriteTeamDisplay.textContent = userPrefDoc.data().favoriteTeam;
+          showMessage(`Your current favorite team is the: "${userPrefDoc.data().favoriteTeam}".`, 'success', favoriteTeamMessage);
+        } else {
+          favoriteTeamDisplay.textContent = 'Not set yet';
+          showMessage("No favorite team set yet. Please update it on the welcome page!", 'info', favoriteTeamMessage);
+        }
+      } catch (error) {
+        console.error("Error loading favorite team preference:", error);
+        favoriteTeamDisplay.textContent = 'Error loading';
+        showMessage(`Error loading team preference: ${error.message}`, 'error', favoriteTeamMessage);
+      }
+    });
+
+    markReadBtn.onclick = async () => {
+      if (!currentUser) return alert("Not logged in.");
+      try {
+        await addDoc(collection(db, "reads"), {
+          userId: currentUser.uid,
+          title: "Amazing Article",
+          articleId: "article_123",
+          duration: 120, // 2 minutes
+          timestamp: serverTimestamp()
+        });
+        showMessage("Article marked as read!", "success", favoriteTeamMessage);
+        loadReadingHistory();
+      } catch (e) {
+        console.error("Error adding read record:", e);
+        showMessage("Failed to mark read.", "error", favoriteTeamMessage);
+      }
+    };
+
+    async function loadReadingHistory() {
+      if (!currentUser) return;
+      readArticlesDiv.textContent = "Loading...";
+
+      try {
+        const q = query(collection(db, "reads"), where("userId", "==", currentUser.uid));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          readArticlesDiv.innerHTML = "<p>You haven't finished reading any articles yet.</p>";
+          return;
+        }
+
+        let html = '';
+        querySnapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          const time = data.timestamp?.toDate().toLocaleString() || "Unknown time";
+          const mins = Math.round((data.duration || 0) / 60);
+          html += `<div class="article-item">
+            <strong>${data.title}</strong><br>
+            <small>Read on: ${time}</small><br>
+            <small>Time spent: ${mins} min</small>
+          </div>`;
+        });
+        readArticlesDiv.innerHTML = html;
+      } catch (e) {
+        console.error("Error loading reading history:", e);
+        readArticlesDiv.textContent = "Error loading reading history.";
+      }
+    }
+  </script>
+
+  <footer>
+    <p>&copy; 2025 Sports Square. All rights reserved.</p>
+    <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+  </footer>
+  <p><a href="./sitemap.html">Sitemap</a></p>
+</body>
+</html>

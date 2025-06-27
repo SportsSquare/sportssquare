@@ -3,356 +3,461 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Subscriber Chat</title>
+<title>Subscriber Chat - Sports Square</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+<link rel="icon" type="image/x-icon" href="./favicon.ico">
 <style>
+    
+    :root {
+      
+      --background-dark: #000000;
+      
+      --accent-dark: #191970;
+
+      
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+      
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0; 
+      --button-text-dark: #000000; 
+      --input-background: rgba(0, 0, 0, 0.5); 
+      --input-border: rgba(0, 255, 0, 0.5); 
+      --input-focus-border: var(--neon-yellow);
+      --input-text: var(--text-light);
+      --placeholder-color: #888;
+    }
+
     body {
-      background-color: rgb(249, 251, 231);
+      background-color: var(--background-dark); 
       font-family: 'Montserrat', sans-serif;
-      padding: 50px;
-    }
-    nav ul {
-      list-style-type: none;
-      padding: 0;
+      color: var(--text-light); 
+      text-align: center;
+      padding: 50px 20px; 
+      line-height: 1.6;
+      min-height: 100vh; 
       display: flex;
-      justify-content: center;
-      gap: 20px;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
     }
-    .flex-section {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 40px;
-      flex-wrap: wrap;
-      margin-top: 20px;
+
+    .chat-container {
+        background-color: var(--accent-dark); 
+        padding: 60px 40px;
+        border-radius: 12px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); 
+        border: 2px solid var(--neon-blue); 
+        max-width: 800px;
+        width: 100%;
+        margin-bottom: 40px;
+        box-sizing: border-box;
     }
-    .post-card {
-      border: 1px solid black;
-      padding: 20px;
-      width: 300px;
-      background-color: white;
-      border-radius: 10px;
+
+    h2 {
+      color: var(--neon-green); 
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 8px var(--neon-green), 0 0 15px var(--neon-green);
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
-    aside.poll-box {
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      font-family: 'Segoe UI', sans-serif;
-      max-width: 300px;
-      width: 100%;
+
+    
+    input[type="text"] {
+        width: calc(100% - 24px); 
+        padding: 12px;
+        margin: 10px 0;
+        font-size: 1rem;
+        background-color: var(--input-background);
+        border: 2px solid var(--input-border);
+        border-radius: 8px;
+        box-sizing: border-box;
+        color: var(--input-text);
+        transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        outline: none;
     }
-    aside.poll-box h3 {
-      margin-top: 0;
-      font-size: 1.2rem;
-      color: #333;
+    input[type="text"]::placeholder {
+        color: var(--placeholder-color);
     }
-    aside.poll-box ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+    input[type="text"]:focus {
+        border-color: var(--input-focus-border);
+        box-shadow: 0 0 0 3px rgba(250, 255, 0, 0.5), 0 0 15px var(--input-focus-border);
     }
-    aside.poll-box li {
-      margin: 0.5rem 0;
-      padding: 0.5rem;
-      background: #f9f9f9;
-      border-radius: 4px;
+
+    button {
+      background-color: var(--neon-yellow); 
+      border: none;
+      color: var(--button-text-dark); 
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: bold;
       cursor: pointer;
-      transition: background 0.2s ease;
+      border-radius: 50px; 
+      transition: background-color 0.3s ease, transform 0.1s ease-out, box-shadow 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 0 10px var(--neon-yellow); 
+      margin: 5px;
     }
-    aside.poll-box li:hover {
-      background: #e0e0e0;
+    button:hover:not(:disabled) {
+      background-color: var(--neon-green); 
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px var(--neon-green); 
     }
-    .message {
-      border: 1px solid #ccc;
+    button:disabled {
+      background-color: #666;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    
+    #userStatus {
+      color: var(--text-light);
+      font-weight: bold;
+      margin-bottom: 20px;
       padding: 10px;
-      margin: 5px 0;
-      border-radius: 5px;
-      background-color: #f9f9f9;
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      border: 1px solid var(--neon-blue);
     }
-    .message strong {
-      color: #333;
+    #userStatus button {
+        margin-left: 10px;
+        background-color: var(--neon-blue);
+        box-shadow: 0 0 10px var(--neon-blue);
+        color: var(--button-text-dark);
+        padding: 8px 15px;
+        font-size: 0.9rem;
     }
-    .message small {
-      color: #666;
-      font-size: 0.8em;
+    #userStatus button:hover {
+        background-color: var(--neon-green);
+        box-shadow: 0 0 15px var(--neon-green);
     }
-    .message .admin-controls {
-      display: none;
-      margin-top: 5px;
-    }
-    .message .admin-controls button {
-      margin-right: 5px;
-      padding: 2px 5px;
-      font-size: 0.8em;
-    }
-    #adminPanel {
+
+
+    #profileSection, #adminPanel {
       margin-top: 20px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      background-color: #f9f9f9;
-      border-radius: 5px;
+      padding: 20px;
+      border: 2px dashed var(--neon-green); 
+      background-color: rgba(0, 0, 0, 0.4); 
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+      color: var(--text-light);
+      text-align: left;
     }
-    #adminPanel h3 {
-      margin-top: 0;
+    #profileSection h3, #adminPanel h3 {
+        color: var(--neon-yellow);
+        font-size: 1.3rem;
+        margin-top: 0;
+        text-shadow: 0 0 5px var(--neon-yellow);
     }
-    #adminPanel input {
-      width: 70%;
-      padding: 5px;
-      margin-right: 5px;
+    #profileSection input, #adminPanel input {
+        width: calc(100% - 120px); 
+        margin-right: 10px;
+    }
+    #profileSection button, #adminPanel button {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+        margin: 5px 0;
     }
     #adminPanel button {
-      padding: 5px 10px;
-      font-size: 0.9em;
+        background-color: #ff6666; 
+        box-shadow: 0 0 10px #ff6666;
     }
-    #profileSection {
-      margin-top: 20px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      background-color: #f9f9f9;
-      border-radius: 5px;
+    #adminPanel button:hover {
+        background-color: #e60000;
+        box-shadow: 0 0 15px #e60000;
     }
-    #profileSection input {
-      width: 70%;
-      padding: 5px;
-      margin-right: 5px;
+    #unbanUserBtn {
+        background-color: var(--neon-blue);
+        box-shadow: 0 0 10px var(--neon-blue);
     }
-    #profileSection button {
-      padding: 5px 10px;
-      font-size: 0.9em;
+    #unbanUserBtn:hover {
+        background-color: #008080; 
+        box-shadow: 0 0 15px #008080;
     }
-    #userStatus {
-      margin-bottom: 20px;
-      font-weight: bold;
-    }
+
+
     #messages {
       max-height: 400px;
       overflow-y: auto;
       margin-bottom: 20px;
-      border: 1px solid #ccc;
-      padding: 10px;
-      background-color: #fff;
-      border-radius: 5px;
+      border: 2px solid var(--neon-blue); 
+      padding: 15px;
+      background-color: rgba(0, 0, 0, 0.3); 
+      border-radius: 10px;
+      box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.3); 
+      text-align: left;
     }
-    #msgInput {
-      width: 70%;
-      padding: 5px;
-      margin-right: 5px;
+    .message {
+      border: 1px solid rgba(0, 255, 0, 0.2); 
+      padding: 14px;
+      margin: 12px 0;
+      border-radius: 8px;
+      background-color: rgba(25, 25, 112, 0.6); 
+      box-shadow: 0 0 5px rgba(0, 255, 0, 0.1);
     }
-    #sendBtn {
-      padding: 5px 10px;
-      font-size: 0.9em;
+    .message strong {
+      color: var(--neon-yellow); 
+      font-size: 1.1em;
+      text-shadow: 0 0 3px var(--neon-yellow);
     }
-    #banUserIdInput {
-      width: 60%;
-      padding: 5px;
-      margin-right: 5px;
+    .message small {
+      color: var(--text-lighter); 
+      font-size: 0.85em;
+      margin-left: 10px;
     }
-    #banUserBtn, #unbanUserBtn {
-      padding: 5px 10px;
-      font-size: 0.9em;
-    }
-    .message input[type="text"] {
-      width: 80%;
-      padding: 5px;
-      margin-right: 5px;
-    }
-    .message button {
-      padding: 5px 10px;
-      font-size: 0.9em;
+    .message span {
+        color: var(--text-light);
+        display: block;
+        margin-top: 5px;
     }
     .message .edited-label {
       font-style: italic;
-      color: #888;
+      color: var(--text-lighter);
+      font-size: 0.8em;
     }
     .message .admin-controls {
-      display: flex;
+      display: flex; 
       gap: 5px;
-      margin-top: 5px;
+      margin-top: 10px;
+      flex-wrap: wrap; 
     }
     .message .admin-controls button {
-      padding: 3px 6px;
-      font-size: 0.8em;
+      padding: 5px 10px;
+      font-size: 0.85em;
+      margin: 0; 
     }
     .message .admin-controls small {
       display: block;
       margin-top: 5px;
-      color: #666;
+      color: var(--text-lighter);
+      font-size: 0.75em;
     }
-    #loginBtn {
-      padding: 5px 10px;
-      font-size: 0.9em;
-      margin-left: 10px;
+
+    
+    div > input#msgInput {
+        width: calc(80% - 20px); 
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 15px 0 0;
+        padding: 14px;
     }
-    #loginBtn:hover {
-      background-color: #ddd;
+    div > button#sendBtn {
+        width: auto;
+        display: inline-block;
+        vertical-align: middle;
+        padding: 14px 30px;
     }
-    #displayNameInput {
-      width: 70%;
-      padding: 5px;
-      margin-right: 5px;
+    .message input[type="text"] { 
+      width: calc(80% - 10px);
+      display: inline-block;
+      vertical-align: middle;
     }
-    #saveDisplayNameBtn {
-      padding: 5px 10px;
-      font-size: 0.9em;
+    .message button { 
+      padding: 6px 12px;
+      font-size: 0.8em;
+      margin-top: 0;
     }
-    #saveDisplayNameBtn:hover {
-      background-color: #ddd;
+
+    
+    footer {
+        margin-top: auto; 
+        padding: 30px;
+        background-color: var(--neon-yellow);
+        box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+        color: var(--button-text-dark);
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 1px;
+        width: 100%; 
+        text-align: center;
     }
-    #userStatus, #profileSection, #adminPanel {
-      margin-bottom: 20px;
+
+    footer p {
+        margin: 5px 0;
+        font-size: 1.1em;
+        color: var(--button-text-dark);
     }
-    #messages {
-      margin-bottom: 20px;
-      max-height: 400px;
-      overflow-y: auto;
-      border: 1px solid #ccc;
-      padding: 10px;
-      background-color: #fff;
-      border-radius: 5px;
+    footer a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
     }
-    #msgInput {
-      width: 70%;
-      padding: 5px;
-      margin-right: 5px;
-      background-color: #f9f9f9;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+    footer a:hover {
+        color: var(--neon-green);
     }
-    #sendBtn {
-      padding: 5px 10px;
-      font-size: 0.9em;
-      background-color: #3ee243;
-    color: black;
-      border: none;
-      border-radius: 5px;
+
+    
+    body > p:last-of-type {
+        margin-top: 20px;
+        margin-bottom: 20px; 
     }
-    #banUserIdInput {
-      width: 60%;
-      padding: 5px;
-      margin-right: 5px;
+    body > p:last-of-type a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
     }
-    #banUserBtn, #unbanUserBtn {
-      padding: 5px 10px;
-      font-size: 0.9em;
+    body > p:last-of-type a:hover {
+        color: var(--neon-green);
     }
-    #banUserBtn:hover, #unbanUserBtn:hover {
-      background-color: #ddd;
+
+    
+    @media (max-width: 768px) {
+        .chat-container {
+            padding: 25px;
+        }
+        h2 {
+            font-size: 2rem;
+        }
+        input[type="text"] {
+            width: calc(100% - 16px);
+        }
+        div > input#msgInput {
+            width: calc(70% - 10px); 
+        }
+        div > button#sendBtn {
+            padding: 10px 20px;
+        }
+        .message input[type="text"] {
+            width: calc(70% - 10px);
+        }
     }
-    #loginBtn {
-      padding: 5px 10px;
-      font-size: 0.9em;
-      margin-left: 10px;
-        background-color: #3ee243;
-        color: black;
-        border: none;
-        border-radius: 5px;
+
+    @media (max-width: 480px) {
+        body {
+            padding: 20px 10px;
+        }
+        .chat-container {
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h2 {
+            font-size: 1.8rem;
+        }
+        input[type="text"], button {
+            width: 100%;
+            margin: 8px 0;
+            display: block; 
+        }
+        div > input#msgInput {
+            width: 100%;
+            margin-right: 0;
+        }
+        div > button#sendBtn {
+            width: 100%;
+            margin-top: 10px;
+        }
+        .message .admin-controls {
+            flex-direction: column; 
+            align-items: flex-start;
+        }
+        .message .admin-controls button {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+        .message input[type="text"] {
+            width: 100%;
+        }
+        .message button {
+            width: auto; 
+        }
+        #profileSection input, #adminPanel input {
+            width: 100%;
+            margin-right: 0;
+        }
+        #profileSection button, #adminPanel button {
+            width: 100%;
+            margin-bottom: 5px;
+        }
     }
-    #loginBtn:hover {
-      background-color: #ddd;
+    nav {
+      background-color: rgba(255, 0, 0, 0.6);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px; 
+        padding: 20px 0; 
+        max-width: 100%; 
     }
-    #displayNameInput {
-      width: 70%;
-      padding: 5px;
-      margin-right: 5px;
+    nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
     }
-    #saveDisplayNameBtn {
-      padding: 5px 10px;
-      font-size: 0.9em;
+    nav li {
+        margin: 0 10px; 
     }
-    #saveDisplayNameBtn:hover {
-      background-color: #ddd;
+    nav a {
+        color: var(--neon-blue);
+        text-decoration: none;
+        font-size: 1.2rem; 
+        padding: 10px 15px; 
+        border-radius: 6px; 
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
-    #userStatus, #profileSection, #adminPanel {
-      margin-bottom: 20px;
+    nav a:hover {
+        background-color: rgba(0, 255, 255, 0.1); 
+        color: var(--neon-green); 
     }
-    #messages {
-      margin-bottom: 20px;
-      max-height: 400px;
-      overflow-y: auto;
-      border: 1px solid #ccc;
-      padding: 10px;
-      background-color: #fff;
-      border-radius: 5px;
-    }
-    #msgInput {
-      width: 70%;
-      padding: 5px;
-      margin-right: 5px;
-    }
-    #sendBtn {
-      padding: 5px 10px;
-      font-size: 0.9em;
-    }
-    #banUserIdInput {
-      width: 60%;
-      padding: 5px;
-      margin-right: 5px;
-    }
-    #banUserBtn, #unbanUserBtn {
-      padding: 5px 10px;
-      font-size: 0.9em;
-    }
-    #banUserBtn:hover, #unbanUserBtn:hover {
-      background-color: #ddd;
-    }
-    #loginBtn {
-      padding: 5px 10px;
-      font-size: 0.9em;
-      margin-left: 10px;
-    }
-    #loginBtn:hover {
-      background-color: #ddd;
-    }
-    #displayNameInput {
-      width: 70%;
-      padding: 5px;
-      margin-right: 5px;
-    }
-    #saveDisplayNameBtn {
-      padding: 5px 10px;
-      font-size: 0.9em;
-    }
-    #saveDisplayNameBtn:hover {
-      background-color: #ddd;
+    nav a:active {
+        background-color: rgba(0, 255, 255, 0.2); 
+        color: var(--neon-yellow); 
     }
 </style>
 </head>
 <body>
+  <nav>
+    <ul>
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./tags.html">Posts</a></li>
+      <li><a href="./sportscalendar.html">Calendar</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="./subscriberchat.html">Subscriber Chat</a></li>
+      <li><a href="./podcast.html">Podcast</a></li>
+      <li><a href="./social.html">Social Media</a></li>
+    </ul>
+  </nav>
+<div class="chat-container">
+    <h2>Subscriber Chat Room</h2>
 
-<h2>Chat Room</h2>
+    <div id="userStatus">Loading user...</div>
 
-<div id="userStatus">Loading user...</div>
+    <div id="profileSection" style="display:none;">
+      <h3>Your Profile</h3>
+      <input type="text" id="displayNameInput" placeholder="Set your display name" />
+      <button id="saveDisplayNameBtn">Save Display Name</button>
+    </div>
 
-<div id="profileSection" style="display:none;">
-  <input type="text" id="displayNameInput" placeholder="Set your display name" />
-  <button id="saveDisplayNameBtn">Save Display Name</button>
+    <div id="messages"></div>
+
+    <div>
+      <input type="text" id="msgInput" placeholder="Type a message..." />
+      <button id="sendBtn">Send</button>
+    </div>
+
+    <div id="adminPanel" style="display:none;">
+      <h3>Admin Controls</h3>
+      <input type="text" id="banUserIdInput" placeholder="User UID to ban/unban" />
+      <button id="banUserBtn">Ban User</button>
+      <button id="unbanUserBtn">Unban User</button>
+    </div>
 </div>
 
-<div id="messages"></div>
-
-<div>
-  <input type="text" id="msgInput" placeholder="Type a message..." style="width:75%" />
-  <button id="sendBtn">Send</button>
-</div>
-
-<div id="adminPanel" style="display:none;">
-  <h3>Admin Controls</h3>
-  <input type="text" id="banUserIdInput" placeholder="User UID to ban/unban" style="width: 70%" />
-  <button id="banUserBtn">Ban User</button>
-  <button id="unbanUserBtn">Unban User</button>
-</div>
-
-<!-- Firebase SDKs: include these ONCE per page -->
 <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
 
-<!-- Your config and presence scripts -->
-<script src="/path/to/firebase-config.js"></script>
-<script src="/path/to/presence.js"></script>
 
 <script>
-  // Your Firebase config here
+
   const firebaseConfig = {
     apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
     authDomain: "sportssquare-b96ed.firebaseapp.com",
@@ -363,7 +468,11 @@
     appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
   };
 
-  firebase.initializeApp(firebaseConfig);
+  if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+  } else {
+      firebase.app(); // if already initialized, use that one
+  }
 
   const auth = firebase.auth();
   const db = firebase.database();
@@ -386,26 +495,35 @@
   let isAdmin = false;
 
   function escapeHTML(text) {
-    return text.replace(/[&<>"']/g, c => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    })[c]);
-  }
+  if (!text) return ''; // prevents calling .replace on undefined
+  return text.replace(/[&<>"']/g, c => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[c]);
+}
+
 
   function updateUserStatus(user) {
     if (user) {
       currentUser = user;
-      // Load display name from DB
+
       db.ref('users/' + user.uid).once('value').then(snap => {
         const displayName = snap.val()?.displayName || user.displayName || user.email || 'Anonymous';
-        userStatus.textContent = `Logged in as: ${displayName} (UID: ${user.uid})`;
+        userStatus.innerHTML = `Logged in as: <strong>${escapeHTML(displayName)}</strong> (UID: ${user.uid})`;
         displayNameInput.value = displayName;
         profileSection.style.display = 'block';
       });
       checkAdmin(user.uid);
     } else {
-      userStatus.innerHTML = `Not logged in. <button id="loginBtn">Log In</button>`;
+      userStatus.innerHTML = `Not logged in. <button id="loginBtn">Log In (Anonymous)</button>`;
       document.getElementById('loginBtn').onclick = () => {
-        auth.signInAnonymously();
+        auth.signInAnonymously().catch(error => {
+            console.error("Anonymous login failed:", error);
+            alert("Failed to log in anonymously: " + error.message);
+        });
       };
       currentUser = null;
       isAdmin = false;
@@ -419,6 +537,8 @@
       isAdmin = snap.exists() && snap.val() === true;
       adminPanel.style.display = isAdmin ? 'block' : 'none';
       loadMessages(); // reload messages on admin change for controls
+    }).catch(error => {
+        console.error("Error checking admin status:", error);
     });
   }
 
@@ -428,16 +548,25 @@
   });
 
   saveDisplayNameBtn.onclick = () => {
-    if (!currentUser) return alert('Log in first');
+    if (!currentUser) {
+        alert('Log in first');
+        return;
+    }
     const newName = displayNameInput.value.trim();
-    if (!newName) return alert('Display name cannot be empty');
+    if (!newName) {
+        alert('Display name cannot be empty');
+        return;
+    }
     db.ref('users/' + currentUser.uid).update({ displayName: newName })
       .then(() => {
         alert('Display name saved!');
-        userStatus.textContent = `Logged in as: ${newName} (UID: ${currentUser.uid})`;
+        userStatus.innerHTML = `Logged in as: <strong>${escapeHTML(newName)}</strong> (UID: ${currentUser.uid})`;
         loadMessages(); // reload to update usernames in messages
       })
-      .catch(console.error);
+      .catch(error => {
+          console.error("Error saving display name:", error);
+          alert("Failed to save display name: " + error.message);
+      });
   };
 
   sendBtn.onclick = async () => {
@@ -457,19 +586,22 @@
     const displayName = userSnap.val()?.displayName || currentUser.displayName || currentUser.email || 'Anonymous';
 
     const messageData = {
-      text,
+      text: text, // Use plain text here
       username: displayName,
       uid: currentUser.uid,
       timestamp: Date.now(),
-      ip: "N/A"
+      ip: "N/A" // IP address should be handled server-side for security/privacy
     };
-    await db.ref('messages').push(messageData);
+    await db.ref('messages').push(messageData).catch(error => {
+        console.error("Error sending message:", error);
+        alert("Failed to send message: " + error.message);
+    });
     msgInput.value = '';
   };
 
   function loadMessages() {
     messagesDiv.innerHTML = '';
-    db.ref('messages').off();
+    db.ref('messages').off(); // Detach previous listeners
 
     db.ref('messages').on('child_added', snap => {
       addMessageToDOM(snap.key, snap.val());
@@ -491,20 +623,24 @@
 
     const time = new Date(msg.timestamp).toLocaleTimeString();
     const userName = escapeHTML(msg.username);
-    const text = escapeHTML(msg.text);
-    const editedLabel = msg.edited ? ' <em>(edited)</em>' : '';
+    const text = escapeHTML(msg.text); // Escape message text
+    const editedLabel = msg.edited ? ' <em class="edited-label">(edited)</em>' : '';
 
-    let html = `<strong title="UID: ${msg.uid}">${userName}</strong> <small>${time}${editedLabel}</small><br><span id="msg-text-${key}">${text}</span>`;
+    let html = `
+      <strong title="UID: ${msg.uid}">${userName}</strong> <small>${time}${editedLabel}</small><br>
+      <span id="msg-text-${key}">${text}</span>
+    `;
 
     if (currentUser && currentUser.uid === msg.uid) {
       html += ` <button onclick="startEditMessage('${key}')">Edit</button>`;
     }
+
     if (isAdmin) {
       html += `<div class="admin-controls">
         <button onclick="banUser('${msg.uid}')">Ban User</button>
         <button onclick="unbanUser('${msg.uid}')">Unban User</button>
         <button onclick="deleteMessage('${key}')">Delete Msg</button><br>
-        <small>IP: ${msg.ip}</small>
+        <small>IP: ${msg.ip || 'N/A'}</small>
       </div>`;
     }
 
@@ -516,14 +652,14 @@
   function updateMessageInDOM(key, msg) {
     const span = document.getElementById('msg-text-' + key);
     if (span) {
-      span.textContent = msg.text;
-      // update edited label
+      span.textContent = escapeHTML(msg.text); // Ensure updated text is also escaped
+
       const msgDiv = document.getElementById('msg-' + key);
       if (msgDiv) {
         const timeSmall = msgDiv.querySelector('small');
         if (timeSmall) {
           const time = new Date(msg.timestamp).toLocaleTimeString();
-          const editedLabel = msg.edited ? ' (edited)' : '';
+          const editedLabel = msg.edited ? ' <em class="edited-label">(edited)</em>' : '';
           timeSmall.innerHTML = time + editedLabel;
         }
       }
@@ -534,63 +670,95 @@
     const span = document.getElementById('msg-text-' + messageKey);
     if (!span) return;
     const oldText = span.textContent;
-    span.innerHTML = `<input type="text" id="edit-input-${messageKey}" value="${oldText}" style="width:80%" /> 
-                      <button onclick="saveEditMessage('${messageKey}')">Save</button> 
-                      <button onclick="cancelEditMessage('${messageKey}', '${oldText.replace(/'/g,"\\'")}')">Cancel</button>`;
+
+    const safeOldText = oldText.replace(/'/g, "&apos;");
+    span.innerHTML = `
+        <input type="text" id="edit-input-${messageKey}" value="${safeOldText}" /> 
+        <button onclick="saveEditMessage('${messageKey}')">Save</button> 
+        <button onclick="cancelEditMessage('${messageKey}', '${safeOldText}')">Cancel</button>
+    `;
+
+    document.getElementById('edit-input-' + messageKey).focus();
   };
 
   window.saveEditMessage = function(messageKey) {
     const input = document.getElementById('edit-input-' + messageKey);
     if (!input) return;
     const newText = input.value.trim();
-    if (!newText) return alert('Message cannot be empty');
+    if (!newText) {
+        alert('Message cannot be empty');
+        return;
+    }
     db.ref('messages/' + messageKey).update({ text: newText, edited: true })
       .then(() => {
-        loadMessages();
+
       })
-      .catch(console.error);
+      .catch(error => {
+          console.error("Error saving edited message:", error);
+          alert("Failed to save edited message: " + error.message);
+      });
   };
 
   window.cancelEditMessage = function(messageKey, oldText) {
     const span = document.getElementById('msg-text-' + messageKey);
     if (span) {
-      span.textContent = oldText;
+      span.textContent = oldText; // Restore original text
     }
   };
 
   window.banUser = function(uid) {
     if (!isAdmin) return alert('Admins only');
     if (!uid) return alert('UID required');
-    db.ref('bannedUsers/' + uid).set(true)
-      .then(() => alert('User banned'))
-      .catch(console.error);
+    if (confirm(`Are you sure you want to BAN user with UID: ${uid}?`)) {
+        db.ref('bannedUsers/' + uid).set(true)
+        .then(() => alert('User banned successfully'))
+        .catch(error => {
+            console.error("Error banning user:", error);
+            alert("Failed to ban user: " + error.message);
+        });
+    }
   };
 
   window.unbanUser = function(uid) {
     if (!isAdmin) return alert('Admins only');
     if (!uid) return alert('UID required');
-    db.ref('bannedUsers/' + uid).remove()
-      .then(() => alert('User unbanned'))
-      .catch(console.error);
+    if (confirm(`Are you sure you want to UNBAN user with UID: ${uid}?`)) {
+        db.ref('bannedUsers/' + uid).remove()
+        .then(() => alert('User unbanned successfully'))
+        .catch(error => {
+            console.error("Error unbanning user:", error);
+            alert("Failed to unban user: " + error.message);
+        });
+    }
   };
 
   window.deleteMessage = function(messageKey) {
     if (!isAdmin) return alert('Admins only');
-    db.ref('messages/' + messageKey).remove()
-      .catch(console.error);
+    if (confirm('Are you sure you want to delete this message?')) {
+        db.ref('messages/' + messageKey).remove()
+        .catch(error => {
+            console.error("Error deleting message:", error);
+            alert("Failed to delete message: " + error.message);
+        });
+    }
   };
 
   banUserBtn.onclick = () => {
     const uid = banUserIdInput.value.trim();
     if (!uid) return alert('Enter a UID');
-    banUser(uid);
+    window.banUser(uid);
   };
   unbanUserBtn.onclick = () => {
     const uid = banUserIdInput.value.trim();
     if (!uid) return alert('Enter a UID');
-    unbanUser(uid);
+    window.unbanUser(uid);
   };
 </script>
 <script src="./notifications.js"></script>
+<footer>
+  <p>&copy; 2025 Sports Square. All rights reserved.</p>
+  <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+</footer>
+<p><a href="./sitemap.html">Sitemap</a></p>
 </body>
 </html>

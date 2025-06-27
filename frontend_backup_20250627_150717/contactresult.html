@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+    </head>
+<body>
+<style>
+    :root {
+      /* Top color: Black */
+      --background-dark: #000000;
+      /* 2nd level color: Midnight Blue */
+      --accent-dark: #191970;
+
+      /* Neon colors remain vibrant */
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+      /* Text colors adjusted for dark background */
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0; /* For less prominent text */
+      --button-text-dark: #000000; /* Dark text for neon buttons */
+      --input-text-color: #e0e0e0; /* Input text on dark background */
+      --placeholder-color: #888; /* Placeholder text */
+    }
+
+    body {
+        background-color: var(--background-dark);
+        font-family: 'Montserrat', sans-serif;
+        text-align: center;
+        padding: 50px;
+        color: var(--text-light);
+        margin: 0;
+        line-height: 1.6;
+    }
+    h1 {
+        font-family: 'Montserrat', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--neon-green); /* Neon green for the thank you message */
+        text-shadow: 0 0 8px var(--neon-green), 0 0 15px var(--neon-green);
+        margin-bottom: 20px;
+        font-size: 2.8em; /* Slightly larger for emphasis */
+    }
+    p {
+        font-size: 1.1em;
+        color: var(--text-light);
+        margin-bottom: 15px;
+    }
+    a {
+        color: var(--neon-blue);
+        text-decoration: none;
+        transition: color 0.3s ease, text-shadow 0.3s ease;
+        font-weight: bold; /* Make links stand out more */
+    }
+    a:hover {
+        color: var(--neon-green);
+        text-shadow: 0 0 5px var(--neon-green);
+        text-decoration: none;
+    }
+
+    footer {
+        margin-top: 60px;
+        padding: 30px;
+        background-color: var(--neon-yellow);
+        box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+        color: var(--button-text-dark);
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 1px;
+    }
+
+    footer p {
+        margin: 5px 0;
+        font-size: 1.1em;
+        color: var(--button-text-dark);
+    }
+    footer a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    footer a:hover {
+        color: var(--neon-green);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        body {
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        p {
+            font-size: 1em;
+        }
+    }
+</style>
+<body>
+    <h1>Thank You for Contacting Us!</h1>
+    <p>We appreciate your message and will get back to you as soon as possible.</p>
+    <p>Your feedback is important to us, and we look forward to assisting you.</p>
+    <p>Have a great day!</p>
+    <p><a href="index.html">Return to Home</a></p>
+    <p><a href="contact.html">Contact Us Again</a></p>
+    <p><a href="about.html">Learn More About Us</a></p>
+    <p><a href="subscribed.html">Subscribe for Updates</a></p>
+    <footer>
+        <p>&copy; 2025 Sports Square. All rights reserved.</p>
+        <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+    </footer>
+    <p><a href="./sitemap.html">Sitemap</a></p>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <script src="./firebase-config.js"></script>
+
+    <script src="./notifications.js"></script>
+    </body>
+</html>

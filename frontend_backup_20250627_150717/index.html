@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sports Square</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824" crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6CR81XMZN5');
+  </script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Your Firebase project configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+      authDomain: "sportssquare-b96ed.firebaseapp.com",
+      databaseURL: "https://sportssquare-b96ed-default-rtdb.firebaseio.com", // Essential for Realtime DB
+      projectId: "sportssquare-b96ed",
+      storageBucket: "sportssquare-b96ed.firebasestorage.app",
+      messagingSenderId: "844736978057",
+      appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+    };
+    // Initialize Firebase App
+    firebase.initializeApp(firebaseConfig);
+
+    // Get Firebase services instances (accessible globally in this script block)
+    const auth = firebase.auth();
+    // const db = firebase.database(); // Uncomment if directly used in this index.html script
+    // const firestore = firebase.firestore(); // Uncomment if directly used in this index.html script
+  </script>
+
+
+  <style>
+    :root {
+      /* Dark background as requested */
+      --background-dark: #1a1a2e;
+      /* Neon colors remain vibrant */
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+      /* Text colors adjusted for dark background */
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0; /* For less prominent text */
+      --accent-dark: #0f3460; /* Dark accent for cards/containers */
+      --button-text-dark: #1a1a2e; /* Text color for neon buttons */
+      --input-text-color: #e0e0e0; /* Input text on dark background */
+      --placeholder-color: #888; /* Placeholder text */
+    }
+
+    body {
+      background-color: var(--background-dark);
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      padding: 50px;
+      color: var(--text-light); /* Light text on dark background */
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Chakra Petch', sans-serif; /* Sporty font */
+      color: var(--neon-blue); /* Use blue for general headings */
+      text-shadow: 0 0 5px var(--neon-blue); /* Subtle blue glow */
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+        font-size: 3.5em; /* Larger main title */
+        color: var(--neon-green); /* Green for the main title */
+        text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+    }
+
+    a {
+      color: var(--neon-blue);
+      text-decoration: none;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    a:hover {
+      color: var(--neon-green);
+      text-shadow: 0 0 5px var(--neon-green);
+    }
+
+    /* Header with Signup/Login Buttons */
+    .header-buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 25px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .header-buttons button,
+    .subscribe-button,
+    nav button {
+      padding: 15px 30px;
+      background-color: var(--neon-blue);
+      color: var(--button-text-dark); /* Dark text on neon button */
+      font-size: 1.1em;
+      font-weight: bold;
+      border: none;
+      border-radius: 50px; /* Pill shape */
+      cursor: pointer;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 0 15px var(--neon-blue);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-family: 'Rajdhani', sans-serif; /* Sporty button font */
+      border: 2px solid transparent;
+    }
+
+    .header-buttons button:hover,
+    .subscribe-button:hover,
+    nav button:hover {
+      background-color: var(--neon-green); /* Green hover */
+      box-shadow: 0 0 25px var(--neon-green);
+      transform: translateY(-2px);
+      border-color: var(--neon-blue); /* Blue border on hover */
+    }
+
+    #dashboardButton {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: var(--neon-green);
+      color: var(--button-text-dark);
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      display: none;
+      z-index: 1000;
+      box-shadow: 0 0 10px var(--neon-green);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    }
+
+    #dashboardButton:hover {
+      background-color: var(--neon-yellow);
+      box-shadow: 0 0 15px var(--neon-yellow);
+      transform: translateY(-2px);
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 380px;
+      padding: 15px;
+      margin-bottom: 20px;
+      background-color: var(--accent-dark); /* Dark background for input */
+      border: 2px solid var(--neon-blue);
+      border-radius: 8px;
+      color: var(--input-text-color); /* Light text for input */
+      font-size: 1.1em;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); /* Darker shadow for dark background */
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    input[type="text"]::placeholder,
+    input[type="email"]::placeholder {
+      color: var(--placeholder-color);
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus {
+      outline: none;
+      border-color: var(--neon-green);
+      box-shadow: 0 0 15px var(--neon-green);
+    }
+
+    /* Navigation Bar */
+    nav ul {
+      list-style-type: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 40px;
+      background-color: var(--neon-yellow); /* Neon yellow strip */
+      padding: 15px 0;
+      box-shadow: 0 5px 15px rgba(255, 255, 0, 0.4); /* Yellow glow */
+      flex-wrap: wrap;
+    }
+
+    nav ul li a {
+      color: var(--button-text-dark); /* Dark text on neon background */
+      font-weight: bold;
+      padding: 8px 15px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+      font-family: 'Rajdhani', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    nav ul li a:hover {
+      background-color: var(--neon-blue);
+      color: var(--text-light);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    }
+
+
+    /* Hero Section (Major Subscribe Button and Featured look) */
+    #hero {
+      background: linear-gradient(135deg, var(--neon-blue), var(--neon-green));
+      padding: 40px;
+      margin: 40px auto;
+      width: 90%;
+      max-width: 800px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 255, 255, 0.5); /* Stronger neon glow */
+      color: var(--text-light); /* Light text on hero background */
+      position: relative;
+      overflow: hidden;
+      transform: skewX(-5deg);
+      animation: pulsateGlow 2s infinite alternate;
+    }
+
+    #hero > * {
+        transform: skewX(5deg); /* Unskew children */
+    }
+
+    @keyframes pulsateGlow {
+      from { box-shadow: 0 10px 30px rgba(0, 255, 255, 0.5); }
+      to { box-shadow: 0 10px 40px rgba(0, 255, 0, 0.7), 0 10px 40px rgba(0, 255, 255, 0.7); }
+    }
+
+
+    #hero h2, #hero h3 {
+      color: var(--text-light);
+      text-shadow: none;
+      font-family: 'Chakra Petch', sans-serif;
+      letter-spacing: 2px;
+    }
+
+    #hero h2 {
+      font-size: 2.5em;
+      color: black;
+    }
+    #hero h3 {
+      font-size: 1.5em;
+      color: blue;
+    }
+
+    #hero em {
+      color: var(--neon-yellow);
+      text-shadow: 0 0 10px var(--neon-yellow);
+    }
+
+    .subscribe-button {
+      width: 280px;
+      height: auto;
+      padding: 20px 40px;
+      font-size: 1.5em;
+      background-color: var(--neon-yellow);
+      color: var(--button-text-dark); /* Dark text on yellow */
+      box-shadow: 0 0 20px var(--neon-yellow);
+      border-radius: 60px;
+      border: 3px solid var(--neon-yellow);
+    }
+    .subscribe-button:hover {
+        background-color: var(--neon-green);
+        box-shadow: 0 0 30px var(--neon-green);
+        border-color: var(--neon-yellow);
+    }
+
+    /* Horizontal Rule with Neon Glow */
+    hr {
+      border: none;
+      height: 3px;
+      background: linear-gradient(to right, transparent, var(--neon-blue), var(--neon-green), var(--neon-blue), transparent);
+      margin: 60px 0;
+      box-shadow: 0 0 15px var(--neon-blue);
+      border-radius: 5px;
+    }
+
+    /* Featured Section */
+    figure {
+      margin: 50px auto;
+      padding: 30px;
+      background-color: var(--accent-dark); /* Dark background for featured */
+      border: 3px solid var(--neon-green);
+      border-radius: 15px;
+      max-width: 750px;
+      box-shadow: 0 10px 25px rgba(0, 255, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    figure:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 255, 0, 0.5), 0 0 30px rgba(0, 0, 255, 0.3);
+    }
+
+    figure h1 {
+      color: var(--neon-yellow);
+      text-shadow: 0 0 10px var(--neon-yellow);
+      font-size: 3em;
+    }
+
+    figure h2 a {
+      color: var(--neon-blue);
+      text-shadow: 0 0 8px var(--neon-blue);
+    }
+    figure h2 a:hover {
+        color: var(--neon-green);
+        text-shadow: 0 0 10px var(--neon-green);
+    }
+
+    figure h4, figure figcaption, figure p {
+      color: var(--text-light); /* Light text on dark background */
+      font-family: 'Montserrat', sans-serif;
+      text-shadow: none;
+    }
+    figure p a { /* Author link inside figure */
+        color: var(--neon-green);
+        font-weight: bold;
+    }
+    figure p a:hover {
+        color: var(--neon-blue);
+    }
+
+    figure img {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      border: 4px solid var(--neon-blue);
+      border-radius: 10px;
+      box-shadow: 0 0 20px var(--neon-blue);
+      margin-top: 25px;
+    }
+
+
+    /* Latest Posts Section (Post Cards) */
+    .flex-section {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-top: 50px;
+    }
+
+    .post-card {
+      background-color: var(--accent-dark); /* Dark background for card */
+      border: 2px solid var(--neon-green);
+      padding: 25px;
+      width: 320px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Darker shadow for dark background */
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: left;
+    }
+
+    .post-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 255, 0, 0.4);
+      border-color: var(--neon-blue);
+    }
+
+    .post-card h3 a {
+      color: var(--neon-blue);
+      text-shadow: 0 0 5px var(--neon-blue);
+      font-size: 1.4em;
+    }
+    .post-card h3 a:hover {
+        color: var(--neon-green);
+        text-shadow: 0 0 8px var(--neon-green);
+    }
+
+    .post-card p {
+      margin-top: 10px;
+      margin-bottom: 15px;
+      color: var(--text-lighter); /* Slightly lighter text for description */
+      flex-grow: 1;
+    }
+
+    .post-card p a { /* Author link inside card */
+        font-weight: bold;
+        color: var(--neon-green);
+    }
+    .post-card p a:hover {
+        color: var(--neon-blue);
+    }
+
+
+    /* Poll Box */
+    aside.poll-box {
+      background-color: var(--accent-dark); /* Dark background for poll box */
+      padding: 1.8rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      font-family: 'Montserrat', sans-serif;
+      max-width: 380px;
+      width: 100%;
+      border: 2px solid var(--neon-blue);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      text-align: left;
+    }
+
+    aside.poll-box:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 255, 0.4);
+      border-color: var(--neon-green);
+    }
+
+    .poll-box h3 {
+      color: var(--neon-yellow);
+      text-shadow: 0 0 8px var(--neon-yellow);
+      font-size: 1.8em;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .poll-box p {
+        color: var(--text-light); /* Light text for poll question */
+        margin-bottom: 1.2rem;
+        text-align: center;
+    }
+
+    .poll-box form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .poll-box label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-light); /* Light text for options */
+      font-size: 1.05em;
+      cursor: pointer;
+    }
+
+    .poll-box input[type="radio"] {
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border: 3px solid var(--neon-blue);
+      border-radius: 50%;
+      background-color: var(--background-dark); /* Dark background for radio */
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .poll-box input[type="radio"]:checked {
+      background-color: var(--neon-green);
+      border-color: var(--neon-green);
+      box-shadow: 0 0 12px var(--neon-green);
+    }
+
+    .poll-box input[type="radio"]:checked::after {
+        content: '';
+        width: 10px;
+        height: 10px;
+        background-color: var(--text-light); /* Inner dot light on dark radio */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+    }
+
+
+    .poll-box button[type="submit"] {
+      margin-top: 1.8rem;
+      padding: 12px 25px;
+      background-color: var(--neon-green);
+      color: var(--button-text-dark);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 0 15px var(--neon-green);
+      font-family: 'Rajdhani', sans-serif;
+      text-transform: uppercase;
+    }
+
+    .poll-box button[type="submit"]:hover {
+      background-color: var(--neon-blue);
+      box-shadow: 0 0 25px var(--neon-blue);
+      transform: translateY(-2px);
+    }
+
+    #pollResult, #pollCounts {
+      margin-top: 1.5rem;
+      font-size: 1em;
+      color: var(--text-light); /* Light text for poll results */
+      text-align: center;
+      padding: 0 10px;
+    }
+    #pollCounts {
+        font-weight: bold;
+    }
+
+
+    footer {
+      margin-top: 80px;
+      padding: 40px;
+      background-color: var(--neon-yellow); /* Neon yellow footer */
+      box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+      color: var(--button-text-dark); /* Dark text on yellow footer */
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 1px;
+    }
+
+    footer p {
+        margin: 5px 0;
+        font-size: 1.1em;
+    }
+    footer a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    footer a:hover {
+        color: var(--neon-green);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header-buttons">
+    <h1>Sports Square</h1>
+    <button onclick="location.href='./signup.html'">Signup</button>
+    <button onclick="location.href='./signup.html'">Login</button>
+  </div>
+  <button id="dashboardButton">Dashboard</button>
+
+  <input type="text" id="search" placeholder="Search for posts...">
+
+  <script>
+    // Search bar functionality
+    document.getElementById('search').addEventListener('keypress', function (event) {
+      if (event.key === 'Enter') {
+        const search = this.value.toLowerCase();
+        if (["so longpops", "so long pops", "solongpops", "solong pops"].includes(search)) {
+          window.location.href = './posts/so-long-pops.html';
+        } else if (["smayan", "smayan srikanth"].includes(search)) {
+          window.location.href = './posts/smayan.html';
+        } else if (["sports calendar", "calendar"].includes(search)) {
+          window.location.href = './sportscalendar.html';
+        } else if (["dashboard"].includes(search)) {
+          console.log('Search for "dashboard" entered! Attempting redirect to /frontend/editor.html'); // Debug log
+          window.location.href = '/frontend/editor.html'; // Redirect to your editor page
+        } else if (["subscribed"].includes(search)) {
+          window.location.href = './subscribed.html';
+        }
+        else if (["careers"].includes(search)) {
+          window.location.href = './careers.html';
+        } else if (search) {
+          alert('No results found for: ' + search);
+        }
+        else if (["home", "index"].includes(search)) {
+          window.location.href = './index.html';
+        }
+        else if (["tags", "posts"].includes(search)) {
+          window.location.href = './tags.html';
+        }
+        else if (["about"].includes(search)) {
+          window.location.href = './about.html';
+        }
+        else if (["contact"].includes(search)) {
+          window.location.href = './contact.html';
+        }
+        else if (["collaborations"].includes(search)) {
+          window.location.href = './collaborations.html';
+        }
+        else if (["subscriber chat", "subscriberchat"].includes(search)) {
+          window.location.href = './subscriberchat.html';
+        }
+        else if (["sitemap"].includes(search)) {
+          window.location.href = './sitemap.html';
+        }
+        else if (["latest sports updates", "latestsmupdates"].includes(search)) {
+          window.location.href = './latestsmupdates.html';
+        }
+        else if (["editor", "rich text editor"].includes(search)) {
+          window.location.href = './editor.html';
+        }
+        else if (["nfl"].includes(search)) {
+          window.location.href = './nfl.html';
+        }
+        else if (["mlb"].includes(search)) {
+          window.location.href = './mlb.html';
+        }
+        else if (["nba"].includes(search)) {
+          window.location.href = './nba.html';
+        }
+        else if (["subscriber dashboard", "subdash"].includes(search)) {
+          window.location.href = './subdash.html';
+        }
+        else if (["admin notification panel", "adminnoti"].includes(search)) {
+          window.location.href = './adminnoti.html';
+        }
+        else if (["signup"].includes(search)) {
+          window.location.href = './signup.html';
+        }
+        else if (["login"].includes(search)) {
+          window.location.href = './signup.html';
+        }
+        else if (["sports square"].includes(search)) {
+          window.location.href = './index.html';
+        }
+        else if (["sports square news"].includes(search)) {
+          window.location.href = './index.html';
+        }
+        else if (["sports square author"].includes(search)) {
+          window.location.href = './posts/smayan.html';
+        }
+        else if (["sports square editor"].includes(search)) {
+          window.location.href = './editor.html';
+        }
+        else if (["sports square calendar", "sports square sportscalendar"].includes(search)) {
+          window.location.href = './sportscalendar.html';
+        }
+        else if (["sports square careers"].includes(search)) {
+          window.location.href = './careers.html';
+        }
+        else if (["sports square subscribed"].includes(search)) {
+          window.location.href = './subscribed.html';
+        }
+        else if (["sports square subscriber chat", "sports square subscriberchat"].includes(search)) {
+          window.location.href = './subscriberchat.html';
+        }
+        else if (["sports square collaborations"].includes(search)) {
+          window.location.href = './collaborations.html';
+        }
+        else if (["sports square contact"].includes(search)) {
+          window.location.href = './contact.html';
+        }
+        else if (["sports square tags", "sports square posts"].includes(search)) {
+          window.location.href = './tags.html';
+        }
+        else if (["sports square sitemap"].includes(search)) {
+          window.location.href = './sitemap.html';
+        }
+        else if (["sports square latest sports updates", "sports square latestsmupdates"].includes(search)) {
+          window.location.href = './latestsmupdates.html';
+        }
+        else if (["sports square subscriber dashboard", "sports square subdash"].includes(search)) {
+          window.location.href = './subdash.html';
+        }
+        else if (["admin notification panel", "adminnoti"].includes(search)) {
+          window.location.href = './adminnoti.html';
+        }
+        else if (["signup"].includes(search)) {
+          window.location.href = './signup.html';
+        }
+        else if (["login"].includes(search)) {
+          window.location.href = './signup.html';
+        }
+        else if (["sports square sports square"].includes(search)) {
+          window.location.href = './index.html';
+        }
+        else if (["sports square sports square news"].includes(search)) {
+          window.location.href = './index.html';
+        }
+        else if (["sports square sports square author"].includes(search)) {
+          window.location.href = './posts/smayan.html';
+        }
+        else if (["sports square sports square editor"].includes(search)) {
+          window.location.href = './editor.html';
+        }
+        else if (["sports square sports square calendar", "sports square sports square sportscalendar"].includes(search)) {
+          window.location.href = './sportscalendar.html';
+        }
+        else if (["sports square sports square careers"].includes(search)) {
+          window.location.href = './careers.html';
+        }
+        else if (["sports square sports square subscribed"].includes(search)) {
+          window.location.href = './subscribed.html';
+        }
+        else if (["sports square sports square subscriber chat", "sports square sports square subscriberchat"].includes(search)) {
+          window.location.href = './subscriberchat.html';
+        }
+        else if (["sports square sports square collaborations"].includes(search)) {
+          window.location.href = './collaborations.html';
+        }
+        else if (["sports square sports square contact"].includes(search)) {
+          window.location.href = './contact.html';
+        }
+        else if (["sports square sports square tags", "sports square sports square posts"].includes(search)) {
+          window.location.href = './tags.html';
+        }
+        else if (["sports square sports square sitemap"].includes(search)) {
+          window.location.href = './sitemap.html';
+        }
+        else if (["sports square sports square latest sports updates", "sports square sports square latestsmupdates"].includes(search)) {
+          window.location.href = './latestsmupdates.html';
+        }
+        else if (["sports square sports square subscriber dashboard", "sports square sports square subdash"].includes(search)) {
+          window.location.href = './subdash.html';
+        }
+        else if (["sports square sports square admin notification panel", "sports square sports square adminnoti"].includes(search)) {
+          window.location.href = './adminnoti.html';
+        }
+        else if (["sports square sports square editor", "sports square sports square rich text editor"].includes(search)) {
+          window.location.href = './editor.html';
+        }
+        else if (["sports square sports square nfl"].includes(search)) {
+          window.location.href = './nfl.html';
+        }
+        else if (["sports square sports square mlb"].includes(search)) {
+          window.location.href = './mlb.html';
+        }
+        else if (["sports square sports square nba"].includes(search)) {
+          window.location.href = './nba.html';
+        }
+        else if (["sports square sports square signup"].includes(search)) {
+          window.location.href = './signup.html';
+        }
+        else if (["sports square sports square login"].includes(search)) {
+          window.location.href = './signup.html';
+        }
+        else if (["social media", "social"].includes(search)) {
+          window.location.href = './social.html';
+        }
+        else if (["podcast"].includes(search)) {
+          window.location.href = './podcast.html';
+        }
+        else if (["podcast recorder", "record"].includes(search)) {
+          window.location.href = './record.html';
+        }
+        else if (["sports square podcast"].includes(search)) {
+          window.location.href = './podcast.html';
+        }
+        else if (["sports square podcast recorder", "sports square record"].includes(search)) {
+          window.location.href = './record.html';
+        }
+        else if (["sports square social media", "sports square social"].includes(search)) {
+          window.location.href = './social.html';
+        }
+        else if (["sports square sports square podcast"].includes(search)) {
+          window.location.href = './podcast.html';
+        }
+        else if (["sports square sports square podcast recorder", "sports square sports square record"].includes(search)) {
+          window.location.href = './record.html';
+        }
+        else if (["sports square sports square social media", "sports square sports square social"].includes(search)) {
+          window.location.href = './social.html';
+        }
+        else if (["sports square sports square social media", "sports square sports square social"].includes(search)) {
+          window.location.href = './social.html';
+        }
+        else if (["sports square sports square social media", "sports square sports square social"].includes(search)) {
+          window.location.href = './social.html';
+        }
+        else if (["sports square sports square social media", "sports square sports square social"].includes(search)) {
+          window.location.href = './social.html';
+        }
+        else if (["sports square sports square social media", "sports square sports square social"].includes(search)) {
+          window.location.href = './social.html';
+        }
+        else {
+          alert('No results found for: ' + search);
+        }
+        this.value = ''; // Clear the search input
+      }
+    });
+
+    // Dashboard button logic
+    const dashboardButton = document.getElementById('dashboardButton');
+    const ADMIN_UID = 'ibLtQvJhIPN2icV7IyB1IUIgzN12'; // Your specific admin UID
+
+    // Listen for authentication state changes to show/hide the button
+    auth.onAuthStateChanged(user => {
+      if (user && user.uid === ADMIN_UID) {
+        dashboardButton.style.display = 'block'; // Show the button
+        console.log('Dashboard button should be visible. User is admin.'); // Debug log
+      } else {
+        dashboardButton.style.display = 'none'; // Hide the button
+        console.log('Dashboard button hidden. User is not admin or not logged in.'); // Debug log
+      }
+    });
+
+    // Add click event listener to the dashboard button for redirection
+    dashboardButton.addEventListener('click', () => {
+      console.log('Dashboard button clicked! Attempting redirect to /frontend/editor.html'); // Debug log
+      window.location.href = 'sportssquare.netlify.app/editor'; // Redirect to your editor page
+    });
+  </script>
+
+  <nav>
+    <ul>
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./tags.html">Posts</a></li>
+      <li><a href="./sportscalendar.html">Calendar</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="collaborations.html">Collaborations</a></li>
+      <li><a href="./careers.html">Careers</a></li>
+      <li><a href="./subscriberchat.html">Subscriber Chat</a></li>
+      <li><a href="./podcast.html">Podcast</a></li>
+      <li><a href="./social.html">Social Media</a></li>
+    </ul>
+  </nav>
+
+  <div id="hero">
+    <h2>Where Sports Meet Their Match</h2>
+    <h3>Fresh takes, game-day insights, and behind-the-scenes sports stories — straight to your inbox.</h3>
+    <h2><em>Join the Square</em></h2>
+    <form action="https://formsubmit.co/sportssquareauthor@gmail.com" method="POST">
+      <input type="email" name="email" placeholder="Your email" required>
+      <input type="hidden" name="_next" value="https://sportssquare.netlify.app/subscribed">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_subject" value="New subscription from Sports Square">
+      <input type="hidden" name="_message" value="A new user has subscribed to Sports Square.">
+      <br>
+      <button type="submit" class="subscribe-button">Subscribe</button>
+    </form>
+  </div>
+
+  <hr>
+
+  <figure>
+    <h1>FEATURED:</h1>
+    <a href="./posts/so-long-pops.html"><h2>So Long Pops</h2></a>
+    <a href="./posts/so-long-pops.html">
+      <h4>From Air Force Cadet to NBA Legend: The Unmatched Legacy of Coach Popovich</h4>
+      <img src="./image.png" alt="Sports Square Logo">
+      <figcaption>For nearly three decades, Gregg Popovich wasn't just coaching basketball — he was redefining it. From humble beginnings at a tiny DIII college to five NBA titles and Olympic gold, Pop's journey is a masterclass in leadership, grit, and principle.</figcaption>
+    </a>
+    <p>By: <a href="./posts/so-long-pops.html">Smayan Srikanth</a></p>
+  </figure>
+
+  <hr>
+
+  <nav class="header-buttons">
+    <button onclick="location.href='./nfl.html'">NFL</button>
+    <button onclick="location.href='./mlb.html'">MLB</button>
+    <button onclick="location.href='./nba.html'">NBA</button>
+  </nav>
+
+  <hr>
+
+  <h2>Latest Posts</h2>
+
+  <div class="flex-section">
+    <div class="post-card">
+      <h3><a href="./posts/so-long-pops.html">So Long Pops</a></h3>
+      <p>From Air Force Cadet to NBA Legend: The Unmatched Legacy of Coach Popovich</p>
+      <p>By: <a href="./posts/smayan.html">Smayan Srikanth</a></p>
+    </div>
+
+    <aside class="poll-box">
+      <h3>🏀 Fan Poll</h3>
+      <p>Who will win the NBA Finals?</p>
+
+      <form id="pollForm">
+        <label><input type="radio" name="vote" value="O1"> Thunder</label>
+        <label><input type="radio" name="vote" value="O3"> Pacers</label>
+
+        <button type="submit">Vote</button>
+      </form>
+
+      <div id="pollResult"></div>
+      <div id="pollCounts"></div>
+    </aside>
+  </div>
+
+  <hr>
+
+  <footer>
+    <p>© 2025 Sports Square. All rights reserved.</p>
+    <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+    <p><a href="./sitemap.html">Sitemap</p></a>
+  </footer>
+
+  <script>
+    // Google Sheets Poll Form Logic
+    const form = document.getElementById('pollForm');
+    const resultDiv = document.getElementById('pollResult');
+    const countsDiv = document.getElementById('pollCounts');
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWyaj5EOkvdBZ_CUAI8AT9k41u2ovK3F-q0XlCvCwyLv4REagM0dydH57WJP5iCINj/exec';
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const selected = document.querySelector('input[name="vote"]:checked');
+      if (!selected) {
+        resultDiv.textContent = '⚠️ Please select an option before submitting.';
+        return;
+      }
+
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `vote=${encodeURIComponent(selected.value)}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          resultDiv.textContent = '✅ Thanks for voting! Your vote has been recorded.';
+          form.style.display = 'none';
+          fetchResults();
+        } else {
+          resultDiv.textContent = '⚠️ There was an error submitting your vote.';
+        }
+      })
+      .catch(() => {
+        resultDiv.textContent = '⚠️ Sorry, could not submit your vote.';
+      });
+    });
+
+    function fetchResults() {
+      fetch(GOOGLE_SCRIPT_URL)
+        .then(response => response.json())
+        .then(counts => {
+          countsDiv.innerHTML = `
+            🗳️ Current Results:<br>
+            • Thunder: ${counts.O1}<br>
+            • Pacers: ${counts.O3}
+          `;
+        })
+        .catch(() => {
+          countsDiv.textContent = '⚠️ Unable to load current results.';
+        });
+    }
+
+    fetchResults();
+    setInterval(fetchResults, 30000);
+  </script>
+  <script src="./notifications.js"></script>
+
+</body>
+</html>

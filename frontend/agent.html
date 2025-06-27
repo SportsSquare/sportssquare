@@ -12,7 +12,7 @@
       padding: 50px;
     }
     #chat-container {
-      display: none; /* Initially hidden */
+      display: none; 
       max-width: 600px;
       margin: auto;
       padding: 20px;
@@ -60,9 +60,83 @@
     button:hover {
       background-color: #27ae60;
     }
+    :root {
+      
+      --background-dark: #1a1a2e;
+      
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+      
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0; 
+      --accent-dark: #0f3460; 
+      --button-text-dark: #1a1a2e; 
+      --input-text-color: #e0e0e0; 
+      --placeholder-color: #888; 
+    }
+
+    body {
+      background-color: var(--background-dark);
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      padding: 50px;
+      color: var(--text-light); 
+      margin: 0;
+      line-height: 1.6;
+    }
+    nav {
+      background-color: rgba(255, 0, 0, 0.6);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px; 
+        padding: 20px 0; 
+        max-width: 100%; 
+    }
+    nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    nav li {
+        margin: 0 10px; 
+    }
+    nav a {
+        color: var(--neon-blue);
+        text-decoration: none;
+        font-size: 1.2rem; 
+        padding: 10px 15px; 
+        border-radius: 6px; 
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    nav a:hover {
+        background-color: rgba(0, 255, 255, 0.1); 
+        color: var(--neon-green); 
+    }
+    nav a:active {
+        background-color: rgba(0, 255, 255, 0.2); 
+        color: var(--neon-yellow); 
+    }
   </style>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
 </head>
 <body>
+  <nav>
+    <ul>
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./tags.html">Posts</a></li>
+      <li><a href="./sportscalendar.html">Calendar</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="./subscriberchat.html">Subscriber Chat</a></li>
+      <li><a href="./podcast.html">Podcast</a></li>
+      <li><a href="./social.html">Social Media</a></li>
+    </ul>
+  </nav>
   <div id="chat-container">
     <div id="chat-log">
       <p class="bot">Welcome! How can I assist you today?</p>
@@ -73,7 +147,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Hide all existing content
+
       document.body.innerHTML = '<div id="chat-container">' + document.getElementById('chat-container').innerHTML + '</div>';
       document.getElementById('chat-container').style.display = 'block';
 
@@ -84,26 +158,24 @@
       sendButton.addEventListener('click', () => {
         const userMessage = userInput.value.trim();
         if (userMessage) {
-          // Display user message
+
           const userMessageElement = document.createElement('p');
           userMessageElement.classList.add('user');
           userMessageElement.textContent = `You: ${userMessage}`;
           chatLog.appendChild(userMessageElement);
 
-          // Display bot response
           const botMessageElement = document.createElement('p');
           botMessageElement.classList.add('bot');
           botMessageElement.textContent = `Bot: ${getBotResponse(userMessage)}`;
           chatLog.appendChild(botMessageElement);
 
-          // Clear input field
           userInput.value = '';
           chatLog.scrollTop = chatLog.scrollHeight; // Scroll to the bottom
         }
       });
 
       function getBotResponse(message) {
-        // Define responses for specific questions
+
         const responses = {
           "hello": "Hi there! How can I help you?",
           "how are you": "I'm just a bot, but I'm here to assist you!",
@@ -114,13 +186,28 @@
           "How do I contact support?": "You can contact support by filling out the contact form on our website or by emailing us at sportssquareauthor@gmail.com. You can also submit a request on the contact form.",
           "How do I subscribe to updates?": "You can subscribe to updates by filling out your email and pressing that big button on our front page.",
           "What sports do you cover?": "Every single one",
-          
+            "How can I contribute content?": "You can contribute content by submitting articles or blog posts through our submission form. We welcome contributions from all sports enthusiasts!",
+            "What is the latest news?": "You can find the latest news on our homepage.",
+            "How do I create an account?": "You can create an account by clicking on the 'Sign Up' button on our homepage and filling out the registration form.",
+            "How do I reset my password?": "You can reset your password by contacting us. The Sports Square team is still working on a forgot password function!",
+            "How do I delete my account?": "To delete your account, please contact us and we will assist you with the process.",
+            "What are the community guidelines?": "Our community guidelines promote respectful and constructive discussions. Please avoid hate speech, harassment, and spam. We encourage positive interactions and sharing of sports knowledge.",
+            "How do I report inappropriate content?": "You can report inappropriate content by clicking the 'Report' button next to the content or by contacting our support team directly.",
+            "How do I follow a team?": "You can follow a team by going to our recommend page and entering your favorite team. We plan to develop something to use wth that feature!",
+            "How do I unsubscribe from updates?": "You can unsubscribe from updates by clicking the 'Unsubscribe' link in any of our emails or by contacting us directly.",
+
+
+
         };
 
-        // Return a response or a default message
-        return responses[message.toLowerCase()] || "I'm not sure how to answer that. Can you rephrase?";
+        return responses[message.toLowerCase()] || "I'm not sure how to answer that. If this is an emergency, please contact us directly in the contact page!";
       }
     });
   </script>
+  <footer style="margin-top: 20px; color: #e0e0e0;">
+    <p style="color: #e0e0e0";>&copy; 2025 Sports Square. All rights reserved.</p>
+    <p style="color: #e0e0e0";>Follow us on <a href="https://x.com/Sports__Square" target="_blank" style="color: #00ffff;">X</a></p>
+</footer>
+<p><a href="./sitemap.html" style="color: #00ffff;">Sitemap</a></p>
 </body>
 </html>

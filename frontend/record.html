@@ -4,77 +4,338 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audio Recorder with Episode Metadata & Pitch Adjustment</title>
-    <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <style>
-        /* Custom styles for the disabled button */
+        :root {
+            
+            --background-dark: #000000;
+            
+            --accent-dark: #191970;
+
+            
+            --neon-green: #00ff00;
+            --neon-blue: #00ffff;
+            --neon-yellow: #faff00;
+            
+            --text-light: #e0e0e0;
+            --text-lighter: #b0b0b0; 
+            --button-text-dark: #000000; 
+            --input-text-color: #e0e0e0; 
+            --placeholder-color: #888; 
+        }
+
+        body {
+            background-color: var(--background-dark);
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            padding: 50px;
+            color: var(--text-light); 
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            color: var(--neon-green); 
+            text-shadow: 0 0 8px var(--neon-green), 0 0 15px var(--neon-green);
+        }
+        h2 {
+            color: var(--neon-blue); 
+            text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue);
+        }
+        
+        
+        .main-container-style {
+            background-color: var(--accent-dark); 
+            border-radius: 15px; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.5); 
+            border: 2px solid var(--neon-blue); 
+            padding: 30px; 
+        }
+
+        
         .disabled-btn {
             opacity: 0.6;
             cursor: not-allowed;
+            box-shadow: none !important; 
         }
         .disabled-btn:hover {
-            background-color: #ccc; /* Prevent hover effect on disabled buttons */
+            background-color: #555 !important; 
         }
-        /* Custom styles for the audio player */
+
+        
         audio {
             width: 100%;
             margin-top: 10px;
             border-radius: 8px;
-            background-color: #f3f4f6; /* Light gray background */
-            padding: 10px; /* Add some padding */
+            background-color: rgba(0, 0, 0, 0.4); 
+            padding: 10px; 
+            border: 1px solid var(--neon-blue); 
         }
-        /* Custom styles for the range slider */
+        
+        audio::-webkit-media-controls-panel {
+            background-color: var(--accent-dark); 
+            color: var(--text-light);
+        }
+        audio::-webkit-media-controls-play-button,
+        audio::-webkit-media-controls-timeline,
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display,
+        audio::-webkit-media-controls-volume-slider {
+            color: var(--neon-green); 
+        }
+
+        
         input[type="range"] {
             -webkit-appearance: none;
             width: 100%;
             height: 8px;
-            background: #d1d5db; /* Gray background */
+            background: rgba(0, 0, 0, 0.5); 
             border-radius: 4px;
             outline: none;
             opacity: 0.7;
             transition: opacity .2s;
+            border: 1px solid var(--neon-blue); 
         }
         input[type="range"]:hover {
-            opacity: 1; /* Full opacity on hover */
+            opacity: 1; 
         }
-        /* Style for loading/error states */
-        .auth-status-container {
-            min-height: 100vh;
-            display: flex;
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--neon-yellow); 
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--neon-yellow);
+            transition: background .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: var(--neon-green); 
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--neon-yellow);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--neon-yellow);
+            transition: background .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+        input[type="range"]::-moz-range-thumb:hover {
+            background: var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
+        
+        input[type="text"],
+        select,
+        textarea {
+            background-color: rgba(0, 0, 0, 0.5); 
+            border: 1px solid var(--neon-blue); 
+            color: var(--input-text-color); 
+            padding: 12px;
+            border-radius: 8px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input[type="text"]::placeholder,
+        textarea::placeholder {
+            color: var(--placeholder-color); 
+        }
+        input[type="text"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--neon-yellow); 
+            box-shadow: 0 0 0 2px rgba(250, 255, 0, 0.4), 0 0 10px var(--neon-yellow); 
+            background-color: rgba(0, 0, 0, 0.7); 
+        }
+        label {
+            color: var(--text-light); 
+        }
+        select option {
+            background-color: var(--accent-dark); 
+            color: var(--text-light);
+        }
+        select option:hover {
+            background-color: rgba(0, 255, 255, 0.2); 
+        }
+
+        
+        .btn-neon {
+            background-color: var(--neon-green);
+            color: var(--button-text-dark);
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 50px; 
+            box-shadow: 0 0 15px var(--neon-green);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-flex; 
             align-items: center;
             justify-content: center;
-            background-color: #f8fafc;
-            text-align: center;
+        }
+        .btn-neon:hover {
+            background-color: var(--neon-yellow);
+            box-shadow: 0 0 25px var(--neon-yellow);
+            transform: translateY(-3px);
+        }
+
+        #stopRecordingBtn {
+            background-color: #ff0000; 
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+            border-radius: 8px; 
+        }
+        #stopRecordingBtn:hover:not(.disabled-btn) {
+            background-color: #cc0000;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
+        }
+        #generatePitchedEmbedBtn,
+        #copyCodeBtn {
+            background-color: var(--neon-blue);
+            box-shadow: 0 0 15px var(--neon-blue);
+            border-radius: 8px; 
+        }
+        #generatePitchedEmbedBtn:hover:not(.disabled-btn),
+        #copyCodeBtn:hover {
+            background-color: var(--neon-yellow);
+            box-shadow: 0 0 25px var(--neon-yellow);
+        }
+        #downloadLink {
+            background-color: var(--neon-green);
+            color: var(--button-text-dark); 
+            box-shadow: 0 0 15px var(--neon-green);
+            border-radius: 8px;
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+        }
+        #downloadLink:hover {
+            background-color: var(--neon-yellow);
+            box-shadow: 0 0 25px var(--neon-yellow);
+        }
+
+        
+        #status, #messageArea {
+            color: var(--text-light); 
+        }
+        #messageArea.text-red-600 {
+            color: #ff6666; 
+            text-shadow: 0 0 5px rgba(255, 102, 102, 0.5);
+        }
+        #messageArea.text-green-600 {
+            color: var(--neon-green); 
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        }
+        #messageArea.text-gray-600 {
+            color: var(--text-lighter); 
+        }
+
+        
+        #audioOutput h2 {
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px var(--neon-blue);
+        }
+
+        
+        #embedCodeArea {
+            background-color: rgba(0, 0, 0, 0.7); 
+            border: 2px dashed var(--neon-yellow); 
+            color: var(--neon-green); 
+            font-family: 'Consolas', 'Monaco', monospace; 
+            font-size: 0.9em;
+            text-shadow: 0 0 3px rgba(0, 255, 0, 0.3);
+            white-space: pre-wrap; 
+            word-break: break-all;
+        }
+        #embedCodeArea::selection {
+            background-color: rgba(0, 255, 255, 0.4); 
+            color: var(--button-text-dark);
+        }
+
+        
+        #pitchRateValueDisplay {
+            color: var(--neon-yellow);
+            text-shadow: 0 0 5px var(--neon-yellow);
+        }
+        .bg-gray-100 { 
+            background-color: rgba(0, 0, 0, 0.4); 
+            border: 1px solid var(--neon-blue);
+        }
+
+        
+        footer {
+            margin-top: 60px;
+            padding: 30px;
+            background-color: var(--neon-yellow);
+            box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+            color: var(--button-text-dark);
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            width: 100%; 
+        }
+
+        footer p {
+            margin: 5px 0;
+            font-size: 1.1em;
+            color: var(--button-text-dark);
+        }
+        footer a {
+            color: var(--neon-blue);
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        footer a:hover {
+            color: var(--neon-green);
+        }
+
+        
+        body > p:last-of-type {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        body > p:last-of-type a {
+            color: var(--neon-blue);
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        body > p:last-of-type a:hover {
+            color: var(--neon-green);
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
+<body class="flex flex-col items-center justify-between min-h-screen p-4">
 
-    <!-- Loading/Auth Status Message - Initially visible -->
-    <div id="authStatus" class="auth-status-container">
-        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-200">
-            <h1 class="text-3xl font-extrabold text-blue-600 mb-4" id="authStatusHeading">Authenticating...</h1>
-            <p class="text-gray-700 mb-6" id="authStatusMessage">Attempting to establish connection and authenticate access.</p>
-            <p id="authErrorMessage" class="text-red-600 font-medium hidden"></p>
-        </div>
+    <div id="authStatus" class="auth-status-container main-container-style w-full max-w-md">
+        <h1 class="text-3xl font-extrabold mb-4" id="authStatusHeading">Authenticating...</h1>
+        <p class="text-base mb-6" id="authStatusMessage">Attempting to establish connection and authenticate access.</p>
+        <p id="authErrorMessage" class="font-medium hidden"></p>
     </div>
 
-    <!-- Main Content - Initially hidden until Firebase authentication succeeds -->
-    <div id="mainContent" class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-2xl border border-gray-200 hidden">
-        <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-6">Record Audio & Adjust Pitch/Tempo</h1>
+    <div id="mainContent" class="main-container-style w-full max-w-2xl hidden">
+        <h1 class="text-3xl font-extrabold text-center mb-6">Record Audio & Adjust Pitch/Tempo</h1>
 
-        <!-- Metadata Input Fields (NEW) -->
         <div class="mb-6 space-y-4">
             <div>
-                <label for="episodeTitle" class="block text-gray-700 text-sm font-medium mb-2">Episode Title:</label>
+                <label for="episodeTitle" class="block text-sm font-medium mb-2">Episode Title:</label>
                 <input type="text" id="episodeTitle"
-                       class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out"
+                       class="w-full p-3 transition duration-200 ease-in-out"
                        placeholder="e.g., NFL Draft Recap 2025">
             </div>
             <div>
-                <label for="episodeCategory" class="block text-gray-700 text-sm font-medium mb-2">Category:</label>
+                <label for="episodeCategory" class="block text-sm font-medium mb-2">Category:</label>
                 <select id="episodeCategory"
-                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out">
+                        class="w-full p-3 transition duration-200 ease-in-out">
                     <option value="">Select a Category</option>
                     <option value="NFL">NFL</option>
                     <option value="NBA">NBA</option>
@@ -85,84 +346,79 @@
                 </select>
             </div>
             <div>
-                <label for="episodeDescription" class="block text-gray-700 text-sm font-medium mb-2">Episode Description / Show Notes:</label>
+                <label for="episodeDescription" class="block text-sm font-medium mb-2">Episode Description / Show Notes:</label>
                 <textarea id="episodeDescription"
-                          class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out h-32 resize-y"
+                          class="w-full p-4 h-32 resize-y transition duration-200 ease-in-out"
                           placeholder="Provide a brief summary or show notes for this episode."></textarea>
             </div>
         </div>
 
-        <!-- Original Post Text Area (for reference while reading) -->
         <div class="mb-6">
-            <label for="postText" class="block text-gray-700 text-sm font-medium mb-2">
+            <label for="postText" class="block text-sm font-medium mb-2">
                 Original Article Content (for your reference while recording):
             </label>
             <textarea id="postText"
-                      class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out h-40 resize-y"
+                      class="w-full p-4 h-40 resize-y transition duration-200 ease-in-out"
                       placeholder="Paste the original article text you want to read here. (This content is NOT included in the embed code for the public page; use Episode Description instead)."></textarea>
         </div>
 
 
-        <!-- Recording Controls -->
         <div class="flex gap-4 mb-6">
             <button id="startRecordingBtn"
-                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    class="flex-1 btn-neon">
                 Start Recording
             </button>
             <button id="stopRecordingBtn" disabled
-                    class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 disabled-btn">
+                    class="flex-1 btn-neon disabled-btn">
                 Stop Recording
             </button>
         </div>
 
-        <!-- Status and Output -->
-        <div id="status" class="text-center text-gray-600 mb-4">Ready to record.</div>
+        <div id="status" class="text-center mb-4">Ready to record.</div>
         <p id="messageArea" class="text-center font-medium mt-4"></p>
 
         <div id="audioOutput" class="mt-8 hidden">
-            <h2 class="text-xl font-semibold text-gray-800 mb-3">Recorded Audio Preview:</h2>
+            <h2 class="text-xl font-semibold mb-3">Recorded Audio Preview:</h2>
             <audio id="audioPlayer" controls class="w-full mb-4"></audio>
 
-            <!-- Pitch Adjustment Controls -->
-            <div class="mb-6 bg-gray-100 p-4 rounded-lg">
-                <label for="pitchRateSlider" class="block text-gray-700 text-sm font-medium mb-2">
-                    Pitch/Tempo Adjustment: <span id="pitchRateValueDisplay" class="font-bold text-blue-700">1.00x</span>
+            <div class="mb-6 p-4 rounded-lg">
+                <label for="pitchRateSlider" class="block text-sm font-medium mb-2">
+                    Pitch/Tempo Adjustment: <span id="pitchRateValueDisplay" class="font-bold">1.00x</span>
                 </label>
                 <input type="range" id="pitchRateSlider" min="0.5" max="1.5" step="0.01" value="1.0"
-                       class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer range-lg">
-                <p class="text-xs text-gray-500 mt-1">
+                       class="w-full h-2 rounded-lg appearance-none cursor-pointer range-lg">
+                <p class="text-xs mt-1" style="color: var(--text-lighter);">
                     (Lower values = lower pitch & slower tempo; Higher values = higher pitch & faster tempo)
                 </p>
             </div>
 
             <div class="flex gap-4 mb-6">
                 <a id="downloadLink" download="recorded-audio.webm"
-                   class="flex-1 text-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                   class="flex-1 text-center btn-neon">
                     Download Original Audio
                 </a>
                 <button id="generatePitchedEmbedBtn" disabled
-                        class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 disabled-btn">
+                        class="flex-1 btn-neon disabled-btn">
                     Generate Pitched Embed Code
                 </button>
             </div>
 
-            <h2 class="text-xl font-semibold text-gray-800 mb-3 mt-8">Copy this FULL Episode Card HTML to Embed:</h2>
+            <h2 class="text-xl font-semibold mb-3 mt-8">Copy this FULL Episode Card HTML to Embed:</h2>
             <textarea id="embedCodeArea" readonly
-                      class="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 font-mono text-sm h-48 resize-y cursor-text select-all"
+                      class="w-full p-4 font-mono text-sm h-48 resize-y cursor-text select-all"
                       aria-label="HTML code to embed recorded audio"></textarea>
             <button id="copyCodeBtn"
-                    class="mt-4 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50">
+                    class="mt-4 btn-neon">
                 Copy Full Episode Card HTML
             </button>
         </div>
     </div>
 
     <script type="module">
-        // Firebase SDKs
+
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // Firebase Configuration (Hardcoded with your provided values)
         const firebaseConfig = {
             apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
             authDomain: "sportssquare-b96ed.firebaseapp.com",
@@ -173,7 +429,6 @@
             appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
         };
 
-        // Your specific UID (Only this user can access the recorder)
         const OWNER_UID = "ibLtQvJhIPN2icV7IyB1IUIgzN12";
 
         let app;
@@ -181,14 +436,12 @@
         let currentUserId = null; // Will be set after authentication
         let authReady = false; // Flag to indicate if authentication is complete
 
-        // UI Elements
         const mainContentDiv = document.getElementById('mainContent');
         const authStatusDiv = document.getElementById('authStatus');
         const authStatusHeading = document.getElementById('authStatusHeading');
         const authStatusMessage = document.getElementById('authStatusMessage');
         const authErrorMessageDiv = document.getElementById('authErrorMessage');
 
-        // NEW Metadata Fields
         const episodeTitleInput = document.getElementById('episodeTitle');
         const episodeCategorySelect = document.getElementById('episodeCategory');
         const episodeDescriptionTextarea = document.getElementById('episodeDescription');
@@ -213,9 +466,7 @@
         let audioContext; // Web Audio API AudioContext
         let audioSource; // AudioBufferSourceNode for processing
 
-        // --- Helper Functions ---
 
-        // Function to convert Blob to Base64 string for embedding
         function blobToBase64(blob) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -227,7 +478,6 @@
             });
         }
 
-        // Function to display messages to the user
         function showMessage(text, type = 'info') {
             messageArea.textContent = text;
             messageArea.className = 'text-center font-medium mt-4'; // Reset classes
@@ -249,27 +499,28 @@
             authStatusHeading.textContent = heading;
             authStatusMessage.textContent = msg;
             if (isError) {
-                authStatusHeading.classList.remove('text-blue-600');
-                authStatusHeading.classList.add('text-red-600');
+                authStatusHeading.style.color = '#ff6666'; 
+                authStatusHeading.style.textShadow = '0 0 8px rgba(255, 102, 102, 0.5)';
+                authStatusMessage.style.color = '#ff6666'; 
                 authErrorMessageDiv.textContent = msg;
                 authErrorMessageDiv.classList.remove('hidden');
+                authErrorMessageDiv.style.color = '#ff6666';
             } else {
-                authStatusHeading.classList.remove('text-red-600');
-                authStatusHeading.classList.add('text-blue-600');
+                authStatusHeading.style.color = 'var(--neon-blue)'; 
+                authStatusHeading.style.textShadow = '0 0 8px var(--neon-blue)';
+                authStatusMessage.style.color = 'var(--text-light)';
                 authErrorMessageDiv.classList.add('hidden');
             }
             authStatusDiv.classList.remove('hidden');
             mainContentDiv.classList.add('hidden');
         }
 
-        // --- Firebase Initialization and Auth ---
         document.addEventListener('DOMContentLoaded', async () => {
             try {
-                // Initialize Firebase App with hardcoded config
+
                 app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
 
-                // Listen for auth state changes to control access
                 onAuthStateChanged(auth, async (user) => {
                     if (user && user.uid === OWNER_UID) {
                         currentUserId = user.uid;
@@ -278,17 +529,16 @@
                         mainContentDiv.classList.remove('hidden'); // Show main content
                         showMessage("Authenticated successfully. Ready to record.", "success");
                     } else if (user && user.uid !== OWNER_UID) {
-                        // Authenticated but not the owner
+
                         showAuthStatus("Access Denied", "You are authenticated, but only the owner can access this tool.", true);
                     }
                     else {
-                        // User is not authenticated or a custom token failed to sign them in.
-                        // Since we require OWNER_UID, we show access denied.
-                        showAuthStatus("Access Denied", "Authentication required. Only the owner can access this tool.", true);
+
+
+                        showAuthStatus("Access Denied", "Authentication required. Only the owner can access this tool. Please contact the administrator for access.", true);
                     }
                 });
 
-                // Initialize slider display
                 pitchRateValueDisplay.textContent = `${parseFloat(pitchRateSlider.value).toFixed(2)}x`;
 
             } catch (error) {
@@ -298,46 +548,37 @@
         });
 
 
-        // --- Recording Functions ---
-
         async function startRecording() {
             hideMessage(); // Clear any previous messages
             try {
-                // Request microphone access
+
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
                 mediaRecorder = new MediaRecorder(stream);
                 originalAudioChunks = []; // Clear previous recordings
 
-                // Event fires when data is available (audio chunks)
                 mediaRecorder.ondataavailable = event => {
                     originalAudioChunks.push(event.data);
                 };
 
-                // Event fires when recording stops
                 mediaRecorder.onstop = () => {
-                    // Combine chunks into a single Blob
+
                     originalAudioBlob = new Blob(originalAudioChunks, { type: 'audio/webm' }); // Common format
 
-                    // Create a URL for the Blob for immediate playback
                     const audioUrl = URL.createObjectURL(originalAudioBlob);
                     audioPlayer.src = audioUrl;
                     audioPlayer.controls = true;
                     audioPlayer.playbackRate = parseFloat(pitchRateSlider.value); // Apply current slider value to preview
 
-                    // Set download link attributes (for the original recording)
                     downloadLink.href = audioUrl;
                     downloadLink.download = `original-audio-${Date.now()}.webm`;
 
-                    // Show the audio output section and enable processing button
                     audioOutputDiv.classList.remove('hidden');
                     generatePitchedEmbedBtn.disabled = false;
                     generatePitchedEmbedBtn.classList.remove('disabled-btn');
 
-                    // No longer generate embed code for original here, wait for dedicated button
                     embedCodeArea.value = ''; // Clear previous embed code
 
-                    // Clean up stream tracks
                     stream.getTracks().forEach(track => track.stop());
 
                     statusDiv.textContent = 'Recording stopped. Adjust pitch/tempo and generate embed code.';
@@ -377,7 +618,6 @@
             }
         }
 
-        // --- Pitch Adjustment & Re-processing for Embed ---
 
         pitchRateSlider.addEventListener('input', () => {
             const rate = parseFloat(pitchRateSlider.value);
@@ -416,7 +656,6 @@
                 source.buffer = audioBuffer;
                 source.playbackRate.value = parseFloat(pitchRateSlider.value); // Set the pitch/tempo here
 
-                // Use MediaStreamDestination to capture the output of the Web Audio API graph
                 const destination = audioContext.createMediaStreamDestination();
                 source.connect(destination);
 
@@ -434,41 +673,61 @@
                     const newAudioBlob = new Blob(processedAudioChunks, { type: 'audio/webm' });
                     const base64Audio = await blobToBase64(newAudioBlob);
 
-                    // Update player with new processed audio for final preview
                     audioPlayer.src = URL.createObjectURL(newAudioBlob);
                     audioPlayer.playbackRate = 1.0; // Reset preview player rate to normal for the new Blob
                     pitchRateSlider.value = 1.0; // Reset slider
                     pitchRateValueDisplay.textContent = '1.00x';
 
-                    // Update download link for the new processed audio
                     downloadLink.href = URL.createObjectURL(newAudioBlob);
-                    downloadLink.download = `pitched-audio-${Date.now()}.webm`;
+                    downloadLink.download = `${episodeTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}-pitched-${Date.now()}.webm`;
                     downloadLink.textContent = 'Download Pitched Audio'; // Change text to reflect pitched audio
 
-                    // Generate the FULL episode card HTML (NEW)
                     const currentDate = new Date();
-                    const formattedDate = currentDate.toLocaleString(); // e.g., "6/18/2025, 2:22:00 PM"
+                    const formattedDate = currentDate.toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    }); // e.g., "June 26, 2025"
                     const dataDateAttribute = currentDate.toISOString().slice(0, 19); // YYYY-MM-DDTHH:MM:SS for sorting
 
                     const episodeCardHTML = `
-<div class="episode-card" data-category="${episodeCategory}" data-date="${dataDateAttribute}">
-    <div class="flex justify-between items-center mb-2">
-        <h2 class="text-xl font-bold text-blue-800">Episode: ${episodeTitle}</h2>
-        <span class="text-sm font-semibold text-purple-700 bg-purple-100 px-3 py-1 rounded-full">${episodeCategory}</span>
+<div class="episode-card max-w-full w-auto flex flex-col md:flex-row items-start gap-4 bg-gradient-to-br from-gray-900 to-gray-800 p-5 rounded-2xl shadow-xl border border-blue-600" data-category="${episodeCategory}" data-date="${dataDateAttribute}">
+    <div class="md:w-28 w-full text-center mb-4 md:mb-0">
+        <div class="text-sm font-semibold text-blue-300">${formattedDate}</div>
     </div>
-    <p class="text-gray-700 text-base leading-relaxed mb-2">
-        **Date:** ${formattedDate}<br>
-        ${episodeDescription}
-    </p>
-    <audio controls class="w-full">
-        <source src="${base64Audio}" type="${newAudioBlob.type}">
-        Your browser does not support the audio element.
-    </audio>
-    <div class="flex justify-end mt-4">
-        <a href="${base64Audio}" download="${episodeTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}-${Date.now()}.webm"
-           class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50">
-            Download Episode
-        </a>
+
+    <div class="flex-1 max-w-full">
+        <div class="flex items-center mb-4">
+            <div class="w-14 h-14 flex items-center justify-center rounded-full bg-blue-600 text-white text-2xl shadow-md">
+                🎧
+            </div>
+            <div class="ml-4">
+                <h3 class="text-xl font-bold text-white">${episodeTitle}</h3>
+                <p class="text-sm text-blue-200">${episodeDescription}</p>
+            </div>
+        </div>
+
+        <div class="custom-player text-white">
+            <audio class="custom-audio" src="${base64Audio}"></audio>
+
+            <div class="flex items-center justify-between mb-2">
+                <button class="play-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-4 rounded shadow">
+                    ▶️ Play
+                </button>
+                <span class="current-time text-sm">0:00</span>
+            </div>
+
+            <div class="progress-container w-full h-2 bg-blue-900 rounded overflow-hidden cursor-pointer">
+                <div class="progress-bar h-2 bg-blue-400 transition-all duration-200 ease-linear w-0"></div>
+            </div>
+        </div>
+
+        <div class="flex justify-end mt-4">
+            <a href="${base64Audio}" download="${episodeTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}-episode.mp3"
+               class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50">
+                Download Episode
+            </a>
+        </div>
     </div>
 </div>
 `;
@@ -478,7 +737,6 @@
                     generatePitchedEmbedBtn.disabled = false;
                     generatePitchedEmbedBtn.classList.remove('disabled-btn');
 
-                    // Disconnect and close context
                     source.disconnect();
                     audioContext.close();
                 };
@@ -486,7 +744,6 @@
                 source.start(0); // Start playing the audio buffer
                 mediaRecorderForProcessing.start(); // Start recording the output
 
-                // Stop recording after the original audio buffer finishes playing
                 source.onended = () => {
                     mediaRecorderForProcessing.stop();
                 };
@@ -500,26 +757,37 @@
             }
         }
 
-
-        // --- Copy to Clipboard ---
         copyCodeBtn.addEventListener('click', () => {
             embedCodeArea.select();
             try {
-                document.execCommand('copy'); // Fallback for navigator.clipboard.writeText due to iframe restrictions
-                showMessage("FULL Episode Card HTML copied to clipboard!", "success");
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(embedCodeArea.value).then(() => {
+                        showMessage("FULL Episode Card HTML copied to clipboard!", "success");
+                    }).catch(err => {
+                        console.error('Failed to copy text using Clipboard API:', err);
+                        showMessage("Failed to copy code. Please manually select and copy.", "error");
+                    });
+                } else {
+                    document.execCommand('copy');
+                    showMessage("FULL Episode Card HTML copied to clipboard!", "success");
+                }
             } catch (err) {
-                console.error('Failed to copy text:', err);
+                console.error('Failed to copy text (execCommand fallback):', err);
                 showMessage("Failed to copy code. Please manually select and copy.", "error");
             }
         });
 
-        // --- Event Listeners ---
         startRecordingBtn.addEventListener('click', startRecording);
         stopRecordingBtn.addEventListener('click', stopRecording);
         generatePitchedEmbedBtn.addEventListener('click', processAndGeneratePitchedAudio);
 
-        // Initialize slider display
         pitchRateValueDisplay.textContent = `${parseFloat(pitchRateSlider.value).toFixed(2)}x`;
     </script>
+    <footer>
+        <p>&copy; 2025 Sports Square. All rights reserved.</p>
+        <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+    </footer>
+    <p><a href="./sitemap.html">Sitemap</a></p>
 </body>
 </html>

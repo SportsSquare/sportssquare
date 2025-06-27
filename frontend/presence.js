@@ -1,7 +1,8 @@
-// presence.js
+
 
 function setupPresence(uid) {
-  const userStatusDatabaseRef = db.ref('/status/' + uid);
+
+  const userStatusDatabaseRef = window.rtdb.ref('/status/' + uid);
 
   const isOfflineForDatabase = {
     state: 'offline',
@@ -13,7 +14,7 @@ function setupPresence(uid) {
     last_changed: firebase.database.ServerValue.TIMESTAMP,
   };
 
-  const connectedRef = db.ref('.info/connected');
+  const connectedRef = window.rtdb.ref('.info/connected');
   connectedRef.on('value', (snap) => {
     if (snap.val() === false) return;
 
@@ -23,7 +24,7 @@ function setupPresence(uid) {
   });
 }
 
-auth.onAuthStateChanged(user => {
+window.auth.onAuthStateChanged(user => {
   if (user) {
     console.log("Setting up presence for:", user.uid);
     setupPresence(user.uid);

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warriors Schedule - Sports Square</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
+     crossorigin="anonymous"></script>
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6CR81XMZN5');
+</script>
+<script src="./notifications.js"></script>
+
+<style>
+    /* Color variables for consistency */
+    :root {
+        /* Top color: Black */
+        --background-dark: #000000;
+        /* 2nd level color: Midnight Blue */
+        --accent-dark: #191970;
+
+        /* Neon colors remain vibrant */
+        --neon-green: #00ff00;
+        --neon-blue: #00ffff;
+        --neon-yellow: #faff00;
+        /* Text colors adjusted for dark background */
+        --text-light: #e0e0e0;
+        --text-lighter: #b0b0b0; /* For less prominent text */
+        --button-text-dark: #000000; /* Dark text for neon buttons */
+    }
+
+    body {
+        background-color: var(--background-dark); /* Dark background */
+        font-family: 'Montserrat', sans-serif;
+        color: var(--text-light); /* Light text for readability */
+        text-align: center;
+        padding: 50px 20px; /* Add horizontal padding */
+        line-height: 1.6;
+        min-height: 100vh; /* Ensure it takes full viewport height */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    .schedule-container {
+        background-color: var(--accent-dark); /* Midnight blue container */
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+        border: 2px solid var(--neon-blue); /* Neon blue border */
+        max-width: 900px;
+        width: 100%;
+        margin-bottom: 30px;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        color: var(--neon-green); /* Neon green for main heading */
+        font-size: 2.8rem; /* Larger font size */
+        font-weight: bold;
+        margin-bottom: 30px;
+        text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        line-height: 1.2;
+    }
+
+    .calendar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+        color: var(--text-light); /* Light text for calendar notes */
+    }
+
+    .calendar p {
+        font-size: 1.1em;
+        margin-bottom: 20px;
+    }
+
+    iframe {
+        border: 2px solid var(--neon-yellow) !important; /* Neon yellow border for iframe */
+        border-radius: 8px; /* Slightly rounded corners for iframe */
+        box-shadow: 0 0 20px rgba(250, 255, 0, 0.5); /* Yellow glow around iframe */
+        width: 100%; /* Make iframe responsive */
+        max-width: 800px; /* Max width to match previous design */
+        height: 600px; /* Fixed height for the calendar */
+    }
+
+    /* Footer styling */
+    footer {
+        margin-top: auto; /* Push footer to the bottom */
+        padding: 30px;
+        background-color: var(--neon-yellow);
+        box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+        color: var(--button-text-dark);
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 1px;
+        width: 100%; /* Ensure footer takes full width */
+        text-align: center;
+    }
+
+    footer p {
+        margin: 5px 0;
+        font-size: 1.1em;
+        color: var(--button-text-dark);
+    }
+    footer a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    footer a:hover {
+        color: var(--neon-green);
+    }
+
+    /* Sitemap link outside footer */
+    body > p:last-of-type {
+        margin-top: 20px;
+        margin-bottom: 20px; /* Add some margin for the sitemap link */
+    }
+    body > p:last-of-type a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    body > p:last-of-type a:hover {
+        color: var(--neon-green);
+    }
+
+    /* Media Queries for responsiveness */
+    @media (max-width: 768px) {
+        .schedule-container {
+            padding: 30px;
+        }
+        h1 {
+            font-size: 2.2rem;
+        }
+        iframe {
+            height: 500px; /* Adjust height for smaller screens */
+        }
+    }
+
+    @media (max-width: 480px) {
+        body {
+            padding: 20px 10px;
+        }
+        .schedule-container {
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h1 {
+            font-size: 1.8rem;
+        }
+        iframe {
+            height: 400px; /* Further adjust height for mobile */
+        }
+    }
+</style>
+<body>
+    <div class="schedule-container">
+        <h1>NBA Warriors Schedule</h1>
+        <div class="calendar">
+            <p>ALL TIMES EASTERN STANDARD TIME</p>
+        </div>
+        <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=America%2FNew_York&showPrint=0&src=bmJhXy1tLTBqbWo3XyU0N29sZGVuKyU1M3RhdGUrJTU3YXJyaW9ycyNzcG9ydHNAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&color=%234285f4" frameborder="0" scrolling="no"></iframe>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+
+    <footer>
+        <p>&copy; 2025 Sports Square. All rights reserved.</p>
+        <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+    </footer>
+    <p><a href="./sitemap.html">Sitemap</a></p>
+</body>
+</html>

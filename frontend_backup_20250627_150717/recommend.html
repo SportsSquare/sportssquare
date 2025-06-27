@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Welcome to Sports Square</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
+     crossorigin="anonymous"></script>
+    <style>
+        :root {
+            /* Top color: Black */
+            --background-dark: #000000;
+            /* 2nd level color: Midnight Blue */
+            --accent-dark: #191970;
+
+            /* Neon colors remain vibrant */
+            --neon-green: #00ff00;
+            --neon-blue: #00ffff;
+            --neon-yellow: #faff00;
+            /* Text colors adjusted for dark background */
+            --text-light: #e0e0e0;
+            --text-lighter: #b0b0b0; /* For less prominent text */
+            --button-text-dark: #000000; /* Dark text for neon buttons */
+            --input-text-color: #e0e0e0; /* Input text on dark background */
+            --placeholder-color: #888; /* Placeholder text */
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background-dark);
+            display: flex;
+            flex-direction: column; /* Allow footer to stack */
+            justify-content: space-between; /* Push footer to bottom */
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            color: var(--text-light); /* Default text color */
+        }
+        .container {
+            background-color: var(--accent-dark); /* Midnight blue container */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            border: 2px solid var(--neon-blue); /* Neon blue border */
+            margin-bottom: 30px; /* Space above footer */
+        }
+        h1 {
+            color: var(--neon-green); /* Neon green for heading */
+            font-size: 2.5rem; /* Slightly larger */
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 8px var(--neon-green), 0 0 15px var(--neon-green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        p {
+            color: var(--text-light); /* Light text for paragraphs */
+            font-size: 1.125rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        input[type="text"] {
+            width: 100%;
+            max-width: 350px;
+            padding: 12px 16px;
+            margin-top: 1rem;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black for input */
+            border: 2px solid var(--neon-blue); /* Neon blue border */
+            border-radius: 8px;
+            font-size: 1rem;
+            text-align: center;
+            color: var(--input-text-color); /* Light text for input */
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            outline: none;
+        }
+        input[type="text"]::placeholder {
+            color: var(--placeholder-color); /* Placeholder color */
+        }
+        input[type="text"]:focus {
+            border-color: var(--neon-yellow); /* Neon yellow on focus */
+            box-shadow: 0 0 0 3px rgba(250, 255, 0, 0.5), 0 0 15px var(--neon-yellow); /* Yellow glow */
+        }
+        button {
+            background-color: var(--neon-green); /* Neon green button */
+            color: var(--button-text-dark); /* Dark text on button */
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px; /* Pill shape */
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-out, box-shadow 0.2s ease-in-out;
+            margin-top: 2rem;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.6); /* Neon green glow */
+        }
+        button:hover {
+            background-color: var(--neon-yellow); /* Neon yellow on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(250, 255, 0, 0.8); /* Stronger yellow glow */
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        button:disabled {
+            background-color: #666; /* Muted color when disabled */
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message-box {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            display: none;
+            word-break: break-word;
+            font-weight: bold;
+        }
+        .message-box.success {
+            background-color: rgba(0, 255, 0, 0.2); /* Light green tint */
+            color: var(--neon-green); /* Neon green text */
+            border: 1px solid var(--neon-green);
+        }
+        .message-box.error {
+            background-color: rgba(255, 0, 0, 0.2); /* Light red tint */
+            color: #ff6666; /* Slightly softer red */
+            border: 1px solid #ff6666;
+        }
+        #resultDiv a {
+            color: var(--neon-blue); /* Neon blue for links */
+            text-decoration: none;
+            transition: color 0.2s ease-in-out;
+            font-weight: bold;
+        }
+        #resultDiv a:hover {
+            color: var(--neon-green); /* Neon green on hover */
+            text-decoration: underline;
+        }
+        #resultDiv p {
+             color: var(--text-light); /* Ensure result text is light */
+        }
+        #resultDiv ul {
+            list-style-type: disc;
+            list-style-position: inside;
+            padding-left: 0;
+            color: var(--text-lighter); /* Lighter gray for list items */
+        }
+        #resultDiv li {
+            margin-bottom: 8px;
+        }
+        #resultDiv span {
+            color: var(--neon-yellow); /* Make team names stand out */
+            text-shadow: 0 0 5px rgba(250, 255, 0, 0.5);
+        }
+
+        /* Footer styling */
+        footer {
+            margin-top: auto; /* Push footer to the bottom */
+            padding: 30px;
+            background-color: var(--neon-yellow);
+            box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+            color: var(--button-text-dark);
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            width: 100%; /* Full width */
+        }
+
+        footer p {
+            margin: 5px 0;
+            font-size: 1.1em;
+            color: var(--button-text-dark);
+        }
+        footer a {
+            color: var(--neon-blue);
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        footer a:hover {
+            color: var(--neon-green);
+        }
+
+        /* Sitemap link outside footer */
+        body > p:last-of-type {
+            margin-top: 20px;
+            margin-bottom: 20px; /* Add some margin for the sitemap link */
+        }
+        body > p:last-of-type a {
+            color: var(--neon-blue);
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        body > p:last-of-type a:hover {
+            color: var(--neon-green);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            p {
+                font-size: 1rem;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Sports Square</h1>
+        <p>Enter your **favorite sports teams** (comma-separated) to get personalized article recommendations!</p>
+        <p>Type the names of your favorite teams below:</p>
+        <input type="text" id="searchInput" placeholder="e.g., Lakers, Warriors, Spurs, Celtics">
+        <div id="resultDiv" class="mt-4"></div>
+        <div id="messageBox" class="message-box"></div>
+        <button id="savePrefButton" style="display: none;">Save Preferences</button>
+    </div>
+
+    <p>We are currently working on features that we can use with this data!</p>
+    <footer>
+        <p>&copy; 2025 Sports Square. All rights reserved.</p>
+        <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+    </footer>
+    <p><a href="./sitemap.html">Sitemap</a></p>
+
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
+    <script src="./firebase-config.js"></script>
+    <script src="./presence.js"></script>
+    <script src="./notifications.js"></script>
+    
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const resultDiv = document.getElementById('resultDiv');
+        const savePrefButton = document.getElementById('savePrefButton');
+        const messageBox = document.getElementById('messageBox');
+
+        // Firebase Configuration: REMOVED from here. It should only be in firebase-config.js
+        // const firebaseConfig = { ... };
+
+        // Firebase Initialization: REMOVED from here. It should only be in firebase-config.js
+        // const app = firebase.initializeApp(firebaseConfig);
+        // const auth = firebase.auth();
+        // const db = firebase.firestore();
+
+        let currentUser = null;
+
+        // Function to display messages to the user
+        function showMessage(message, type) {
+            messageBox.textContent = message;
+            messageBox.className = `message-box ${type}`;
+            messageBox.style.display = 'block';
+        }
+
+        // Authenticate user (using anonymous sign-in if no initial token)
+        // 'auth' and 'db' are now expected to be global variables (e.g., window.auth, window.db)
+        // defined in firebase-config.js
+        window.auth.onAuthStateChanged(async (user) => { // Use window.auth to be explicit
+            if (user) {
+                currentUser = user;
+                console.log("Authenticated as:", currentUser.uid);
+                // Try to load existing preferences from 'userPreferences' collection
+                try {
+                    // Use window.db to be explicit
+                    const userDoc = await window.db.collection("userPreferences").doc(currentUser.uid).get();
+                    if (userDoc.exists) {
+                        const userData = userDoc.data();
+                        // Now expecting 'favoriteTeams' as an array
+                        if (userData.favoriteTeams && Array.isArray(userData.favoriteTeams) && userData.favoriteTeams.length > 0) {
+                            searchInput.value = userData.favoriteTeams.join(', '); // Display as comma-separated string
+                            displayTeamRecommendation(userData.favoriteTeams); // Pass the array
+                            showMessage(`Welcome back! Your favorite teams are currently set to: "${userData.favoriteTeams.join(', ')}".`, 'success');
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error loading user preferences:", error);
+                    showMessage(`Failed to load your saved preferences: ${error.message}. Please ensure your Firebase security rules allow reading from 'userPreferences'.`, 'error');
+                }
+            } else {
+                try {
+                    // Use window.auth to be explicit
+                    await window.auth.signInAnonymously();
+                    console.log("Firebase auth successful (anonymous).");
+                } catch (error) {
+                    console.error("Firebase auth failed:", error);
+                    showMessage(`Authentication failed. You must be authenticated to use this page. To get this fixed as fast as possible, please contact us, or try again later.`, 'error');
+                }
+            }
+        });
+
+
+        // Function to display team-specific recommendations
+        // Now accepts an array of team names
+        function displayTeamRecommendation(teamNames) {
+            resultDiv.innerHTML = ''; // Clear previous results
+            savePrefButton.style.display = 'inline-block'; // Always show button if there's input
+
+            if (!teamNames || teamNames.length === 0) {
+                resultDiv.innerHTML = '<p class="text-gray-600 text-lg">Please enter your favorite teams.</p>';
+                savePrefButton.style.display = 'none';
+                return;
+            }
+
+            let recommendationHtml = `<p class="text-green-600 text-lg">Based on your teams: ${teamNames.map(t => `<span style="font-weight: bold; text-transform: capitalize;">${t}</span>`).join(', ')}, here are some articles you might enjoy:</p><ul class="list-disc list-inside text-gray-700 mt-2">`;
+
+            // Example recommendations - expand this logic with real data or LLM calls later
+            teamNames.forEach(team => {
+                const lowerTeam = team.toLowerCase();
+                if (lowerTeam.includes('spurs')) {
+                    recommendationHtml += `
+                        <li><a href="https://sportssquare.netlify.app/posts/so-long-pops" target="_blank">So Long Pops (A Tribute To the Great Gregg Popovich)</a></li>
+                        <li><a href="https://www.sportssquarenews.com/p/victor-wembanyama-out-for-the-season?utm_source=publication-search" target="_blank">The Spurs Can't Catch A Break, Can They?</a></li>
+                        <li><a href="https://www.sportssquarenews.com/p/tank-wars-the-race-for-cooper-flagg?utm_source=publication-search" target="_blank">Tank Wars || The Race For Cooper Flagg Is On!</a></li>
+                    `;
+                } else if (lowerTeam.includes('warriors') || lowerTeam.includes('golden state')) {
+                    recommendationHtml += `<li><a href="#" target="_blank">Article about Golden State Warriors (Placeholder)</a></li>`;
+                } else if (lowerTeam.includes('lakers') || lowerTeam.includes('la lakers')) {
+                    recommendationHtml += `<li><a href="#" target="_blank">Latest news on the Los Angeles Lakers (Placeholder)</a></li>`;
+                } else if (lowerTeam.includes('celtics') || lowerTeam.includes('boston celtics')) {
+                    recommendationHtml += `<li><a href="#" target="_blank">Insights into the Boston Celtics season (Placeholder)</a></li>`;
+                }
+                // Add more team-specific recommendations here as needed
+            });
+
+            if (recommendationHtml === `<p class="text-green-600 text-lg">Based on your teams: ${teamNames.map(t => `<span style="font-weight: bold; text-transform: capitalize;">${t}</span>`).join(', ')}, here are some articles you might enjoy:</p><ul class="list-disc list-inside text-gray-700 mt-2">`) {
+                recommendationHtml += `<li>No specific recommendations for these teams yet. Check back later!</li>`;
+            }
+
+            recommendationHtml += `</ul>`;
+            resultDiv.innerHTML = recommendationHtml;
+        }
+
+        // Listen for input changes in the search box
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            messageBox.style.display = 'none'; // Hide messages
+
+            if (query) {
+                // Parse comma-separated teams
+                const teams = query.split(',').map(team => team.trim()).filter(team => team !== '');
+                displayTeamRecommendation(teams);
+            } else {
+                resultDiv.innerHTML = '';
+                savePrefButton.style.display = 'none'; // Hide button if input is empty
+            }
+        });
+
+        // Handle save preference button click
+        savePrefButton.addEventListener('click', async () => {
+            const inputVal = searchInput.value.trim();
+            if (!inputVal) {
+                showMessage("Please enter at least one team name before saving.", 'error');
+                return;
+            }
+
+            const favoriteTeams = inputVal.split(',').map(team => team.trim().toLowerCase()).filter(team => team !== '');
+
+            if (!currentUser) {
+                showMessage("User not authenticated. Please try refreshing the page or logging in.", 'error');
+                return;
+            }
+
+            savePrefButton.disabled = true; // Disable button to prevent multiple clicks
+            try {
+                // Update the user's document in Firestore within the 'userPreferences' collection
+                // Use window.db to be explicit
+                await window.db.collection("userPreferences").doc(currentUser.uid).set({
+                    favoriteTeams: favoriteTeams // Save as an array
+                }, { merge: true }); // Use merge to only update this field
+
+                showMessage(`Your favorite teams "${favoriteTeams.join(', ')}" have been saved!`, 'success');
+                console.log(`Favorite teams "${favoriteTeams.join(', ')}" saved for user ${currentUser.uid}`);
+
+                // --- Client-side call to FormSubmit for email notification ---
+                // IMPORTANT: Replace 'your_admin_email@example.com' with the actual email
+                // address where you want to receive notifications.
+                const formSubmitEndpoint = `https://formsubmit.co/sportssquareauthor@gmail.com`;
+
+                try {
+                    const response = await fetch(formSubmitEndpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            _subject: `New Sports Square Team Preferences from ${currentUser.email || currentUser.uid}`, // Email subject updated
+                            userId: currentUser.uid,
+                            userEmail: currentUser.email,
+                            userName: currentUser.displayName || 'N/A',
+                            favoriteTeams: favoriteTeams.join(', ') // Send as comma-separated string for email readability
+                        })
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result && result.success) {
+                            console.log('Email notification successfully triggered via FormSubmit.');
+                        } else {
+                            console.error('FormSubmit reported an issue:', result);
+                            showMessage(`Preference saved, but FormSubmit reported an issue. Check console.`, 'error');
+                        }
+                    } else {
+                        const errorData = await response.json();
+                        console.error('Failed to trigger email notification via FormSubmit:', response.status, errorData);
+                        showMessage(`Preference saved, but failed to trigger FormSubmit notification: ${errorData.message || 'Unknown error'}`, 'error');
+                    }
+                } catch (fetchError) {
+                    console.error('Network error during FormSubmit notification fetch:', fetchError);
+                    showMessage(`Preference saved, but network error prevented FormSubmit notification.`, 'error');
+                }
+
+            } catch (error) {
+                console.error("Error saving preference to Firestore:", error);
+                showMessage(`Failed to save preference: ${error.message}`, 'error');
+            } finally {
+                savePrefButton.disabled = false; // Re-enable button
+            }
+        });
+    </script>
+</body>
+</html>

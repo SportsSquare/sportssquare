@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Sports Square News</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
+     crossorigin="anonymous"></script>
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6CR81XMZN5');
+</script>
+<style>
+    /* Your existing CSS styles remain here */
+    :root {
+      /* Dark background as requested */
+      --background-dark: #1a1a2e;
+      /* Neon colors remain vibrant */
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+      /* Text colors adjusted for dark background */
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0; /* For less prominent text */
+      --accent-dark: #0f3460; /* Dark accent for cards/containers */
+      --button-text-dark: #1a1a2e; /* Text color for neon buttons */
+      --input-text-color: #e0e0e0; /* Input text on dark background */
+      --placeholder-color: #888; /* Placeholder text */
+    }
+
+    body {
+      background-color: var(--background-dark);
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      padding: 50px;
+      color: var(--text-light); /* Light text on dark background */
+      margin: 0;
+      line-height: 1.6;
+    }
+    nav ul {
+      list-style-type: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .flex-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .post-card {
+      border: 1px solid black;
+      padding: 20px;
+      width: 300px;
+      background-color: white;
+      border-radius: 10px;
+    }
+    aside.poll-box {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      font-family: 'Segoe UI', sans-serif;
+      max-width: 300px;
+      width: 100%;
+    }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        p {
+            line-height: 1.6;
+            color: black;
+        }
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        strong {
+            color: #2980b9;
+        }
+        em {
+            color: #e74c3c;
+        }
+        #hero {
+            border: 3px solid black;
+            padding: 20px;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+            background-color: white;
+            border-radius: 10px;
+            text-align: center;
+        }
+        #hero h2 {
+            color: #2c3e50;
+        }
+        #hero h3 {
+            color: #34495e;
+        }
+        #hero form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #hero input[type="email"] {
+            width: 300px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #hero button {
+            width: 200px;
+            height: 50px;
+            background-color: #2ECC71;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        #hero button:hover {
+            background-color: #27ae60;
+        }
+        #hero button:disabled {
+            background-color: #95d7a5;
+            cursor: not-allowed;
+        }
+        @media (max-width: 600px) {
+            #hero {
+                width: 90%;
+            }
+            #hero input[type="email"] {
+                width: 100%;
+            }
+            #hero button {
+                width: 100%;
+            }
+        }
+        @media (max-width: 400px) {
+            .container {
+                padding: 10px;
+            }
+            #hero {
+                width: 100%;
+                padding: 15px;
+            }
+            #hero h2, #hero h3 {
+                font-size: 1.2em;
+            }
+            #hero input[type="email"], #hero button {
+                width: 90%;
+            }
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            #hero {
+                width: 95%;
+            }
+            #hero h2, #hero h3 {
+                font-size: 1.5em;
+            }
+            #hero input[type="email"], #hero button {
+                width: 80%;
+            }
+        }
+        @media (min-width: 769px) {
+            .container {
+                padding: 20px;
+            }
+            #hero {
+                width: 80%;
+            }
+            #hero h2, #hero h3 {
+                font-size: 1.8em;
+            }
+            #hero input[type="email"], #hero button {
+                width: 70%;
+            }
+        }
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1000px;
+            }
+            #hero {
+                width: 70%;
+            }
+            #hero h2, #hero h3 {
+                font-size: 2em;
+            }
+            #hero input[type="email"], #hero button {
+                width: 60%;
+            }
+        }
+        @media (min-width: 1600px) {
+            .container {
+                max-width: 1200px;
+            }
+            #hero {
+                width: 60%;
+            }
+            #hero h2, #hero h3 {
+                font-size: 2.2em;
+            }
+            #hero input[type="email"], #hero button {
+                width: 50%;
+            }
+        }
+        @media (min-width: 2000px) {
+            .container {
+                max-width: 1400px;
+            }
+            #hero {
+                width: 50%;
+            }
+            #hero h2, #hero h3 {
+                font-size: 2.5em;
+            }
+            #hero input[type="email"], #hero button {
+                width: 40%;
+            }
+        }
+        @media (min-width: 2400px) {
+            .container {
+                max-width: 1600px;
+            }
+            #hero {
+                width: 40%;
+            }
+            #hero h2, #hero h3 {
+                font-size: 2.8em;
+            }
+            #hero input[type="email"], #hero button {
+                width: 30%;
+            }
+        }
+</style>
+<body>
+    <div class="container">
+        <h1>About Sports Square</h1>
+        <nav>
+            <ul>
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="./sportscalendar.html">Calendar</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <p><strong>Your Hub for All Sports</strong></p>
+
+        <p>At <strong>Sports Square</strong>, we are dedicated to delivering comprehensive sports coverage, ensuring that every sport, from the most popular to the niche, receives the attention it deserves. Whether you're a casual fan or a die-hard enthusiast, our goal is to provide you with timely, accurate, and engaging sports content.</p>
+
+        <h2 style="color: black;">What We Offer</h2>
+        <ul>
+            <li style="color: black;"><strong>In-Depth Stories</strong>: Dive deep into the narratives that shape the sports world. From behind-the-scenes looks at teams like the Texans and Lions to detailed analyses, our stories offer unique perspectives that you won't find elsewhere.</li>
+            <li style="color: black;"><strong>Collaborative Features</strong>: Through initiatives like <em>The Sports Summit</em>, we bring together multiple writers to provide diverse viewpoints on various topics, enriching your reading experience.</li>
+            <li style="color: black;"><strong>Timely Information</strong>: Stay informed with factual and up-to-date information, making you the go-to person for sports discussions among your friends and colleagues.</li>
+            <li style="color: black;"><strong>Consistent Delivery</strong>: Unless specified otherwise, expect new content every morning at 7:00 A.M. EST (12:00 P.M. GMT), ensuring you start your day with the latest in sports.</li>
+        </ul>
+
+        <h2 style="color: black;">Our Coverage</h2>
+        <p style="color: black;">We pride ourselves on covering every sport in existence. From major leagues like the NFL, NBA, MLB, NHL, and WNBA to smaller and international leagues such as MLS, NWSL, and MILB, we've got you covered. Our expansive coverage ensures that fans of all sports find content tailored to their interests.</p>
+
+        <h2 style="color: black;">Join Us</h2>
+        <p style="color: black;">Become a part of our growing community by subscribing to <strong>Sports Square</strong>. Whether you're looking to stay updated on your favorite team or explore new sports, we offer content that caters to all. Subscribe to learn more!</p>
+
+    </div>
+    <div style="
+    background: linear-gradient(135deg, #00ffff, #00ff00); /* Neon blue to neon green gradient */
+    padding: 40px;
+    margin: 40px auto;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 255, 255, 0.5); /* Stronger neon glow (static without @keyframes) */
+    color: #e0e0e0; /* Light text for readability */
+    position: relative;
+    overflow: hidden;
+    transform: skewX(-5deg); /* The dynamic angle */
+">
+    <h2 style="
+        font-family: 'Chakra Petch', sans-serif; /* Sporty font */
+        color: black; /* Light text on hero background */
+        text-shadow: none;
+        letter-spacing: 2px;
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        transform: skewX(5deg); /* Unskew text to make it readable */
+    ">Where Sports Meet Their Match</h2>
+    <h3 style="
+        font-family: 'Chakra Petch', sans-serif;
+        color: blue;
+        text-shadow: none;
+        letter-spacing: 2px;
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        transform: skewX(5deg); /* Unskew text */
+    ">Fresh takes, game-day insights, and behind-the-scenes sports stories — straight to your inbox.</h3>
+    <h2 style="
+        font-family: 'Chakra Petch', sans-serif;
+        color: blue;
+        text-shadow: none;
+        letter-spacing: 2px;
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        transform: skewX(5deg); /* Unskew text */
+    "><em style="
+        color: #faff00; /* Neon yellow for emphasis */
+        text-shadow: 0 0 10px #faff00;
+        font-style: normal; /* Keep italic look, but with control */
+    ">Join the Square</em></h2>
+
+    <form action="https://formsubmit.co/sportssquareauthor@gmail.com" method="POST" style="
+        display: block; /* Ensures form takes up full width for centering */
+        margin: 20px auto;
+        text-align: center;
+        transform: skewX(5deg); /* Unskew the form */
+    ">
+        <input type="email" name="email" placeholder="Your email" required style="
+            width: 300px; /* Adjust width as needed */
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #0f3460; /* Dark accent */
+            border: 2px solid #00ffff; /* Neon blue border */
+            border-radius: 8px;
+            color: #e0e0e0; /* Light text color */
+            font-size: 1.1em;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        " onfocus="this.style.borderColor='#00ff00'; this.style.boxShadow='0 0 15px #00ff00';" onblur="this.style.borderColor='#00ffff'; this.style.boxShadow='0 0 8px rgba(0, 0, 0, 0.3)';">
+        <input type="hidden" name="_next" value="https://sportssquare.netlify.app/subscribed">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_subject" value="New subscription from Sports Square">
+        <input type="hidden" name="_message" value="A new user has subscribed to Sports Square.">
+        <br>
+        <button type="submit" style="
+            padding: 20px 40px;
+            font-size: 1.5em;
+            background-color: #faff00; /* Neon yellow for primary action */
+            color: #1a1a2e; /* Dark text on yellow button */
+            font-weight: bold;
+            border: 3px solid #faff00; /* Neon yellow border */
+            border-radius: 60px; /* Pill shape */
+            cursor: pointer;
+            box-shadow: 0 0 20px #faff00; /* Neon yellow glow */
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-family: 'Rajdhani', sans-serif; /* Sporty button font */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
+        " onmouseover="this.style.backgroundColor='#00ff00'; this.style.boxShadow='0 0 30px #00ff00'; this.style.borderColor='#faff00'; this.style.transform='translateY(-2px)';" onmouseout="this.style.backgroundColor='#faff00'; this.style.boxShadow='0 0 20px #faff00'; this.style.borderColor='#faff00'; this.style.transform='translateY(0)';">
+            Subscribe
+        </button>
+    </form>
+</div>
+    <footer style="margin-top: 20px; color: #e0e0e0;">
+        <p style="color: #e0e0e0";>&copy; 2025 Sports Square. All rights reserved.</p>
+        <p style="color: #e0e0e0";>Follow us on <a href="https://x.com/Sports__Square" target="_blank" style="color: #00ffff;">X</a></p>
+    </footer>
+    <p><a href="./sitemap.html" style="color: #00ffff;">Sitemap</a></p>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <script src="./firebase-config.js"></script>
+
+    <script src="./presence.js"></script>
+    <script src="./notifications.js"></script>
+</body>
+</html>

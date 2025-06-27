@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanks for Subscribing - Sports Square</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
+     crossorigin="anonymous"></script>
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6CR81XMZN5');
+</script>
+<script src="./notifications.js"></script>
+
+<style>
+    /* Color variables for consistency */
+    :root {
+        /* Top color: Black */
+        --background-dark: #000000;
+        /* 2nd level color: Midnight Blue */
+        --accent-dark: #191970;
+
+        /* Neon colors remain vibrant */
+        --neon-green: #00ff00;
+        --neon-blue: #00ffff;
+        --neon-yellow: #faff00;
+        /* Text colors adjusted for dark background */
+        --text-light: #e0e0e0;
+        --text-lighter: #b0b0b0; /* For less prominent text */
+        --button-text-dark: #000000; /* Dark text for neon buttons */
+    }
+
+    body {
+        background-color: var(--background-dark); /* Dark background */
+        font-family: 'Montserrat', sans-serif;
+        color: var(--text-light); /* Light text for readability */
+        text-align: center;
+        padding: 50px 20px; /* Add horizontal padding */
+        line-height: 1.6;
+        min-height: 100vh; /* Ensure it takes full viewport height */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center; /* Center content vertically */
+    }
+
+    .content-container {
+        background-color: var(--accent-dark); /* Midnight blue container */
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+        border: 2px solid var(--neon-blue); /* Neon blue border */
+        max-width: 700px; /* Max width for better readability */
+        width: 100%; /* Occupy full width within max-width */
+        margin-bottom: 30px; /* Space between container and footer */
+    }
+
+    h1 {
+        color: var(--neon-green); /* Neon green for main heading */
+        font-size: 2.8rem; /* Larger font size */
+        font-weight: bold;
+        margin-bottom: 30px;
+        text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        line-height: 1.2;
+    }
+
+    p {
+        color: var(--text-light); /* Light text for paragraphs */
+        font-size: 1.15rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Footer styling */
+    footer {
+        margin-top: auto; /* Push footer to the bottom */
+        padding: 30px;
+        background-color: var(--neon-yellow);
+        box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+        color: var(--button-text-dark);
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 1px;
+        width: 100%; /* Ensure footer takes full width */
+        text-align: center;
+    }
+
+    footer p {
+        margin: 5px 0;
+        font-size: 1.1em;
+        color: var(--button-text-dark);
+    }
+    footer a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    footer a:hover {
+        color: var(--neon-green);
+    }
+
+    /* Sitemap link outside footer */
+    body > p:last-of-type {
+        margin-top: 20px;
+        margin-bottom: 20px; /* Add some margin for the sitemap link */
+    }
+    body > p:last-of-type a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    body > p:last-of-type a:hover {
+        color: var(--neon-green);
+    }
+</style>
+<body>
+    <div class="content-container">
+        <h1>Thank You for Subscribing!</h1>
+        <p>We're thrilled to have you join the Sports Square community.</p>
+        <p>Get ready for fresh takes, game-day insights, and behind-the-scenes sports stories delivered straight to your inbox.</p>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+
+    <footer>
+        <p>&copy; 2025 Sports Square. All rights reserved.</p>
+        <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+    </footer>
+    <p><a href="./sitemap.html">Sitemap</a></p>
+</body>
+</html>

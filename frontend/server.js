@@ -5,7 +5,6 @@ const cors = require("cors");
 const { initializeApp } = require("firebase/app");
 const { getFirestore, collection, addDoc, onSnapshot } = require("firebase/firestore");
 
-// Firebase Config
 const firebaseConfig = {
     apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
     authDomain: "sportssquare-b96ed.firebaseapp.com",
@@ -33,7 +32,6 @@ app.use(express.static("public"));
 io.on("connection", (socket) => {
     console.log("New user connected");
 
-    // Listen for new questions
     socket.on("newQuestion", async (data) => {
         try {
             await addDoc(collection(db, "ama"), { text: data.text, timestamp: new Date() });
@@ -43,7 +41,6 @@ io.on("connection", (socket) => {
         }
     });
 
-    // Send real-time updates when Firestore changes
     onSnapshot(collection(db, "ama"), (snapshot) => {
         const questions = [];
         snapshot.forEach((doc) => {

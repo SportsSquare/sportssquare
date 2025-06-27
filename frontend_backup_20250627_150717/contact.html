@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+    </head>
+<style>
+    :root {
+      /* Top color: Black */
+      --background-dark: #000000;
+      /* 2nd level color: Midnight Blue */
+      --accent-dark: #191970;
+
+      /* Neon colors remain vibrant */
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+      /* Text colors adjusted for dark background */
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0; /* For less prominent text */
+      --button-text-dark: #000000; /* Dark text for neon buttons */
+      --input-text-color: #e0e0e0; /* Input text on dark background */
+      --placeholder-color: #888; /* Placeholder text */
+    }
+
+    body {
+        background-color: var(--background-dark);
+        font-family: 'Montserrat', sans-serif;
+        text-align: center;
+        padding: 50px;
+        color: var(--text-light);
+        margin: 0;
+        line-height: 1.6;
+    }
+    h1, h2, h3 {
+        font-family: 'Montserrat', sans-serif; /* Use Montserrat for headings */
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+        color: var(--neon-green); /* Primary neon for main headings */
+        text-shadow: 0 0 8px var(--neon-green), 0 0 15px var(--neon-green);
+    }
+    h2 {
+        color: var(--neon-blue); /* Secondary neon for sub-headings */
+        text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue);
+        margin-bottom: 15px;
+    }
+    h3 {
+        color: var(--text-light); /* Lighter text for hero subheading */
+        text-shadow: none;
+        margin-bottom: 15px;
+    }
+    p {
+        font-size: 1.1em;
+        color: var(--text-light);
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+    a {
+        color: var(--neon-blue);
+        text-decoration: none;
+        transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+    a:hover {
+        color: var(--neon-green);
+        text-shadow: 0 0 5px var(--neon-green);
+        text-decoration: none;
+    }
+
+    /* Navigation Bar */
+    nav ul {
+      list-style-type: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 40px;
+      background-color: var(--neon-yellow); /* Neon yellow strip */
+      padding: 15px 0;
+      box-shadow: 0 5px 15px rgba(255, 255, 0, 0.4); /* Yellow glow */
+      flex-wrap: wrap;
+    }
+
+    nav ul li a {
+      color: var(--button-text-dark); /* Dark text on neon background */
+      font-weight: bold;
+      padding: 8px 15px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+      font-family: 'Montserrat', sans-serif; /* Use Montserrat for nav links */
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    nav ul li a:hover {
+      background-color: var(--neon-blue);
+      color: var(--text-light);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .flex-section {
+      display: flex;
+      justify-content: center; /* Center items for better layout */
+      align-items: flex-start;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    /* Hero section for "We'd love to hear from you!" */
+    #hero {
+        background: linear-gradient(135deg, var(--neon-blue), var(--neon-green));
+        padding: 40px;
+        margin: 0; /* Remove auto margin, let flex-section handle positioning */
+        width: 100%; /* Take full width within flex item */
+        max-width: 450px; /* Limit width */
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 255, 255, 0.5); /* Stronger neon glow */
+        color: var(--text-light);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    #hero:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 255, 0, 0.7), 0 0 30px rgba(0, 0, 255, 0.7);
+    }
+    #hero h2, #hero h3 {
+        color: black; /* Changed to black for better contrast on gradient */
+        text-shadow: none; /* Remove text shadow as background provides glow */
+    }
+
+    form {
+        max-width: 600px;
+        margin: 0; /* Remove auto margin */
+        padding: 30px;
+        background-color: var(--accent-dark); /* Midnight blue background */
+        border-radius: 12px;
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+        border: 2px solid var(--neon-blue); /* Neon blue border */
+        flex-grow: 1; /* Allow form to grow in flex container */
+    }
+    label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: var(--text-light);
+        text-align: left;
+        font-size: 1.05em;
+    }
+    input[type="text"],
+    input[type="email"],
+    textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        background-color: var(--background-dark); /* Black background for inputs */
+        border: 2px solid var(--neon-green);
+        border-radius: 8px;
+        box-sizing: border-box;
+        color: var(--input-text-color);
+        font-size: 1.1em;
+        box-shadow: 0 0 8px rgba(0, 255, 0, 0.2);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    input[type="text"]::placeholder,
+    input[type="email"]::placeholder,
+    textarea::placeholder {
+        color: var(--placeholder-color);
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus {
+        outline: none;
+        border-color: var(--neon-yellow);
+        box-shadow: 0 0 15px var(--neon-yellow);
+    }
+    textarea {
+        height: 150px;
+        resize: vertical;
+    }
+    button[type="submit"] {
+        width: 100%;
+        padding: 18px;
+        background-color: var(--neon-yellow);
+        color: var(--button-text-dark);
+        font-size: 1.4em;
+        font-weight: bold;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 0 20px var(--neon-yellow);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+        font-family: 'Montserrat', sans-serif; /* Use Montserrat for button */
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+    button[type="submit"]:hover {
+        background-color: var(--neon-green);
+        box-shadow: 0 0 30px var(--neon-green);
+        transform: translateY(-3px);
+    }
+    button[type="submit"]:disabled {
+        background-color: #666;
+        box-shadow: none;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    footer {
+        margin-top: 60px;
+        padding: 30px;
+        background-color: var(--neon-yellow);
+        box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+        color: var(--button-text-dark);
+        font-family: 'Montserrat', sans-serif; /* Use Montserrat for footer */
+        letter-spacing: 1px;
+    }
+
+    footer p {
+        margin: 5px 0;
+        font-size: 1.1em;
+        color: var(--button-text-dark);
+    }
+    footer a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    footer a:hover {
+        color: var(--neon-green);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) { /* Adjust breakpoint for flex-wrap */
+        .flex-section {
+            flex-direction: column;
+            align-items: center; /* Center items when stacked */
+        }
+        #hero, form {
+            max-width: 90%; /* Allow wider elements when stacked */
+        }
+    }
+    @media (max-width: 768px) {
+        body {
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2.5em;
+        }
+        h2 {
+            font-size: 1.8em;
+        }
+        p {
+            font-size: 1em;
+        }
+        form {
+            padding: 20px;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            padding: 10px;
+            font-size: 1em;
+        }
+        button[type="submit"] {
+            padding: 15px;
+            font-size: 1.2em;
+        }
+    }
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 2em;
+        }
+        h2 {
+            font-size: 1.5em;
+        }
+        form {
+            padding: 15px;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            margin-bottom: 15px;
+        }
+    }
+</style>
+<body>
+  <h1>Contact Us</h1>
+    <nav>
+        <ul>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="">Posts</a></li>
+            <li><a href="./sportscalendar.html">Calendar</a></li>
+            <li><a href="./about.html">About</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+        </ul>
+    </nav>
+    <div class="flex-section">
+        <div id="hero">
+            <h2 style="color:black;">We'd love to hear from you!</h2>
+            <h3 style="color:black;">Feel free to reach out with any questions or feedback.</h3>
+        </div>
+        <form action="https://formsubmit.co/sportssquareauthor@gmail.com" method="POST">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value="https://sportssquare.netlify.app/contactresult">
+        
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required>
+        
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" required>
+        
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject">
+        
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required></textarea>
+        
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+    <footer>
+      <p>&copy; 2025 Sports Square. All rights reserved.</p>
+      <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+    </footer>
+    <p><a href="./sitemap.html">Sitemap</a></p>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <script src="./firebase-config.js"></script>
+
+    <script src="./notifications.js"></script>
+    </body>
+</html>

@@ -17,10 +17,10 @@
         padding: 10px 20px;
         display: flex;
         justify-content: space-between;
-        align-items: center; /* Vertically center items */
+        align-items: center; 
         position: sticky;
         top: 0;
-        z-index: 999; /* Ensure topbar stays above content */
+        z-index: 999; 
       }
       #topbar > span {
         font-weight: bold;
@@ -36,10 +36,10 @@
         cursor: pointer;
         transition: 0.3s;
       }
-      #topbar button:hover:not(:disabled) { /* Hover effect only for enabled buttons */
+      #topbar button:hover:not(:disabled) { 
         background: rgba(255, 255, 255, 0.2);
       }
-      #topbar button:disabled { /* Style for disabled buttons */
+      #topbar button:disabled { 
           opacity: 0.6;
           cursor: not-allowed;
       }
@@ -48,7 +48,7 @@
         display: none;
         max-width: 800px;
         margin: 20px auto;
-        padding: 0 15px; /* Add some horizontal padding for smaller screens */
+        padding: 0 15px; 
       }
       .view.active {
         display: block;
@@ -80,9 +80,9 @@
       .post .content {
           margin-bottom: 10px;
           line-height: 1.5;
-          word-wrap: break-word; /* Ensure long words break */
+          word-wrap: break-word; 
       }
-      /* Removed .post img style */
+      
 
       .delete-btn, .report-btn, .block-btn {
         background: #dc3545;
@@ -90,14 +90,14 @@
         border: none;
         padding: 4px 8px;
         border-radius: 4px;
-        margin-left: auto; /* Pushes buttons to the right */
+        margin-left: auto; 
         cursor: pointer;
         font-size: 0.8em;
       }
       .report-btn {
         background: #ffc107;
         color: #333;
-        margin-left: 5px; /* Spacing between delete/report */
+        margin-left: 5px; 
       }
       .report-btn:hover {
           background: #e0a800;
@@ -126,7 +126,7 @@
         border-radius: 10px;
         cursor: pointer;
         transition: 0.3s;
-        /*flex-grow: 1; /* Make buttons expand */
+        
       }
       .actions button:hover {
         background: #e2e6ea;
@@ -143,11 +143,11 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.6); /* Darker overlay */
+        background: rgba(0, 0, 0, 0.6); 
         display: none;
         justify-content: center;
         align-items: center;
-        z-index: 1000; /* Ensure modal is on top */
+        z-index: 1000; 
       }
       .modal {
         background: #fff;
@@ -184,7 +184,7 @@
         box-sizing: border-box; 
         font-size: 1em;
       }
-      /* Removed input[type="file"] style */
+      
 
       #modalPostSend, #saveSettingsBtn, #agreeRulesButton, #displayNameSubmitBtn {
           background-color: #0d6efd; 
@@ -216,7 +216,7 @@
         align-items: center;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       }
-      /* Styles for trending tags */
+      
       #trendingTags {
           background: #fff;
           border-radius: 8px;
@@ -246,7 +246,7 @@
           background: #dae0e5;
           color: #0b5ed7;
       }
-      /* Styles for user stats */
+      
       #userStats {
           background: #fff;
           border-radius: 8px;
@@ -271,7 +271,7 @@
           color: #555;
           font-size: 0.9em;
       }
-      /* Specific view for posts by tag */
+      
       #postsByTagView {
           display: none; 
           max-width: 800px;
@@ -308,7 +308,7 @@
           margin-right: auto;
       }
       #profileFeed button {
-          margin: 0 5px 20px 5px; /* Spacing for Follow/Block buttons */
+          margin: 0 5px 20px 5px; 
           padding: 8px 15px;
           font-size: 1em;
       }
@@ -345,9 +345,9 @@
       .list-item .follow-btn:hover {
           background: #218838;
       }
-      /* Removed DM specific styles */
+      
 
-      /* Explore View styles */
+      
       #exploreView {
           display: none; 
           max-width: 800px;
@@ -423,7 +423,7 @@
           border-radius: 5px;
           margin-bottom: 5px;
           font-size: 0.9em;
-          display: flex; /* For like button alignment */
+          display: flex; 
           align-items: center;
       }
       .comment small {
@@ -431,7 +431,7 @@
           margin-left: 5px;
       }
       .comment .like-comment-btn {
-          margin-left: auto; /* Push like button to the right */
+          margin-left: auto; 
           background: #e9ecef;
           border: 1px solid #ddd;
           color: #333;
@@ -447,55 +447,55 @@
 
       #commentsDiv {
         margin-top: 15px;
-        padding: 15px; /* Increased padding on all sides */
-        border: 1px solid #e0e0e0; /* Added a light border */
-        border-radius: 8px; /* Rounded corners */
-        background: #fdfdfd; /* Light background color */
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Subtle shadow */
+        padding: 15px; 
+        border: 1px solid #e0e0e0; 
+        border-radius: 8px; 
+        background: #fdfdfd; 
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
     }
     #commentsDiv input {
         margin-top: 10px;
-        width: calc(100% - 90px); /* Adjusts width for button */
+        width: calc(100% - 90px); 
         display: inline-block;
         vertical-align: middle;
-        padding: 8px 10px; /* Example: Added from previous suggestion, adjust as desired */
+        padding: 8px 10px; 
         border: 1px solid #ccc;
         border-radius: 5px;
         font-size: 0.9em;
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08); /* Subtle inner shadow */
-        transition: border-color 0.2s, box-shadow 0.2s; /* Smooth transition for focus effect */
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08); 
+        transition: border-color 0.2s, box-shadow 0.2s; 
     }
     #commentsDiv input:focus {
-        outline: none; /* Removes the default browser outline */
-        border-color: #0d6efd; /* Blue border on focus */
-        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25); /* Subtle blue glow on focus */
+        outline: none; 
+        border-color: #0d6efd; 
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25); 
     }
     #commentsDiv button.postCommentBtn {
-        width: 90px; /* Example: Slightly wider, adjust as desired */
+        width: 90px; 
         margin-left: 10px;
-        padding: 8px 15px; /* Example: Adjust padding for better look with width */
+        padding: 8px 15px; 
         font-size: 0.95em;
-        background-color: #0d6efd; /* Primary blue background */
-        color: #fff; /* White text */
+        background-color: #0d6efd; 
+        color: #fff; 
         border: none;
         border-radius: 5px;
         cursor: pointer;
         vertical-align: middle;
-        transition: background-color 0.2s ease-in-out, transform 0.1s ease-out; /* Add transform for a subtle press effect */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Subtle shadow for depth */
+        transition: background-color 0.2s ease-in-out, transform 0.1s ease-out; 
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
     }
 
-/* Hover effect */
+
 #commentsDiv button.postCommentBtn:hover {
-    background-color: #0a58ca; /* Darker blue on hover */
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* Slightly larger shadow on hover */
+    background-color: #0a58ca; 
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); 
 }
 
-/* Active (when clicked) effect */
+
 #commentsDiv button.postCommentBtn:active {
-    background-color: #084298; /* Even darker blue when pressed */
-    transform: translateY(1px); /* Moves the button down slightly for a 'pressed' feel */
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Smaller shadow when pressed */
+    background-color: #084298; 
+    transform: translateY(1px); 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); 
 }
       #feedLoading {
         text-align: center;
@@ -506,48 +506,48 @@
       #feedLoading.active {
         display: block;
       }
-      /* --- Comments UI Enhancements --- */
+      
 
-/* For the main comments container (if you want to style its overall box) */
-div[id^="commentsDiv-"] { /* Targets any div whose ID starts with "commentsDiv-" */
+
+div[id^="commentsDiv-"] { 
     margin-top: 15px;
-    padding: 15px; /* Increased padding on all sides */
-    border: 1px solid #e0e0e0; /* Added a light border */
-    border-radius: 8px; /* Rounded corners */
-    background: #fdfdfd; /* Light background color */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Subtle shadow */
-    /* Ensure it's block-level if it's not already */
-    display: block !important; /* Forces it to be block, just in case */
+    padding: 15px; 
+    border: 1px solid #e0e0e0; 
+    border-radius: 8px; 
+    background: #fdfdfd; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+    
+    display: block !important; 
 }
 
 
-/* 1. Enhancing the Comment Input Field */
-div[id^="commentsDiv-"] input { /* Targets input inside any commentsDiv- dynamically ID'd div */
-    /* Re-apply input specific styles, overriding general ones if needed */
-    width: calc(100% - 100px); /* Adjust width considering the button width + margin */
-    margin-right: 10px; /* Space between input and button */
-    padding: 8px 12px; /* Good padding */
+
+div[id^="commentsDiv-"] input { 
+    
+    width: calc(100% - 100px); 
+    margin-right: 10px; 
+    padding: 8px 12px; 
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 0.95em; /* Slightly larger text */
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08); /* Subtle inner shadow */
-    transition: border-color 0.2s, box-shadow 0.2s; /* Smooth transition for focus effect */
-    vertical-align: middle; /* Keep it aligned with the button */
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    font-size: 0.95em; 
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08); 
+    transition: border-color 0.2s, box-shadow 0.2s; 
+    vertical-align: middle; 
+    box-sizing: border-box; 
 }
 
 div[id^="commentsDiv-"] input:focus {
-    outline: none; /* Removes the default browser outline */
-    border-color: #0d6efd; /* Blue border on focus */
-    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25); /* Subtle blue glow on focus */
+    outline: none; 
+    border-color: #0d6efd; 
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25); 
 }
 
 
-/* 2. Enhancing the Comment "Post" Button */
-div[id^="commentsDiv-"] button.postCommentBtn { /* Targets button with class postCommentBtn inside any commentsDiv- dynamically ID'd div */
-    width: 80px; /* Fixed width for the button */
-    /* margin-left: 10px; -- No longer needed as we added margin-right to input */
-    padding: 8px 0; /* Adjust padding for button */
+
+div[id^="commentsDiv-"] button.postCommentBtn { 
+    width: 80px; 
+    
+    padding: 8px 0; 
     font-size: 0.95em;
     background-color: #0d6efd;
     color: #fff;
@@ -557,7 +557,7 @@ div[id^="commentsDiv-"] button.postCommentBtn { /* Targets button with class pos
     vertical-align: middle;
     transition: background-color 0.2s ease-in-out, transform 0.1s ease-out;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    display: inline-block; /* Ensure it stays inline with the input */
+    display: inline-block; 
     box-sizing: border-box;
 }
 
@@ -572,30 +572,30 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* Ensure the .comment class styles are also there for individual comments */
+
 .comment {
-    background: #fff; /* White background for comments */
-    padding: 10px 15px; /* More padding */
-    border-radius: 8px; /* More rounded corners */
-    margin-bottom: 8px; /* More space between comments */
-    font-size: 0.95em; /* Slightly larger text */
-    line-height: 1.4; /* Better readability */
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Very subtle shadow */
+    background: #fff; 
+    padding: 10px 15px; 
+    border-radius: 8px; 
+    margin-bottom: 8px; 
+    font-size: 0.95em; 
+    line-height: 1.4; 
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
     display: flex;
     align-items: center;
 }
 .comment b {
-    color: #0d6efd; /* Make username blue */
-    margin-right: 5px; /* Space after username */
+    color: #0d6efd; 
+    margin-right: 5px; 
 }
 .comment small {
-    color: #999; /* Lighter timestamp */
+    color: #999; 
     font-size: 0.8em;
 }
 
-/* Style for the comment like button specifically */
+
 .comment .like-comment-btn {
-    margin-left: auto; /* Push like button to the right */
+    margin-left: auto; 
     background: #e9ecef;
     border: 1px solid #ddd;
     color: #333;
@@ -609,6 +609,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
     color: #fff;
 }
     </style>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
   </head>
   <body>
     <div id="topbar">
@@ -738,6 +739,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script>
+        firebase.firestore.setLogLevel("debug");
       const adminUID = "ibLtQvJhIPN2icV7IyB1IUIgzN12"; // <-- REMEMBER TO REPLACE THIS WITH YOUR ACTUAL ADMIN UID
       firebase.initializeApp({
         apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk", // <-- REPLACE WITH YOUR ACTUAL API KEY
@@ -749,12 +751,12 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
       });
       const auth = firebase.auth(),
         db = firebase.firestore();
-        // Removed storage variable
+
 
       let currentUser,
         following = new Set(),
         blockedUsers = new Set();
-        // Removed conversations, currentConvId DM variables
+
 
       let userFeedPreferences = {
         tagPreferences: {},
@@ -762,7 +764,6 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
         myAccountWeight: 20,
       };
 
-      // Pagination variables
       let lastVisiblePost = null;
       let isLoadingPosts = false;
       let noMorePosts = false;
@@ -779,14 +780,14 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
         userPosts = getEl("userPosts"),
         followBtn = getEl("followBtn"),
         blockBtn = getEl("blockBtn"),
-        // Removed DM elements
+
         adminBtn = getEl("adminBtn"),
         adminPanel = getEl("adminPanel"),
         adminUsers = getEl("adminUsers"),
         adminStats = getEl("adminStats"),
         feedBtn = getEl("feedBtn"),
         exploreBtn = getEl("exploreBtn"),
-        // Removed dmBtn
+
         postBtn = getEl("postBtn"),
         settingsBtn = getEl("settingsBtn"),
         backBtn = getEl("backBtn"),
@@ -795,14 +796,14 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
         postModalClose = getEl("postModalClose"),
         modalText = getEl("modalPostText"),
         modalTag = getEl("modalPostTag"), 
-        // Removed modalImage
+
         modalSend = getEl("modalPostSend"),
         settingsModal = getEl("settingsModal"),
         settingsClose = getEl("settingsModalClose"),
         displayNameInput = getEl("displayNameInput"),
         emailInput = getEl("emailInput"),
         bioInput = getEl("bioInput"),
-        // Removed profilePicInput
+
         passwordInput = getEl("passwordInput"),
         saveSettingsBtn = getEl("saveSettingsBtn"),
         trendingTagsDiv = getEl("trendingTags"), 
@@ -841,14 +842,13 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
         document.querySelectorAll(".view").forEach((v) => {
           v === view ? v.classList.add("active") : v.classList.remove("active");
         });
-        // Reset top bar button states
+
         feedBtn.disabled = (view === feed);
         exploreBtn.disabled = (view === exploreView);
-        // Removed dmBtn.disabled
-        // show/hide back button based on view
+
+
         backBtn.style.display = (view === profileFeed || view === postsByTagView || view === exploreView || view === adminPanel) ? "inline-block" : "none";
-        
-        // Buttons always visible except for backBtn and AdminBtn based on role
+
         postBtn.style.display = "inline-block"; 
         settingsBtn.style.display = "inline-block";
         adminBtn.style.display = (currentUser && currentUser.uid === adminUID) ? "inline-block" : "none"; 
@@ -875,7 +875,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
         const ud = await udRef.get();
 
         if (!ud.exists) {
-          // New user setup
+
           await udRef.set({
             email: u.email,
             following: [],
@@ -887,7 +887,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
             followedUserPreferences: {},
             myAccountWeight: 20, 
           });
-          // After setting up, immediately prompt for display name if not already set by Auth
+
           if (!u.displayName) {
               displayNameModal.style.display = "flex";
           } else {
@@ -912,7 +912,6 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
         showFeed(); // Always start on the feed
       });
 
-      // Handle display name submission for new users
       displayNameSubmitBtn.onclick = async () => {
           const newName = newDisplayNameInput.value.trim();
           if (!newName) {
@@ -953,7 +952,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
         postsDiv.innerHTML = ''; // Clear existing posts
         noMorePosts = false;
         loadPosts(); // Initial load
-        // Set up infinite scroll
+
         postsDiv.onscroll = handleScroll; // Attach only once if needed, or better, use IntersectionObserver
         window.onscroll = handleScroll; // Listen to window scroll
       }
@@ -977,7 +976,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
 
       async function loadTrendingPosts() {
           exploreTrendingPosts.innerHTML = '<h3>Trending Posts</h3><p>Loading...</p>';
-          // Get posts from the last 7 days for a broader trend view
+
           const sevenDaysAgo = firebase.firestore.Timestamp.now().toDate();
           sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); 
 
@@ -989,7 +988,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
 
           let trending = snap.docs.map(doc => {
               const data = doc.data();
-              // Calculate a simple engagement score: Likes + Reposts * 2
+
               const engagement = (data.likes?.length || 0) + (data.repostCount || 0); 
               return { id: doc.id, ...data, engagementScore: engagement };
           }).filter(p => !blockedUsers.has(p.uid)); // Filter out blocked users
@@ -1039,7 +1038,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
                           following: firebase.firestore.FieldValue.arrayUnion(targetUid) 
                       });
                       following.add(targetUid);
-                      // Update followed user preferences
+
                       userFeedPreferences.followedUserPreferences[targetUid] = { score: 7.3, lastInteraction: firebase.firestore.Timestamp.now() };
                       await updateUserPreferencesInFirestore();
                       alert(`You are now following ${user.displayName || user.email}!`);
@@ -1053,14 +1052,13 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
       feedBtn.onclick = showFeed;
       exploreBtn.onclick = showExplore;
 
-      // Removed dmBtn.onclick
 
       postBtn.onclick = () => (postModal.style.display = "flex");
       postModalClose.onclick = () => {
           postModal.style.display = "none";
           modalText.value = '';
           modalTag.value = '';
-          // Removed modalImage.value
+
       };
 
       settingsBtn.onclick = () => {
@@ -1068,7 +1066,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
         emailInput.value = currentUser.email || ""; 
         bioInput.value = currentUser.bio || "";
         passwordInput.value = "";
-        // Removed profilePicInput.value
+
         settingsModal.style.display = "flex";
       };
       settingsClose.onclick = () => (settingsModal.style.display = "none");
@@ -1079,7 +1077,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
         const [us, ps] = await Promise.all([ // Removed dm from promise.all
           db.collection("users").get(),
           db.collection("posts").get(),
-          // db.collection("dms").get(), // Removed DM fetch
+
         ]);
         adminUsers.innerHTML = "<h3>Users</h3>";
         us.docs.forEach((d) => {
@@ -1097,7 +1095,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
         const tag = modalTag.value.trim(); 
         if (!txt || !tag) return alert("Text and Tag required"); 
         modalSend.disabled = true;
-        // Removed image upload logic
+
         
         await db.collection("posts").add({
           uid: currentUser.uid,
@@ -1114,7 +1112,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
         postModal.style.display = "none";
         modalText.value = ''; 
         modalTag.value = ''; 
-        // Removed modalImage.value
+
         showFeed();
       };
 
@@ -1125,7 +1123,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
             p = passwordInput.value;
           
           let profileImgUrl = ""; // Always use placeholder
-          // Removed profile picture upload logic
+
 
           if (n !== currentUser.displayName) {
             await currentUser.updateProfile({ displayName: n });
@@ -1290,9 +1288,8 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
             lastVisiblePost = snap.docs[snap.docs.length - 1]; // Update last visible post
             feedLoading.classList.remove('active'); // Hide loading indicator
         }
-        
-        // Combine new posts with existing ones for trending tags calculation
-        // This is not efficient for large datasets, consider only calculating from current batch + some recent
+
+
         const allFetchedPosts = [...(postsDiv.children.length === 0 ? [] : Array.from(postsDiv.children).map(el => JSON.parse(el.dataset.postData))), ...newPosts]; 
         displayTrendingTags(allFetchedPosts);
 
@@ -1317,8 +1314,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
           return { ...p, relevanceScore };
         }).filter(p => !blockedUsers.has(p.uid));
 
-        // Sort only the newly fetched posts before rendering, then append
-        // This ensures the feed remains ordered correctly as new batches come in
+
         scoredPosts.sort((a, b) => b.relevanceScore - a.relevanceScore); // Re-sort for optimal feed
 
         renderPosts(scoredPosts, postsDiv, true); // Append mode for feed
@@ -1326,7 +1322,6 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
         feedLoading.classList.remove('active'); // Hide loading indicator
       }
 
-      // `append` parameter will determine if we clear container or append
       function renderPosts(posts, container, append = false) {
         if (!append) {
           container.innerHTML = "";
@@ -1362,22 +1357,20 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
           }" style="display:none;"></div>`;
           container.appendChild(el);
 
-          // User clicks on post author's name
           const usernameSpans = el.querySelectorAll(".username");
           usernameSpans.forEach(span => {
               span.onclick = () => showUserProfile(span.dataset.uid);
           });
 
-          // Admin delete button for posts
           if (currentUser.uid === adminUID) {
               const deleteButton = el.querySelector(".delete-btn");
               if (deleteButton) {
                   deleteButton.onclick = async () => {
                       if (confirm("Are you sure you want to delete this post? This action cannot be undone.")) {
                           await db.collection("posts").doc(p.id).delete();
-                          // Find and remove the element from the DOM
+
                           el.remove(); 
-                          // If current view is the main feed, ensure feed updates for pagination
+
                           if (container === postsDiv) {
                               lastVisiblePost = null; // Reset pagination
                               postsDiv.innerHTML = '';
@@ -1406,14 +1399,13 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
               }
           }
 
-          // Like button
           el.querySelector(".likeBtn").onclick = async () => {
             const ref = db.collection("posts").doc(p.id);
             liked
               ? await ref.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) })
               : await ref.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
             await handlePostInteraction(p, 'like'); 
-            // Re-render the specific post element to update like count immediately without full reload
+
             const updatedPostSnap = await ref.get();
             if (updatedPostSnap.exists) {
                 const updatedPostData = { id: updatedPostSnap.id, ...updatedPostSnap.data() };
@@ -1426,7 +1418,6 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
             }
           };
 
-          // Comment toggle button
           el.querySelector(".commentToggleBtn").onclick = () => {
             const cd = getEl(`commentsDiv-${p.id}`);
             
@@ -1441,8 +1432,6 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
             }
           };
 
-
-          // Repost button
           el.querySelector(".repostBtn").onclick = async () => {
             const r = {
               uid: currentUser.uid,
@@ -1460,7 +1449,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
             await db.collection("posts").doc(p.id).update({ repostCount: rc + 1 });
             await handlePostInteraction(p, 'repost'); 
             alert("Post reposted successfully!");
-            // Re-render the specific post element to update repost count immediately
+
             const updatedPostSnap = await db.collection("posts").doc(p.id).get();
             if (updatedPostSnap.exists) {
                 const updatedPostData = { id: updatedPostSnap.id, ...updatedPostSnap.data() };
@@ -1483,8 +1472,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
       async function loadComments(pid) {
         const cd = getEl(`commentsDiv-${pid}`);
         const commentsListEl = getEl(`commentsList-${pid}`);
-        
-        // Ensure the postCommentBtn has its listener attached correctly
+
         const postCommentBtn = cd.querySelector(".postCommentBtn");
         if (postCommentBtn && !postCommentBtn.dataset.listenerAttached) { 
           postCommentBtn.onclick = async (e) => {
@@ -1533,7 +1521,6 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
             }`;
           commentsListEl.appendChild(commentDiv);
 
-          // Like comment button
           const likeCommentBtn = commentDiv.querySelector(".like-comment-btn");
           if (likeCommentBtn) {
               likeCommentBtn.onclick = async (e) => {
@@ -1646,7 +1633,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
             
             await updateUserPreferencesInFirestore(); 
             
-            isF = !isF; 
+            isF = !isF;
             followBtn.textContent = isF ? "Unfollow" : "Follow";
             followBtn.style.backgroundColor = isF ? "#6c757d" : "#28a745";
             followersCountSpan.textContent = (await db.collection("users").where("following", "array-contains", uid).get()).size;

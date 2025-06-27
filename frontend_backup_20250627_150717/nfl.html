@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFL Schedule - Sports Square</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
+     crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+    <style>
+        /* Define your root variables and basic body styles as per your other files */
+        :root {
+            /* Top color: Black */
+            --background-dark: #000000;
+            /* 2nd level color: Midnight Blue */
+            --accent-dark: #191970;
+
+            /* Neon colors remain vibrant */
+            --neon-green: #00ff00;
+            --neon-blue: #00ffff;
+            --neon-yellow: #faff00;
+            /* Text colors adjusted for dark background */
+            --text-light: #e0e0e0;
+            --text-lighter: #b0b0b0; /* For less prominent text */
+            --button-text-dark: #000000; /* Dark text for neon buttons */
+            --input-text-color: #e0e0e0; /* Input text on dark background */
+            --placeholder-color: #888; /* Placeholder text */
+        }
+
+        body {
+            background-color: var(--background-dark);
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            padding: 50px;
+            color: var(--text-light); /* Light text for readability */
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Styles for the footer to match your other pages */
+        footer {
+            margin-top: 60px; /* Add some space above the footer */
+            padding: 30px;
+            background-color: var(--neon-yellow); /* Neon yellow strip */
+            box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4); /* Yellow glow */
+            color: var(--button-text-dark); /* Dark text on yellow footer */
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        footer p {
+            margin: 5px 0;
+            font-size: 1.1em;
+            color: var(--button-text-dark); /* Ensure footer text is dark */
+        }
+        footer a {
+            color: var(--neon-blue);
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        footer a:hover {
+            color: var(--neon-green);
+        }
+
+        /* Sitemap link outside footer */
+        body > p:last-of-type { /* Targets the sitemap link specifically if it's the last paragraph in body */
+            margin-top: 20px;
+            margin-bottom: 0;
+        }
+        body > p:last-of-type a {
+            color: var(--neon-blue);
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        body > p:last-of-type a:hover {
+            color: var(--neon-green);
+        }
+    </style>
+</head>
+<body>
+
+<h1>NFL News and Updates</h1>
+<p>This is a placeholder for NFL-related content. You can add articles, schedules, etc. here.</p>
+
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script> <script src="./firebase-config.js"></script>
+<script src="./presence.js"></script>
+<script src="./notifications.js"></script>
+
+<footer>
+    <p>&copy; 2025 Sports Square. All rights reserved.</p>
+    <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+</footer>
+<p><a href="./sitemap.html">Sitemap</a></p>
+    
+</body>
+</html>

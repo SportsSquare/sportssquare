@@ -17,7 +17,6 @@ const socket = io();
 const questionInput = document.getElementById("question-input");
 const questionsContainer = document.getElementById("questions-container");
 
-// Send a question
 function sendQuestion() {
     const questionText = questionInput.value.trim();
     if (questionText !== "") {
@@ -26,7 +25,6 @@ function sendQuestion() {
     }
 }
 
-// Listen for new questions (real-time updates)
 socket.on("questionsUpdated", (questions) => {
     questionsContainer.innerHTML = "";
     questions.forEach((q) => {

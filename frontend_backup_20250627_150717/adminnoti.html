@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Notification Panel</title>
+  <style>
+    #admin-panel {
+      display: none;
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      padding: 16px;
+      max-width: 400px;
+      font-family: Arial, sans-serif;
+    }
+    input, textarea {
+      width: 100%;
+      margin-bottom: 12px;
+      padding: 8px;
+    }
+    button {
+      padding: 10px 16px;
+      background: green;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: darkgreen;
+    }
+    #status {
+      margin-top: 10px;
+      color: red;
+    }
+    body {
+      background-color: #f9fbf7;
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    h2 {
+      color: #333;
+    }
+    h3 {
+      color: #555;
+    }
+    textarea {
+      resize: none;
+      font-family: Arial, sans-serif;
+    }
+    #admin-panel p {
+      color: red;
+      font-weight: bold;
+    }
+    @media (max-width: 600px) {
+      #admin-panel {
+        width: 90%;
+      }
+    }
+    @media (max-width: 400px) {
+      #admin-panel {
+        width: 100%;
+      }
+    }
+    h1 {
+      color: blue;
+      margin-bottom: 20px;
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    h3 {
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .message {
+      margin: 1rem 0;
+      color: red;
+      font-weight: bold;
+    }
+    .admin-panel {
+      display: none;
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      padding: 16px;
+      max-width: 400px;
+      font-family: Arial, sans-serif;
+      text-align: center
+    }
+    :root {
+      /* Dark background as requested */
+      --background-dark: #1a1a2e;
+      /* Neon colors remain vibrant */
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+      /* Text colors adjusted for dark background */
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0; /* For less prominent text */
+      --accent-dark: #0f3460; /* Dark accent for cards/containers */
+      --button-text-dark: #1a1a2e; /* Text color for neon buttons */
+      --input-text-color: #e0e0e0; /* Input text on dark background */
+      --placeholder-color: #888; /* Placeholder text */
+    }
+
+    body {
+      background-color: var(--background-dark);
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      padding: 50px;
+      color: var(--text-light); /* Light text on dark background */
+      margin: 0;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<h2 style="color: rgb(255, 0, 0);">Welcome to Sports Square</h2>
+
+<div id="admin-panel" style="display: flex; flex-direction: column; align-items: center;">
+  <h1>Admin Notification Panel</h1>
+  <p>Only authorized users can access this panel.</p>
+  <h3 style="color: red;">Create Notification</h3>
+  <textarea id="message" rows="4" placeholder="Notification message"></textarea>
+  <button onclick="createNotification()">Post Notification</button>
+  <p id="status"></p>
+</div>
+
+<!-- Firebase SDKs: include these ONCE per page -->
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+
+<!-- Your config and presence scripts -->
+<script src="/path/to/firebase-config.js"></script>
+<script src="/path/to/presence.js"></script>
+
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+  authDomain: "sportssquare-b96ed.firebaseapp.com",
+  projectId: "sportssquare-b96ed",
+  storageBucket: "sportssquare-b96ed.firebasestorage.app",
+  messagingSenderId: "844736978057",
+  appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+};
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+
+  const adminUID = "ibLtQvJhIPN2icV7IyB1IUIgzN12"; // Replace with YOUR actual UID
+  const adminPanel = document.getElementById('admin-panel');
+  const status = document.getElementById('status');
+
+  auth.onAuthStateChanged(user => {
+    if (user && user.uid === adminUID) {
+      adminPanel.style.display = 'block';
+    } else {
+      adminPanel.innerHTML = '<p>You do not have permission to view this page.</p>';
+    }
+  });
+
+  function createNotification() {
+    const message = document.getElementById('message').value.trim();
+    if (!message) {
+      status.textContent = "Message cannot be empty.";
+      return;
+    }
+
+    const notification = {
+      message: message,
+      timestamp: Date.now(),
+      readBy: []
+    };
+
+    db.collection("notifications").add(notification)
+      .then(() => {
+        status.textContent = "Notification sent!";
+        document.getElementById('message').value = '';
+      })
+      .catch((error) => {
+        status.textContent = "Error: " + error.message;
+      });
+  }
+</script>
+<script src="./notifications.js"></script>
+<footer style="margin-top: 20px; color: #e0e0e0;">
+  <p style="color: #e0e0e0";>&copy; 2025 Sports Square. All rights reserved.</p>
+  <p style="color: #e0e0e0";>Follow us on <a href="https://x.com/Sports__Square" target="_blank" style="color: #00ffff;">X</a></p>
+</footer>
+<p><a href="./sitemap.html" style="color: #00ffff;">Sitemap</a></p>
+
+</body>
+</html>

@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sports Square Social</title>
+    <style>
+        body {
+            font-family: Montserrat, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: rgb(249, 251, 231);
+        }
+      #topbar {
+        background: #0d6efd;
+        color: #fff;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center; /* Vertically center items */
+        position: sticky;
+        top: 0;
+        z-index: 999; /* Ensure topbar stays above content */
+      }
+      #topbar > span {
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+      #topbar button {
+        background: transparent;
+        border: none;
+        color: #fff;
+        margin-left: 10px;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      #topbar button:hover:not(:disabled) { /* Hover effect only for enabled buttons */
+        background: rgba(255, 255, 255, 0.2);
+      }
+      #topbar button:disabled { /* Style for disabled buttons */
+          opacity: 0.6;
+          cursor: not-allowed;
+      }
+
+      .view {
+        display: none;
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 0 15px; /* Add some horizontal padding for smaller screens */
+      }
+      .view.active {
+        display: block;
+      }
+      .post {
+        background: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .post .meta {
+        font-size: 0.9em;
+        color: #555;
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .post .username {
+        cursor: pointer;
+        color: #0d6efd;
+        font-weight: bold;
+      }
+      .post .date {
+        margin-left: 10px;
+        color: #888;
+        font-size: 0.85em;
+      }
+      .post .content {
+          margin-bottom: 10px;
+          line-height: 1.5;
+          word-wrap: break-word; /* Ensure long words break */
+      }
+      /* Removed .post img style */
+
+      .delete-btn, .report-btn, .block-btn {
+        background: #dc3545;
+        color: #fff;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 4px;
+        margin-left: auto; /* Pushes buttons to the right */
+        cursor: pointer;
+        font-size: 0.8em;
+      }
+      .report-btn {
+        background: #ffc107;
+        color: #333;
+        margin-left: 5px; /* Spacing between delete/report */
+      }
+      .report-btn:hover {
+          background: #e0a800;
+      }
+      .block-btn {
+        background: #6c757d;
+        color: #fff;
+        margin-left: 5px;
+      }
+      .block-btn:hover {
+        background: #5a6268;
+      }
+
+      .actions {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+      }
+      .actions button {
+        background: limegreen;
+        border: 1px solid #ddd;
+        color: #333;
+        padding: 6px 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+        /*flex-grow: 1; /* Make buttons expand */
+      }
+      .actions button:hover {
+        background: #e2e6ea;
+      }
+      .repost-badge {
+        font-size: 0.85em;
+        color: #6c757d;
+        margin-bottom: 5px;
+        font-style: italic;
+      }
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6); /* Darker overlay */
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000; /* Ensure modal is on top */
+      }
+      .modal {
+        background: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        max-height: 90vh; 
+        overflow-y: auto; 
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+      .modal .close {
+        position: absolute;
+        top: 12px;
+        right: 15px;
+        font-size: 24px;
+        cursor: pointer;
+        color: #888;
+      }
+      .modal h3, .modal h2 {
+          margin-top: 0;
+          color: #333;
+          margin-bottom: 15px;
+          text-align: center;
+      }
+      input,
+      textarea {
+        width: 100%;
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box; 
+        font-size: 1em;
+      }
+      /* Removed input[type="file"] style */
+
+      #modalPostSend, #saveSettingsBtn, #agreeRulesButton, #displayNameSubmitBtn {
+          background-color: #0d6efd; 
+          color: #fff; 
+          padding: 10px 15px; 
+          border-radius: 5px;
+          margin-top: 20px; 
+          width: auto; 
+          display: block; 
+          margin-left: auto; 
+          margin-right: auto;
+          border: none; 
+          cursor: pointer;
+          font-size: 1em;
+          transition: background-color 0.2s;
+      }
+
+      #modalPostSend:hover, #saveSettingsBtn:hover, #agreeRulesButton:hover, #displayNameSubmitBtn:hover {
+          background-color: #0b5ed7; 
+      }
+
+      #adminPanel .admin-item {
+        background: #fff;
+        padding: 12px;
+        margin-bottom: 10px;
+        border-radius: 6px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      /* Styles for trending tags */
+      #trendingTags {
+          background: #fff;
+          border-radius: 8px;
+          padding: 15px;
+          margin-bottom: 15px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      #trendingTags h3 {
+          margin-top: 0;
+          color: #333;
+          border-bottom: 1px solid #eee;
+          padding-bottom: 10px;
+          margin-bottom: 15px;
+      }
+      #trendingTags .tag {
+          display: inline-block;
+          background: #e9ecef;
+          color: #0d6efd;
+          padding: 6px 12px;
+          border-radius: 20px;
+          margin: 5px;
+          cursor: pointer;
+          font-size: 0.9em;
+          transition: background 0.2s, color 0.2s;
+      }
+      #trendingTags .tag:hover {
+          background: #dae0e5;
+          color: #0b5ed7;
+      }
+      /* Styles for user stats */
+      #userStats {
+          background: #fff;
+          border-radius: 8px;
+          padding: 15px;
+          margin-bottom: 20px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          display: flex;
+          justify-content: space-around;
+          text-align: center;
+      }
+      #userStats div {
+          flex: 1;
+      }
+      #userStats div span {
+          display: block;
+          font-weight: bold;
+          font-size: 1.4em;
+          color: #0d6efd;
+          margin-bottom: 5px;
+      }
+      #userStats div small {
+          color: #555;
+          font-size: 0.9em;
+      }
+      /* Specific view for posts by tag */
+      #postsByTagView {
+          display: none; 
+          max-width: 800px;
+          margin: 20px auto;
+          padding: 0 15px;
+      }
+      #postsByTagView.active {
+          display: block;
+      }
+      #profileFeed {
+          text-align: center;
+      }
+      #profilePicture {
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          object-fit: cover;
+          margin: 0 auto 15px auto;
+          display: block;
+          border: 3px solid #0d6efd;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+      #profileUserEmail {
+          font-size: 1.8em;
+          margin-bottom: 8px;
+          color: #333;
+      }
+      #profileBio {
+          margin-bottom: 25px;
+          color: #555;
+          line-height: 1.4;
+          max-width: 600px;
+          margin-left: auto;
+          margin-right: auto;
+      }
+      #profileFeed button {
+          margin: 0 5px 20px 5px; /* Spacing for Follow/Block buttons */
+          padding: 8px 15px;
+          font-size: 1em;
+      }
+      .list-modal-content {
+          max-height: 400px;
+          overflow-y: auto;
+          padding: 10px 0;
+      }
+      .list-item {
+          padding: 10px 15px;
+          border-bottom: 1px solid #eee;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+      .list-item:last-child {
+          border-bottom: none;
+      }
+      .list-item .email {
+          color: #0d6efd;
+          font-weight: bold;
+          cursor: pointer;
+          font-size: 1.1em;
+      }
+      .list-item .follow-btn {
+          background: #28a745;
+          color: #fff;
+          padding: 5px 10px;
+          border-radius: 4px;
+          border: none;
+          cursor: pointer;
+          font-size: 0.9em;
+      }
+      .list-item .follow-btn:hover {
+          background: #218838;
+      }
+      /* Removed DM specific styles */
+
+      /* Explore View styles */
+      #exploreView {
+          display: none; 
+          max-width: 800px;
+          margin: 20px auto;
+          padding: 0 15px;
+      }
+      #exploreView.active {
+          display: block;
+      }
+      #exploreView h2 {
+          text-align: center;
+          color: #333;
+          margin-bottom: 20px;
+          font-size: 2em;
+      }
+      #exploreTrendingPosts, #exploreSuggestedUsers {
+          background: #fff;
+          border-radius: 8px;
+          padding: 15px;
+          margin-bottom: 20px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      #exploreTrendingPosts h3, #exploreSuggestedUsers h3 {
+          margin-top: 0;
+          color: #333;
+          border-bottom: 1px solid #eee;
+          padding-bottom: 10px;
+          margin-bottom: 15px;
+          font-size: 1.5em;
+      }
+      .suggested-user-item {
+          display: flex;
+          align-items: center;
+          margin-bottom: 12px;
+          gap: 15px;
+          padding-bottom: 10px;
+          border-bottom: 1px dashed #f0f0f0;
+      }
+      .suggested-user-item:last-child {
+          border-bottom: none;
+          margin-bottom: 0;
+          padding-bottom: 0;
+      }
+      .suggested-user-item img {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 1px solid #ddd;
+      }
+      .suggested-user-item .email {
+          font-weight: bold;
+          color: #0d6efd;
+          cursor: pointer;
+          font-size: 1.1em;
+      }
+      .suggested-user-item .follow-btn {
+          margin-left: auto;
+          background: #28a745;
+          color: #fff;
+          padding: 8px 15px;
+          border-radius: 5px;
+          border: none;
+          cursor: pointer;
+          font-size: 0.95em;
+      }
+      .suggested-user-item .follow-btn:hover {
+          background: #218838;
+      }
+      .comment {
+          background: #f8f8f8;
+          padding: 8px 10px;
+          border-radius: 5px;
+          margin-bottom: 5px;
+          font-size: 0.9em;
+          display: flex; /* For like button alignment */
+          align-items: center;
+      }
+      .comment small {
+          color: #777;
+          margin-left: 5px;
+      }
+      .comment .like-comment-btn {
+          margin-left: auto; /* Push like button to the right */
+          background: #e9ecef;
+          border: 1px solid #ddd;
+          color: #333;
+          padding: 3px 8px;
+          border-radius: 3px;
+          cursor: pointer;
+          font-size: 0.75em;
+      }
+      .comment .like-comment-btn.liked {
+          background: #0d6efd;
+          color: #fff;
+      }
+
+      #commentsDiv {
+        margin-top: 15px;
+        padding: 15px; /* Increased padding on all sides */
+        border: 1px solid #e0e0e0; /* Added a light border */
+        border-radius: 8px; /* Rounded corners */
+        background: #fdfdfd; /* Light background color */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Subtle shadow */
+    }
+    #commentsDiv input {
+        margin-top: 10px;
+        width: calc(100% - 90px); /* Adjusts width for button */
+        display: inline-block;
+        vertical-align: middle;
+        padding: 8px 10px; /* Example: Added from previous suggestion, adjust as desired */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 0.9em;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08); /* Subtle inner shadow */
+        transition: border-color 0.2s, box-shadow 0.2s; /* Smooth transition for focus effect */
+    }
+    #commentsDiv input:focus {
+        outline: none; /* Removes the default browser outline */
+        border-color: #0d6efd; /* Blue border on focus */
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25); /* Subtle blue glow on focus */
+    }
+    #commentsDiv button.postCommentBtn {
+        width: 90px; /* Example: Slightly wider, adjust as desired */
+        margin-left: 10px;
+        padding: 8px 15px; /* Example: Adjust padding for better look with width */
+        font-size: 0.95em;
+        background-color: #0d6efd; /* Primary blue background */
+        color: #fff; /* White text */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        vertical-align: middle;
+        transition: background-color 0.2s ease-in-out, transform 0.1s ease-out; /* Add transform for a subtle press effect */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Subtle shadow for depth */
+    }
+
+/* Hover effect */
+#commentsDiv button.postCommentBtn:hover {
+    background-color: #0a58ca; /* Darker blue on hover */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* Slightly larger shadow on hover */
+}
+
+/* Active (when clicked) effect */
+#commentsDiv button.postCommentBtn:active {
+    background-color: #084298; /* Even darker blue when pressed */
+    transform: translateY(1px); /* Moves the button down slightly for a 'pressed' feel */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Smaller shadow when pressed */
+}
+      #feedLoading {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+        display: none;
+      }
+      #feedLoading.active {
+        display: block;
+      }
+      /* --- Comments UI Enhancements --- */
+
+/* For the main comments container (if you want to style its overall box) */
+div[id^="commentsDiv-"] { /* Targets any div whose ID starts with "commentsDiv-" */
+    margin-top: 15px;
+    padding: 15px; /* Increased padding on all sides */
+    border: 1px solid #e0e0e0; /* Added a light border */
+    border-radius: 8px; /* Rounded corners */
+    background: #fdfdfd; /* Light background color */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Subtle shadow */
+    /* Ensure it's block-level if it's not already */
+    display: block !important; /* Forces it to be block, just in case */
+}
+
+
+/* 1. Enhancing the Comment Input Field */
+div[id^="commentsDiv-"] input { /* Targets input inside any commentsDiv- dynamically ID'd div */
+    /* Re-apply input specific styles, overriding general ones if needed */
+    width: calc(100% - 100px); /* Adjust width considering the button width + margin */
+    margin-right: 10px; /* Space between input and button */
+    padding: 8px 12px; /* Good padding */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.95em; /* Slightly larger text */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08); /* Subtle inner shadow */
+    transition: border-color 0.2s, box-shadow 0.2s; /* Smooth transition for focus effect */
+    vertical-align: middle; /* Keep it aligned with the button */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+div[id^="commentsDiv-"] input:focus {
+    outline: none; /* Removes the default browser outline */
+    border-color: #0d6efd; /* Blue border on focus */
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25); /* Subtle blue glow on focus */
+}
+
+
+/* 2. Enhancing the Comment "Post" Button */
+div[id^="commentsDiv-"] button.postCommentBtn { /* Targets button with class postCommentBtn inside any commentsDiv- dynamically ID'd div */
+    width: 80px; /* Fixed width for the button */
+    /* margin-left: 10px; -- No longer needed as we added margin-right to input */
+    padding: 8px 0; /* Adjust padding for button */
+    font-size: 0.95em;
+    background-color: #0d6efd;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    vertical-align: middle;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    display: inline-block; /* Ensure it stays inline with the input */
+    box-sizing: border-box;
+}
+
+div[id^="commentsDiv-"] button.postCommentBtn:hover {
+    background-color: #0a58ca;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+div[id^="commentsDiv-"] button.postCommentBtn:active {
+    background-color: #084298;
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure the .comment class styles are also there for individual comments */
+.comment {
+    background: #fff; /* White background for comments */
+    padding: 10px 15px; /* More padding */
+    border-radius: 8px; /* More rounded corners */
+    margin-bottom: 8px; /* More space between comments */
+    font-size: 0.95em; /* Slightly larger text */
+    line-height: 1.4; /* Better readability */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Very subtle shadow */
+    display: flex;
+    align-items: center;
+}
+.comment b {
+    color: #0d6efd; /* Make username blue */
+    margin-right: 5px; /* Space after username */
+}
+.comment small {
+    color: #999; /* Lighter timestamp */
+    font-size: 0.8em;
+}
+
+/* Style for the comment like button specifically */
+.comment .like-comment-btn {
+    margin-left: auto; /* Push like button to the right */
+    background: #e9ecef;
+    border: 1px solid #ddd;
+    color: #333;
+    padding: 3px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.75em;
+}
+.comment .like-comment-btn.liked {
+    background: #0d6efd;
+    color: #fff;
+}
+    </style>
+  </head>
+  <body>
+    <div id="topbar">
+      <span>Sports Square Social</span>
+      <div>
+        <a href="./index.html"><button id="Btn">Home</button></a>
+        <button id="feedBtn" disabled>Feed</button>
+        <button id="exploreBtn">Explore</button>
+        <button id="postBtn">New Post</button>
+        <button id="settingsBtn">Settings</button>
+        <button id="adminBtn" style="display: none">Admin</button>
+        <button id="backBtn" style="display: none">Back</button>
+        <button id="logoutBtn">Logout</button>
+      </div>
+    </div>
+
+    <div id="content">
+      <div id="feed" class="view active">
+        <div id="trendingTags">
+            <h3>Trending Tags</h3>
+            <p>Loading...</p>
+        </div>
+        <div id="posts"></div>
+        <div id="feedLoading">Loading more posts...</div>
+      </div>
+      <div id="profileFeed" class="view">
+        <img id="profilePicture" src="" alt="Profile Picture">
+        <h2 id="profileUserDisplayName"></h2>
+        <p id="profileUserEmail"></p>
+        <p id="profileBio"></p>
+        <div id="userStats">
+            <div id="postsCount"><span>0</span><small>Posts</small></div>
+            <div id="followersCount"><span id="followersNum">0</span><small style="cursor:pointer;" id="followersLink">Followers</small></div>
+            <div id="followingCount"><span id="followingNum">0</span><small style="cursor:pointer;" id="followingLink">Following</small></div>
+            </div>
+        <button id="followBtn" style="margin-bottom: 15px"></button>
+        <button id="blockBtn" class="block-btn"></button>
+        <div id="userPosts"></div>
+      </div>
+      <div id="adminPanel" class="view">
+        <h2>Admin Dashboard</h2>
+        <div id="adminUsers"><h3>Users</h3></div>
+        <div id="adminStats">
+          <h3>Stats</h3>
+          <p>Loading...</p>
+        </div>
+      </div>
+      <div id="postsByTagView" class="view">
+        <h2 id="postsByTagTitle">Posts with tag: </h2>
+        <div id="postsByTagContent"></div>
+      </div>
+      <div id="exploreView" class="view"> <h2>Explore</h2>
+          <div id="exploreTrendingPosts">
+              <h3>Trending Posts</h3>
+              <p>Loading trending posts...</p>
+          </div>
+          <div id="exploreSuggestedUsers">
+              <h3>Suggested Users</h3>
+              <p>Loading suggested users...</p>
+          </div>
+      </div>
+    </div>
+
+    <div id="displayNameModal" class="modal-overlay">
+        <div class="modal">
+            <h3>Welcome!</h3>
+            <p>Before you start, please set your display name. This is how other users will see you.</p>
+            <input type="text" id="newDisplayNameInput" placeholder="Enter your display name" required />
+            <button id="displayNameSubmitBtn">Save Display Name</button>
+        </div>
+    </div>
+
+    <div id="rulesModal" class="modal-overlay">
+        <div class="modal">
+            <h2>Sports Square Social Rules</h2>
+            <p>Welcome to Sports Square Social! Please note our community guidelines:</p>
+            <ul>
+                <li>All posts and discussions must be related to **sports, sports business, or sports economics**.</li>
+                <li>Be respectful to other members.</li>
+                <li>No spam, hate speech, or inappropriate content.</li>
+                <li>Violations may lead to account suspension.</li>
+            </ul>
+            <button id="agreeRulesButton">Agree and Continue</button>
+        </div>
+    </div>
+
+    <div id="postModal" class="modal-overlay">
+      <div class="modal">
+        <span class="close" id="postModalClose">&times;</span>
+        <h3>New Post</h3>
+        <textarea id="modalPostText" rows="4" placeholder="What's on your mind?"></textarea>
+        <input type="text" id="modalPostTag" placeholder="Add a tag (e.g., NBA, Economics, Football)" required />
+        <button id="modalPostSend" type="button">Post</button>
+      </div>
+    </div>
+
+    <div id="settingsModal" class="modal-overlay">
+      <div class="modal">
+        <span class="close" id="settingsModalClose">&times;</span>
+        <h3>Settings</h3>
+        <input id="displayNameInput" placeholder="Display Name" />
+        <input id="emailInput" type="email" placeholder="Email" disabled title="Email cannot be changed directly here." />
+        <textarea id="bioInput" placeholder="Write a short bio..." rows="3"></textarea>
+        <input id="passwordInput" type="password" placeholder="New Password (leave blank to keep current)" />
+        <button id="saveSettingsBtn">Save</button>
+      </div>
+    </div>
+
+    <div id="followersListModal" class="modal-overlay">
+        <div class="modal">
+            <span class="close" id="followersListModalClose">&times;</span>
+            <h3>Followers</h3>
+            <div id="followersListContent" class="list-modal-content"></div>
+        </div>
+    </div>
+
+    <div id="followingListModal" class="modal-overlay">
+        <div class="modal">
+            <span class="close" id="followingListModalClose">&times;</span>
+            <h3>Following</h3>
+            <div id="followingListContent" class="list-modal-content"></div>
+        </div>
+    </div>
+
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script>
+        firebase.firestore.setLogLevel("debug");
+      const adminUID = "ibLtQvJhIPN2icV7IyB1IUIgzN12"; // <-- REMEMBER TO REPLACE THIS WITH YOUR ACTUAL ADMIN UID
+      firebase.initializeApp({
+        apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk", // <-- REPLACE WITH YOUR ACTUAL API KEY
+        authDomain: "sportssquare-b96ed.firebaseapp.com", // <-- REPLACE WITH YOUR ACTUAL AUTH DOMAIN
+        projectId: "sportssquare-b96ed", // <-- REPLACE WITH YOUR ACTUAL PROJECT ID
+        storageBucket: "sportssquare-b96ed.appspot.com", // <-- REPLACE WITH YOUR ACTUAL STORAGE BUCKET (though not used now)
+        messagingSenderId: "844736978057", // <-- REPLACE WITH YOUR ACTUAL MESSAGING SENDER ID
+        appId: "1:844736978057:web:76c8db520d3c27bdeb7a58", // <-- REPLACE WITH YOUR ACTUAL APP ID
+      });
+      const auth = firebase.auth(),
+        db = firebase.firestore();
+        // Removed storage variable
+
+      let currentUser,
+        following = new Set(),
+        blockedUsers = new Set();
+        // Removed conversations, currentConvId DM variables
+
+      let userFeedPreferences = {
+        tagPreferences: {},
+        followedUserPreferences: {},
+        myAccountWeight: 20,
+      };
+
+      // Pagination variables
+      let lastVisiblePost = null;
+      let isLoadingPosts = false;
+      let noMorePosts = false;
+
+      const getEl = (id) => document.getElementById(id);
+
+      const feed = getEl("feed"),
+        postsDiv = getEl("posts"),
+        profileFeed = getEl("profileFeed"),
+        profileUserDisplayName = getEl("profileUserDisplayName"),
+        profileUserEmail = getEl("profileUserEmail"),
+        profilePictureEl = getEl("profilePicture"),
+        profileBioEl = getEl("profileBio"),
+        userPosts = getEl("userPosts"),
+        followBtn = getEl("followBtn"),
+        blockBtn = getEl("blockBtn"),
+        // Removed DM elements
+        adminBtn = getEl("adminBtn"),
+        adminPanel = getEl("adminPanel"),
+        adminUsers = getEl("adminUsers"),
+        adminStats = getEl("adminStats"),
+        feedBtn = getEl("feedBtn"),
+        exploreBtn = getEl("exploreBtn"),
+        // Removed dmBtn
+        postBtn = getEl("postBtn"),
+        settingsBtn = getEl("settingsBtn"),
+        backBtn = getEl("backBtn"),
+        logoutBtn = getEl("logoutBtn"),
+        postModal = getEl("postModal"),
+        postModalClose = getEl("postModalClose"),
+        modalText = getEl("modalPostText"),
+        modalTag = getEl("modalPostTag"), 
+        // Removed modalImage
+        modalSend = getEl("modalPostSend"),
+        settingsModal = getEl("settingsModal"),
+        settingsClose = getEl("settingsModalClose"),
+        displayNameInput = getEl("displayNameInput"),
+        emailInput = getEl("emailInput"),
+        bioInput = getEl("bioInput"),
+        // Removed profilePicInput
+        passwordInput = getEl("passwordInput"),
+        saveSettingsBtn = getEl("saveSettingsBtn"),
+        trendingTagsDiv = getEl("trendingTags"), 
+        postsByTagView = getEl("postsByTagView"), 
+        postsByTagTitle = getEl("postsByTagTitle"), 
+        postsByTagContent = getEl("postsByTagContent"), 
+        postsCountSpan = getEl("postsCount").querySelector("span"), 
+        followersCountSpan = getEl("followersNum"),
+        followingCountSpan = getEl("followingNum"),
+        followersLink = getEl("followersLink"),
+        followingLink = getEl("followingLink"),
+        followersListModal = getEl("followersListModal"),
+        followersListModalClose = getEl("followersListModalClose"),
+        followersListContent = getEl("followersListContent"),
+        followingListModal = getEl("followingListModal"),
+        followingListModalClose = getEl("followingListModalClose"),
+        followingListContent = getEl("followingListContent"),
+        exploreView = getEl("exploreView"),
+        exploreTrendingPosts = getEl("exploreTrendingPosts"),
+        exploreSuggestedUsers = getEl("exploreSuggestedUsers"),
+        displayNameModal = getEl("displayNameModal"),
+        newDisplayNameInput = getEl("newDisplayNameInput"),
+        displayNameSubmitBtn = getEl("displayNameSubmitBtn"),
+        rulesModal = getEl("rulesModal"),
+        agreeRulesButton = getEl("agreeRulesButton"),
+        feedLoading = getEl("feedLoading");
+
+
+      function escapeHtml(t) {
+        const d = document.createElement("div");
+        d.textContent = t;
+        return d.innerHTML;
+      }
+
+      function switchView(view) {
+        document.querySelectorAll(".view").forEach((v) => {
+          v === view ? v.classList.add("active") : v.classList.remove("active");
+        });
+        // Reset top bar button states
+        feedBtn.disabled = (view === feed);
+        exploreBtn.disabled = (view === exploreView);
+        // Removed dmBtn.disabled
+        // show/hide back button based on view
+        backBtn.style.display = (view === profileFeed || view === postsByTagView || view === exploreView || view === adminPanel) ? "inline-block" : "none";
+        
+        // Buttons always visible except for backBtn and AdminBtn based on role
+        postBtn.style.display = "inline-block"; 
+        settingsBtn.style.display = "inline-block";
+        adminBtn.style.display = (currentUser && currentUser.uid === adminUID) ? "inline-block" : "none"; 
+      }
+
+      async function updateUserPreferencesInFirestore() {
+        if (currentUser) {
+          await db.collection("users").doc(currentUser.uid).set({
+            tagPreferences: userFeedPreferences.tagPreferences,
+            followedUserPreferences: userFeedPreferences.followedUserPreferences,
+            myAccountWeight: userFeedPreferences.myAccountWeight,
+            blockedUsers: Array.from(blockedUsers)
+          }, { merge: true }); // Use merge to only update these fields
+        }
+      }
+
+      auth.onAuthStateChanged(async (u) => {
+        if (!u) return (location.href = "./signup.html");
+        currentUser = u;
+        if (u.uid === adminUID) adminBtn.style.display = "inline-block";
+        logoutBtn.onclick = () => { auth.signOut().then(() => { console.log('Signed out'); }).catch(error => console.error('Sign out error', error)); };
+
+        const udRef = db.collection("users").doc(u.uid);
+        const ud = await udRef.get();
+
+        if (!ud.exists) {
+          // New user setup
+          await udRef.set({
+            email: u.email,
+            following: [],
+            blockedUsers: [],
+            displayName: u.displayName || "", // Initialize with Firebase Auth display name
+            profileImageUrl: "", // Default placeholder image
+            bio: "",
+            tagPreferences: {},
+            followedUserPreferences: {},
+            myAccountWeight: 20, 
+          });
+          // After setting up, immediately prompt for display name if not already set by Auth
+          if (!u.displayName) {
+              displayNameModal.style.display = "flex";
+          } else {
+              currentUser.displayName = u.displayName;
+              currentUser.profileImageUrl = ""; // Set default for current session
+              currentUser.bio = '';
+              showRulesPopup();
+          }
+        } else {
+          const data = ud.data();
+          following = new Set(data.following || []);
+          blockedUsers = new Set(data.blockedUsers || []);
+          userFeedPreferences.tagPreferences = data.tagPreferences || {};
+          userFeedPreferences.followedUserPreferences = data.followedUserPreferences || {};
+          userFeedPreferences.myAccountWeight = data.myAccountWeight || 20;
+          currentUser.profileImageUrl = data.profileImageUrl || ''; // Ensure default if empty
+          currentUser.bio = data.bio || '';
+          currentUser.displayName = u.displayName || data.displayName || u.email; // Ensure display name is current
+          showRulesPopup(); // Show rules for existing users if they haven't seen it
+        }
+
+        showFeed(); // Always start on the feed
+      });
+
+      // Handle display name submission for new users
+      displayNameSubmitBtn.onclick = async () => {
+          const newName = newDisplayNameInput.value.trim();
+          if (!newName) {
+              alert("Display name cannot be empty.");
+              return;
+          }
+          displayNameSubmitBtn.disabled = true;
+          try {
+              await currentUser.updateProfile({ displayName: newName });
+              await db.collection("users").doc(currentUser.uid).set({ displayName: newName }, { merge: true });
+              currentUser.displayName = newName; // Update local currentUser object
+              displayNameModal.style.display = "none";
+              showRulesPopup(); // After setting display name, show rules
+          } catch (error) {
+              console.error("Error setting display name:", error);
+              alert("Failed to set display name: " + error.message);
+          } finally {
+              displayNameSubmitBtn.disabled = false;
+          }
+      };
+
+      function showRulesPopup() {
+          if (!localStorage.getItem('hasSeenRulesPopup')) {
+              rulesModal.style.display = 'flex';
+          }
+      }
+
+      agreeRulesButton.onclick = () => {
+          localStorage.setItem('hasSeenRulesPopup', 'true');
+          rulesModal.style.display = 'none';
+      };
+
+
+      function showFeed() {
+        switchView(feed);
+        currentProfileUID = null;
+        lastVisiblePost = null; // Reset for new feed load
+        postsDiv.innerHTML = ''; // Clear existing posts
+        noMorePosts = false;
+        loadPosts(); // Initial load
+        // Set up infinite scroll
+        postsDiv.onscroll = handleScroll; // Attach only once if needed, or better, use IntersectionObserver
+        window.onscroll = handleScroll; // Listen to window scroll
+      }
+
+      function handleScroll() {
+          if (isLoadingPosts || noMorePosts) return;
+
+          const scrollThreshold = 100; // Pixels from bottom to trigger load
+          const isNearBottom = (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - scrollThreshold);
+
+          if (isNearBottom && document.querySelector("#feed.active")) {
+              loadPosts();
+          }
+      }
+
+      function showExplore() {
+          switchView(exploreView);
+          loadTrendingPosts();
+          loadSuggestedUsers();
+      }
+
+      async function loadTrendingPosts() {
+          exploreTrendingPosts.innerHTML = '<h3>Trending Posts</h3><p>Loading...</p>';
+          // Get posts from the last 7 days for a broader trend view
+          const sevenDaysAgo = firebase.firestore.Timestamp.now().toDate();
+          sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); 
+
+          const snap = await db.collection('posts')
+              .where('createdAt', '>', firebase.firestore.Timestamp.fromDate(sevenDaysAgo))
+              .orderBy('createdAt', 'desc')
+              .limit(100) // Fetch more posts to ensure good trending sample
+              .get();
+
+          let trending = snap.docs.map(doc => {
+              const data = doc.data();
+              // Calculate a simple engagement score: Likes + Reposts * 2
+              const engagement = (data.likes?.length || 0) + (data.repostCount || 0); 
+              return { id: doc.id, ...data, engagementScore: engagement };
+          }).filter(p => !blockedUsers.has(p.uid)); // Filter out blocked users
+
+          trending.sort((a, b) => b.engagementScore - a.engagementScore);
+          
+          exploreTrendingPosts.innerHTML = '<h3>Trending Posts</h3>';
+          if (trending.length === 0) {
+              exploreTrendingPosts.innerHTML += '<p>No trending posts right now. Be the first to engage!</p>';
+          } else {
+              renderPosts(trending.slice(0, 10), exploreTrendingPosts); // Display top 10 trending
+          }
+      }
+
+      async function loadSuggestedUsers() {
+          exploreSuggestedUsers.innerHTML = '<h3>Suggested Users</h3><p>Loading...</p>';
+          const usersSnap = await db.collection('users').limit(20).get(); // Get some users
+
+          let suggested = [];
+          for (const doc of usersSnap.docs) {
+              const userData = doc.data();
+              const uid = doc.id;
+              if (uid === currentUser.uid || following.has(uid) || blockedUsers.has(uid)) {
+                  continue; // Skip self, followed users, and blocked users
+              }
+              suggested.push({ uid, ...userData });
+          }
+
+          exploreSuggestedUsers.innerHTML = '<h3>Suggested Users</h3>';
+          if (suggested.length === 0) {
+              exploreSuggestedUsers.innerHTML += '<p>No new users to suggest at the moment.</p>';
+          } else {
+              suggested.slice(0, 5).forEach(user => { // Show top 5 suggestions
+                  const item = document.createElement('div');
+                  item.className = 'suggested-user-item';
+                  item.innerHTML = `
+                      <img src="" alt="Profile Picture">
+                      <span class="email" data-uid="${user.uid}">${escapeHtml(user.displayName || user.email)}</span>
+                      <button class="follow-btn" data-uid="${user.uid}">Follow</button>
+                  `;
+                  exploreSuggestedUsers.appendChild(item);
+
+                  item.querySelector('.email').onclick = () => showUserProfile(user.uid);
+                  item.querySelector('.follow-btn').onclick = async (e) => {
+                      const targetUid = e.target.dataset.uid;
+                      await db.collection("users").doc(currentUser.uid).update({ 
+                          following: firebase.firestore.FieldValue.arrayUnion(targetUid) 
+                      });
+                      following.add(targetUid);
+                      // Update followed user preferences
+                      userFeedPreferences.followedUserPreferences[targetUid] = { score: 7.3, lastInteraction: firebase.firestore.Timestamp.now() };
+                      await updateUserPreferencesInFirestore();
+                      alert(`You are now following ${user.displayName || user.email}!`);
+                      loadSuggestedUsers(); // Reload suggestions to reflect changes
+                  };
+              });
+          }
+      }
+
+
+      feedBtn.onclick = showFeed;
+      exploreBtn.onclick = showExplore;
+
+      // Removed dmBtn.onclick
+
+      postBtn.onclick = () => (postModal.style.display = "flex");
+      postModalClose.onclick = () => {
+          postModal.style.display = "none";
+          modalText.value = '';
+          modalTag.value = '';
+          // Removed modalImage.value
+      };
+
+      settingsBtn.onclick = () => {
+        displayNameInput.value = currentUser.displayName || "";
+        emailInput.value = currentUser.email || ""; 
+        bioInput.value = currentUser.bio || "";
+        passwordInput.value = "";
+        // Removed profilePicInput.value
+        settingsModal.style.display = "flex";
+      };
+      settingsClose.onclick = () => (settingsModal.style.display = "none");
+
+      backBtn.onclick = showFeed; 
+
+      adminBtn.onclick = async () => {
+        const [us, ps] = await Promise.all([ // Removed dm from promise.all
+          db.collection("users").get(),
+          db.collection("posts").get(),
+          // db.collection("dms").get(), // Removed DM fetch
+        ]);
+        adminUsers.innerHTML = "<h3>Users</h3>";
+        us.docs.forEach((d) => {
+          const userData = d.data();
+          adminUsers.innerHTML += `<div class="admin-item">${escapeHtml(userData.displayName || userData.email)} <button class="delete-btn" data-uid="${
+            d.id
+          }">Delete User</button></div>`;
+        });
+        adminStats.innerHTML = `<h3>Stats</h3><p>Users: ${us.size}</p><p>Posts: ${ps.size}</p>`; // Removed DMs stat
+        switchView(adminPanel);
+      };
+
+      modalSend.onclick = async () => {
+        const txt = modalText.value.trim();
+        const tag = modalTag.value.trim(); 
+        if (!txt || !tag) return alert("Text and Tag required"); 
+        modalSend.disabled = true;
+        // Removed image upload logic
+        
+        await db.collection("posts").add({
+          uid: currentUser.uid,
+          userEmail: currentUser.email, // Keep email for legacy/fallback
+          userName: currentUser.displayName || currentUser.email, // Store display name
+          text: txt,
+          imageUrl: "", // Set image URL to empty string
+          likes: [],
+          repostCount: 0,
+          tag: tag.toLowerCase(), 
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        modalSend.disabled = false;
+        postModal.style.display = "none";
+        modalText.value = ''; 
+        modalTag.value = ''; 
+        // Removed modalImage.value
+        showFeed();
+      };
+
+      saveSettingsBtn.onclick = async () => {
+        try {
+          const n = displayNameInput.value.trim(),
+            b = bioInput.value.trim(),
+            p = passwordInput.value;
+          
+          let profileImgUrl = ""; // Always use placeholder
+          // Removed profile picture upload logic
+
+          if (n !== currentUser.displayName) {
+            await currentUser.updateProfile({ displayName: n });
+            currentUser.displayName = n; // Update local currentUser object
+          }
+
+          if (p) {
+              await currentUser.updatePassword(p);
+              alert("Password updated!");
+          }
+          
+          await db.collection("users").doc(currentUser.uid).update({ 
+              displayName: n, 
+              bio: b,
+              profileImageUrl: profileImgUrl // Always update to placeholder
+          });
+          
+          currentUser.bio = b;
+          currentUser.profileImageUrl = profileImgUrl; // Update local
+
+          alert("Settings Saved successfully!");
+          settingsModal.style.display = "none";
+          if (currentProfileUID === currentUser.uid) {
+              showUserProfile(currentUser.uid);
+          }
+        } catch (error) {
+          alert("Error saving settings: " + error.message);
+          console.error("Error saving settings:", error);
+        }
+      };
+
+      async function handlePostInteraction(post, interactionType) {
+        const now = firebase.firestore.Timestamp.now();
+        let needsUpdate = false;
+
+        if (post.tag) {
+          const tagKey = post.tag.toLowerCase();
+          if (!userFeedPreferences.tagPreferences[tagKey]) {
+            userFeedPreferences.tagPreferences[tagKey] = { score: 0, lastInteraction: now };
+          }
+          userFeedPreferences.tagPreferences[tagKey].score = Math.min(100, userFeedPreferences.tagPreferences[tagKey].score + 5);
+          userFeedPreferences.tagPreferences[tagKey].lastInteraction = now;
+          needsUpdate = true;
+        }
+
+        if (post.uid !== currentUser.uid && following.has(post.uid)) {
+          if (!userFeedPreferences.followedUserPreferences[post.uid]) {
+            userFeedPreferences.followedUserPreferences[post.uid] = { score: 0, lastInteraction: now };
+          }
+          userFeedPreferences.followedUserPreferences[post.uid].score = Math.max(7.3, userFeedPreferences.followedUserPreferences[post.uid].score);
+          userFeedPreferences.followedUserPreferences[post.uid].lastInteraction = now;
+          needsUpdate = true;
+        }
+
+        if (needsUpdate) {
+          await updateUserPreferencesInFirestore();
+        }
+      }
+
+      function displayTrendingTags(posts) {
+          const tagCounts = {};
+          const now = firebase.firestore.Timestamp.now().toDate();
+          const twentyFourHoursAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000)); 
+
+          posts.forEach(p => {
+              if (p.tag && p.createdAt && p.createdAt.toDate() > twentyFourHoursAgo) {
+                  const tag = p.tag.toLowerCase();
+                  tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+              }
+          });
+
+          const sortedTags = Object.entries(tagCounts)
+              .sort(([, countA], [, countB]) => countB - countA)
+              .slice(0, 5); 
+
+          trendingTagsDiv.innerHTML = '<h3>Trending Tags</h3>';
+          if (sortedTags.length === 0) {
+              trendingTagsDiv.innerHTML += '<p>No trending tags in the last 24 hours.</p>';
+          } else {
+              sortedTags.forEach(([tag, count]) => {
+                  const tagEl = document.createElement('span');
+                  tagEl.className = 'tag';
+                  tagEl.textContent = `#${escapeHtml(tag)} (${count})`;
+                  tagEl.onclick = () => showPostsByTag(tag); 
+                  trendingTagsDiv.appendChild(tagEl);
+              });
+          }
+      }
+
+      async function showPostsByTag(tag) {
+          switchView(postsByTagView);
+          postsByTagTitle.textContent = `Posts with tag: #${escapeHtml(tag)}`;
+          postsByTagContent.innerHTML = '<p>Loading posts...</p>';
+
+          const snap = await db.collection("posts")
+              .where("tag", "==", tag.toLowerCase())
+              .orderBy("createdAt", "desc")
+              .get();
+          
+          const filteredPosts = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+                                    .filter(p => !blockedUsers.has(p.uid));
+          
+          if (filteredPosts.length === 0) {
+              postsByTagContent.innerHTML = `<p>No posts found with tag #${escapeHtml(tag)}.</p>`;
+          } else {
+              renderPosts(filteredPosts, postsByTagContent);
+          }
+      }
+
+
+      async function loadPosts() {
+        if (isLoadingPosts || noMorePosts) return;
+        isLoadingPosts = true;
+        feedLoading.classList.add('active'); // Show loading indicator
+
+        const now = firebase.firestore.Timestamp.now();
+        let needsPreferenceSaveAfterDecay = false;
+
+        for (const tagKey in userFeedPreferences.tagPreferences) {
+          const pref = userFeedPreferences.tagPreferences[tagKey];
+          const lastInteractionDate = pref.lastInteraction ? pref.lastInteraction.toDate() : new Date(0); 
+          const diffHours = (now.toDate().getTime() - lastInteractionDate.getTime()) / (1000 * 60 * 60);
+
+          if (diffHours >= 24 && pref.score > 0.1) { 
+            pref.score = Math.max(0.1, pref.score - 1);
+            needsPreferenceSaveAfterDecay = true;
+          }
+        }
+
+        for (const followedUid in userFeedPreferences.followedUserPreferences) {
+          const pref = userFeedPreferences.followedUserPreferences[followedUid];
+          if (followedUid === currentUser.uid) continue;
+          
+          const lastInteractionDate = pref.lastInteraction ? pref.lastInteraction.toDate() : new Date(0);
+          const diffDays = (now.toDate().getTime() - lastInteractionDate.getTime()) / (1000 * 60 * 60 * 24);
+
+          if (diffDays >= 3 && pref.score > 0.1) { 
+            pref.score = Math.max(0.1, pref.score - 0.5);
+            needsPreferenceSaveAfterDecay = true;
+          }
+        }
+
+        if (needsPreferenceSaveAfterDecay) {
+          await updateUserPreferencesInFirestore();
+        }
+
+        const postsPerPage = 10; 
+        let query = db.collection("posts").orderBy("createdAt", "desc");
+        
+        if (lastVisiblePost) {
+            query = query.startAfter(lastVisiblePost);
+        }
+        query = query.limit(postsPerPage);
+
+        const snap = await query.get();
+        const newPosts = snap.docs.map((d) => ({ id: d.id, ...d.data(), docRef: d })); // Store doc reference
+
+        if (newPosts.length === 0) {
+            noMorePosts = true;
+            feedLoading.textContent = "No more posts.";
+        } else {
+            lastVisiblePost = snap.docs[snap.docs.length - 1]; // Update last visible post
+            feedLoading.classList.remove('active'); // Hide loading indicator
+        }
+        
+        // Combine new posts with existing ones for trending tags calculation
+        // This is not efficient for large datasets, consider only calculating from current batch + some recent
+        const allFetchedPosts = [...(postsDiv.children.length === 0 ? [] : Array.from(postsDiv.children).map(el => JSON.parse(el.dataset.postData))), ...newPosts]; 
+        displayTrendingTags(allFetchedPosts);
+
+        const scoredPosts = newPosts.map(p => {
+          let relevanceScore = 0;
+
+          const createdAtMillis = p.createdAt ? p.createdAt.toMillis() : 0;
+          relevanceScore += createdAtMillis / 10000000; 
+
+          if (p.uid === currentUser.uid) {
+            relevanceScore += userFeedPreferences.myAccountWeight;
+          }
+
+          if (userFeedPreferences.followedUserPreferences[p.uid]) {
+            relevanceScore += userFeedPreferences.followedUserPreferences[p.uid].score;
+          }
+
+          if (p.tag && userFeedPreferences.tagPreferences[p.tag.toLowerCase()]) {
+            relevanceScore += userFeedPreferences.tagPreferences[p.tag.toLowerCase()].score;
+          }
+
+          return { ...p, relevanceScore };
+        }).filter(p => !blockedUsers.has(p.uid));
+
+        // Sort only the newly fetched posts before rendering, then append
+        // This ensures the feed remains ordered correctly as new batches come in
+        scoredPosts.sort((a, b) => b.relevanceScore - a.relevanceScore); // Re-sort for optimal feed
+
+        renderPosts(scoredPosts, postsDiv, true); // Append mode for feed
+        isLoadingPosts = false;
+        feedLoading.classList.remove('active'); // Hide loading indicator
+      }
+
+      // `append` parameter will determine if we clear container or append
+      function renderPosts(posts, container, append = false) {
+        if (!append) {
+          container.innerHTML = "";
+        }
+        if (posts.length === 0 && !append) {
+            container.innerHTML = '<p style="text-align: center;">No posts to display.</p>';
+            return;
+        }
+
+        posts.forEach((p) => {
+          const d = p.createdAt ? p.createdAt.toDate().toLocaleString() : "Just now";
+          const liked = p.likes?.includes(currentUser.uid);
+          const rc = p.repostCount || 0;
+          const badge = p.repostOf
+            ? `<div class="repost-badge">🔁 Reposted from <span class="username" data-uid="${p.repostOf.uid}">${escapeHtml(p.repostOf.username)}</span></div>`
+            : "";
+          const tagDisplay = p.tag ? `<span style="font-size:0.8em; color: #6c757d; margin-left: 10px;">#${escapeHtml(p.tag)}</span>` : ''; 
+
+          const el = document.createElement("div");
+          el.className = "post";
+          el.dataset.postId = p.id;
+          el.dataset.postData = JSON.stringify(p); // Store full post data for re-rendering if needed later
+          el.innerHTML = `${badge}<div class="meta"><span class="username" data-uid="${
+            p.uid
+          }">${escapeHtml(p.userName || p.userEmail)}</span><span class="date">${d}</span>${tagDisplay}${
+            currentUser.uid === adminUID
+              ? `<button class="delete-btn" data-pid="${p.id}">Delete</button>`
+              : `<button class="report-btn" data-pid="${p.id}">Report</button>` 
+          }</div><div class="content">${escapeHtml(p.text)}</div><div class="actions"><button class="likeBtn">${
+            liked ? "Unlike" : "Like"
+          } (${p.likes?.length || 0})</button><button class="commentToggleBtn">Comments</button><button class="repostBtn">Repost (${rc})</button></div><div id="commentsDiv-${
+            p.id
+          }" style="display:none;"></div>`;
+          container.appendChild(el);
+
+          // User clicks on post author's name
+          const usernameSpans = el.querySelectorAll(".username");
+          usernameSpans.forEach(span => {
+              span.onclick = () => showUserProfile(span.dataset.uid);
+          });
+
+          // Admin delete button for posts
+          if (currentUser.uid === adminUID) {
+              const deleteButton = el.querySelector(".delete-btn");
+              if (deleteButton) {
+                  deleteButton.onclick = async () => {
+                      if (confirm("Are you sure you want to delete this post? This action cannot be undone.")) {
+                          await db.collection("posts").doc(p.id).delete();
+                          // Find and remove the element from the DOM
+                          el.remove(); 
+                          // If current view is the main feed, ensure feed updates for pagination
+                          if (container === postsDiv) {
+                              lastVisiblePost = null; // Reset pagination
+                              postsDiv.innerHTML = '';
+                              noMorePosts = false;
+                              loadPosts(); 
+                          }
+                      }
+                  };
+              }
+          } else { 
+              const reportButton = el.querySelector(".report-btn");
+              if (reportButton) {
+                  reportButton.onclick = async () => {
+                      if (confirm("Are you sure you want to report this post as inappropriate?")) {
+                          await db.collection("reports").add({
+                              reporterUid: currentUser.uid,
+                              reportedPostId: p.id,
+                              reason: "User reported post as inappropriate.", 
+                              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                          });
+                          alert("Post reported successfully. Thank you!");
+                          reportButton.disabled = true; 
+                          reportButton.textContent = "Reported";
+                      }
+                  };
+              }
+          }
+
+          // Like button
+          el.querySelector(".likeBtn").onclick = async () => {
+            const ref = db.collection("posts").doc(p.id);
+            liked
+              ? await ref.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) })
+              : await ref.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
+            await handlePostInteraction(p, 'like'); 
+            // Re-render the specific post element to update like count immediately without full reload
+            const updatedPostSnap = await ref.get();
+            if (updatedPostSnap.exists) {
+                const updatedPostData = { id: updatedPostSnap.id, ...updatedPostSnap.data() };
+                const currentPostEl = container.querySelector(`[data-post-id="${updatedPostData.id}"]`);
+                if (currentPostEl) {
+                    const likeBtn = currentPostEl.querySelector(".likeBtn");
+                    const newLikedStatus = updatedPostData.likes?.includes(currentUser.uid);
+                    likeBtn.textContent = `${newLikedStatus ? "Unlike" : "Like"} (${updatedPostData.likes?.length || 0})`;
+                }
+            }
+          };
+
+          // Comment toggle button
+          el.querySelector(".commentToggleBtn").onclick = () => {
+            const cd = getEl(`commentsDiv-${p.id}`);
+            
+            if (cd.style.display == "block") { // If currently visible, hide it
+                cd.style.display = "none";
+            } else { // If hidden, show and load comments
+                cd.innerHTML = `<div id="commentsList-${p.id}"></div>
+                                <input id="commentInput-${p.id}" placeholder="Comment...">
+                                <button data-id="${p.id}" class="postCommentBtn">Post</button>`;
+                cd.style.display = "block";
+                loadComments(p.id);
+            }
+          };
+
+
+          // Repost button
+          el.querySelector(".repostBtn").onclick = async () => {
+            const r = {
+              uid: currentUser.uid,
+              userEmail: currentUser.email,
+              userName: currentUser.displayName || currentUser.email,
+              text: p.text,
+              imageUrl: "", // Always empty for reposts now
+              likes: [],
+              repostCount: 0,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              repostOf: { uid: p.uid, username: p.userName || p.userEmail || "Unknown" }, // Use userName here
+              tag: p.tag ? p.tag.toLowerCase() : '', 
+            };
+            await db.collection("posts").add(r);
+            await db.collection("posts").doc(p.id).update({ repostCount: rc + 1 });
+            await handlePostInteraction(p, 'repost'); 
+            alert("Post reposted successfully!");
+            // Re-render the specific post element to update repost count immediately
+            const updatedPostSnap = await db.collection("posts").doc(p.id).get();
+            if (updatedPostSnap.exists) {
+                const updatedPostData = { id: updatedPostSnap.id, ...updatedPostSnap.data() };
+                const currentPostEl = container.querySelector(`[data-post-id="${updatedPostData.id}"]`);
+                if (currentPostEl) {
+                    const repostBtn = currentPostEl.querySelector(".repostBtn");
+                    repostBtn.textContent = `Repost (${updatedPostData.repostCount || 0})`;
+                }
+            }
+            if (container === postsDiv) {
+                lastVisiblePost = null; // Reset pagination for feed to show new post
+                postsDiv.innerHTML = '';
+                noMorePosts = false;
+                loadPosts();
+            }
+          };
+        });
+      }
+
+      async function loadComments(pid) {
+        const cd = getEl(`commentsDiv-${pid}`);
+        const commentsListEl = getEl(`commentsList-${pid}`);
+        
+        // Ensure the postCommentBtn has its listener attached correctly
+        const postCommentBtn = cd.querySelector(".postCommentBtn");
+        if (postCommentBtn && !postCommentBtn.dataset.listenerAttached) { 
+          postCommentBtn.onclick = async (e) => {
+            const txt = getEl(`commentInput-${e.target.dataset.id}`).value.trim();
+            if (txt) {
+              await db
+                .collection("posts")
+                .doc(e.target.dataset.id)
+                .collection("comments")
+                .add({
+                  uid: currentUser.uid,
+                  username: currentUser.displayName || currentUser.email, // Use displayName if available
+                  text: txt,
+                  createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                  likes: [] // Add likes array for comments
+                });
+              getEl(`commentInput-${e.target.dataset.id}`).value = '';
+              loadComments(e.target.dataset.id);
+
+              const postSnap = await db.collection("posts").doc(e.target.dataset.id).get();
+              if (postSnap.exists) {
+                await handlePostInteraction({ id: postSnap.id, ...postSnap.data() }, 'comment');
+              }
+            }
+          };
+          postCommentBtn.dataset.listenerAttached = true; 
+        }
+        
+        const snap = await db.collection("posts").doc(pid).collection("comments").orderBy("createdAt").get();
+        commentsListEl.innerHTML = ""; 
+        snap.forEach((doc) => {
+          const c = doc.data();
+          const commentId = doc.id;
+          const t = c.createdAt ? c.createdAt.toDate().toLocaleString() : "";
+          const likedComment = c.likes?.includes(currentUser.uid);
+
+          const commentDiv = document.createElement('div');
+          commentDiv.className = 'comment';
+          commentDiv.dataset.commentId = commentId; // Store comment ID
+          commentDiv.innerHTML = `<span><b>${escapeHtml(c.username)}</b>: ${escapeHtml(c.text)} <small>(${t})</small></span>
+            <button class="like-comment-btn ${likedComment ? 'liked' : ''}" data-pid="${pid}" data-cid="${commentId}">${likedComment ? 'Unlike' : 'Like'} (${c.likes?.length || 0})</button>
+            ${
+                currentUser.uid === adminUID
+                ? ` <button class="delete-btn" data-pid="${pid}" data-cid="${commentId}">Delete</button>`
+                : ` <button class="report-btn" data-pid="${pid}" data-cid="${commentId}">Report</button>` 
+            }`;
+          commentsListEl.appendChild(commentDiv);
+
+          // Like comment button
+          const likeCommentBtn = commentDiv.querySelector(".like-comment-btn");
+          if (likeCommentBtn) {
+              likeCommentBtn.onclick = async (e) => {
+                  const targetPid = e.target.dataset.pid;
+                  const targetCid = e.target.dataset.cid;
+                  const commentRef = db.collection("posts").doc(targetPid).collection("comments").doc(targetCid);
+                  const currentLikes = (await commentRef.get()).data()?.likes || [];
+                  const userLiked = currentLikes.includes(currentUser.uid);
+
+                  if (userLiked) {
+                      await commentRef.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
+                  } else {
+                      await commentRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
+                  }
+                  loadComments(targetPid); // Reload comments for immediate update
+              };
+          }
+
+          if (currentUser.uid === adminUID) {
+              const deleteButton = commentDiv.querySelector(".delete-btn");
+              if (deleteButton) {
+                  deleteButton.onclick = async () => {
+                      if (confirm("Are you sure you want to delete this comment?")) {
+                          await db.collection("posts").doc(deleteButton.dataset.pid).collection("comments").doc(deleteButton.dataset.cid).delete();
+                          loadComments(deleteButton.dataset.pid); 
+                      }
+                  };
+              }
+          } else { 
+              const reportButton = commentDiv.querySelector(".report-btn");
+              if (reportButton) {
+                  reportButton.onclick = async () => {
+                      if (confirm("Are you sure you want to report this comment as inappropriate?")) {
+                          await db.collection("reports").add({
+                              reporterUid: currentUser.uid,
+                              reportedPostId: reportButton.dataset.pid,
+                              reportedCommentId: reportButton.dataset.cid,
+                              reason: "User reported comment as inappropriate.", 
+                              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                          });
+                          alert("Comment reported successfully. Thank you!");
+                          reportButton.disabled = true; 
+                          reportButton.textContent = "Reported";
+                      }
+                  };
+              }
+          }
+        });
+      }
+
+      async function showUserProfile(uid) {
+        currentProfileUID = uid;
+        switchView(profileFeed);
+        
+        const udRef = db.collection("users").doc(uid);
+        const ud = await udRef.get();
+        const userData = ud.exists ? ud.data() : {};
+        
+        profileUserDisplayName.textContent = userData.displayName || "Unknown User";
+        profileUserEmail.textContent = userData.email || "";
+        profileBioEl.textContent = userData.bio || "No bio available.";
+        profilePictureEl.src = userData.profileImageUrl || ""; // Use default if no image URL
+
+        getEl("userStats").style.display = "flex"; 
+        postsCountSpan.textContent = (await db.collection("posts").where("uid", "==", uid).get()).size;
+        
+        const followersSnap = await db.collection("users").where("following", "array-contains", uid).get();
+        followersCountSpan.textContent = followersSnap.size;
+
+        if (uid === currentUser.uid) {
+            followingCountSpan.textContent = following.size;
+        } else {
+            const profileUserDoc = await db.collection("users").doc(uid).get();
+            const profileUserData = profileUserDoc.data();
+            followingCountSpan.textContent = (profileUserData?.following || []).length;
+        }
+
+        followersLink.onclick = () => showFollowersList(uid);
+        followingLink.onclick = () => showFollowingList(uid);
+        
+        if (uid === currentUser.uid) {
+          followBtn.style.display = "none";
+          blockBtn.style.display = "none";
+        } else {
+          followBtn.style.display = "inline-block";
+          blockBtn.style.display = "inline-block";
+
+          let isF = following.has(uid); 
+          followBtn.textContent = isF ? "Unfollow" : "Follow";
+          followBtn.style.backgroundColor = isF ? "#6c757d" : "#28a745"; 
+          followBtn.style.color = "#fff";
+
+          let isBlocked = blockedUsers.has(uid);
+          blockBtn.textContent = isBlocked ? "Unblock" : "Block";
+          blockBtn.style.backgroundColor = isBlocked ? "#6c757d" : "#dc3545";
+
+          followBtn.onclick = async () => {
+            const userDocRef = db.collection("users").doc(currentUser.uid);
+            const now = firebase.firestore.Timestamp.now();
+            
+            if (isF) {
+              await userDocRef.update({ following: firebase.firestore.FieldValue.arrayRemove(uid) });
+              delete userFeedPreferences.followedUserPreferences[uid];
+              following.delete(uid); 
+            } else {
+              await userDocRef.update({ following: firebase.firestore.FieldValue.arrayUnion(uid) });
+              userFeedPreferences.followedUserPreferences[uid] = { score: 7.3, lastInteraction: now };
+              following.add(uid); 
+            }
+            
+            await updateUserPreferencesInFirestore(); 
+            
+            isF = !isF;
+            followBtn.textContent = isF ? "Unfollow" : "Follow";
+            followBtn.style.backgroundColor = isF ? "#6c757d" : "#28a745";
+            followersCountSpan.textContent = (await db.collection("users").where("following", "array-contains", uid).get()).size;
+          };
+
+          blockBtn.onclick = async () => {
+              if (isBlocked) {
+                  if (confirm(`Are you sure you want to unblock ${userData.displayName || userData.email}? Their posts will reappear in your feed and they can message you.`)) {
+                      blockedUsers.delete(uid);
+                  }
+              } else {
+                  if (confirm(`Are you sure you want to block ${userData.displayName || userData.email}? You will no longer see their posts and they cannot message you.`)) {
+                      blockedUsers.add(uid);
+                      if (following.has(uid)) {
+                        await db.collection("users").doc(currentUser.uid).update({ 
+                            following: firebase.firestore.FieldValue.arrayRemove(uid) 
+                        });
+                        following.delete(uid);
+                        delete userFeedPreferences.followedUserPreferences[uid];
+                        followBtn.textContent = "Follow";
+                        followBtn.style.backgroundColor = "#28a745";
+                        followersCountSpan.textContent = (await db.collection("users").where("following", "array-contains", uid).get()).size;
+                      }
+                  }
+              }
+              await updateUserPreferencesInFirestore();
+              isBlocked = !isBlocked;
+              blockBtn.textContent = isBlocked ? "Unblock" : "Block";
+              blockBtn.style.backgroundColor = isBlocked ? "#6c757d" : "#dc3545";
+              alert(`User ${userData.displayName || userData.email} has been ${isBlocked ? 'blocked' : 'unblocked'}.`);
+              showUserProfile(uid); 
+              showFeed(); 
+          };
+        }
+        const snap = await db.collection("posts").where("uid", "==", uid).orderBy("createdAt", "desc").get();
+        const postsToShow = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+                                    .filter(p => uid === currentUser.uid || !blockedUsers.has(p.uid)); 
+        renderPosts(postsToShow, userPosts);
+      }
+
+      followersListModalClose.onclick = () => followersListModal.style.display = "none";
+      async function showFollowersList(uid) {
+          followersListContent.innerHTML = '<p>Loading followers...</p>';
+          followersListModal.style.display = "flex";
+
+          const followersSnap = await db.collection("users").where("following", "array-contains", uid).get();
+          followersListContent.innerHTML = '';
+          if (followersSnap.empty) {
+              followersListContent.innerHTML = '<p>No followers yet.</p>';
+              return;
+          }
+
+          for (const doc of followersSnap.docs) {
+              const followerData = doc.data();
+              const followerUid = doc.id;
+              if (blockedUsers.has(followerUid)) continue; 
+
+              const listItem = document.createElement('div');
+              listItem.className = 'list-item';
+              listItem.innerHTML = `
+                  <span class="email" data-uid="${followerUid}">${escapeHtml(followerData.displayName || followerData.email)}</span>
+                  ${followerUid !== currentUser.uid && !following.has(followerUid) ? `<button class="follow-btn" data-uid="${followerUid}">Follow</button>` : ''}
+              `;
+              followersListContent.appendChild(listItem);
+
+              listItem.querySelector('.email').onclick = () => {
+                  followersListModal.style.display = "none";
+                  showUserProfile(followerUid);
+              };
+              const followBtn = listItem.querySelector('.follow-btn');
+              if (followBtn) {
+                  followBtn.onclick = async (e) => {
+                      const targetUid = e.target.dataset.uid;
+                      await db.collection("users").doc(currentUser.uid).update({ 
+                          following: firebase.firestore.FieldValue.arrayUnion(targetUid) 
+                      });
+                      following.add(targetUid);
+                      userFeedPreferences.followedUserPreferences[targetUid] = { score: 7.3, lastInteraction: firebase.firestore.Timestamp.now() };
+                      await updateUserPreferencesInFirestore();
+                      alert(`You are now following ${followerData.displayName || followerData.email}!`);
+                      e.target.remove();
+                      followersCountSpan.textContent = (parseInt(followersCountSpan.textContent) + 1).toString();
+                      if (currentProfileUID === currentUser.uid) { 
+                          followingCountSpan.textContent = following.size;
+                      }
+                  };
+              }
+          }
+      }
+
+      followingListModalClose.onclick = () => followingListModal.style.display = "none";
+      async function showFollowingList(uid) {
+          followingListContent.innerHTML = '<p>Loading following...</p>';
+          followingListModal.style.display = "flex";
+
+          let followingUids = [];
+          if (uid === currentUser.uid) {
+              followingUids = Array.from(following);
+          } else {
+              const userDoc = await db.collection("users").doc(uid).get();
+              followingUids = userDoc.data()?.following || [];
+          }
+
+          if (followingUids.length === 0) {
+              followingListContent.innerHTML = '<p>Not following anyone yet.</p>';
+              return;
+          }
+          followingListContent.innerHTML = '';
+
+          for (const followedUid of followingUids) {
+              if (blockedUsers.has(followedUid)) continue; 
+              const followedUserDoc = await db.collection("users").doc(followedUid).get();
+              if (followedUserDoc.exists) {
+                  const followedUserData = followedUserDoc.data();
+                  const listItem = document.createElement('div');
+                  listItem.className = 'list-item';
+                  listItem.innerHTML = `
+                      <span class="email" data-uid="${followedUid}">${escapeHtml(followedUserData.displayName || followedUserData.email)}</span>
+                      ${followedUid !== currentUser.uid && following.has(followedUid) ? `<button class="follow-btn" data-uid="${followedUid}">Unfollow</button>` : 
+                       (followedUid !== currentUser.uid && !following.has(followedUid) ? `<button class="follow-btn" data-uid="${followedUid}">Follow</button>` : '')}
+                  `;
+                  followingListContent.appendChild(listItem);
+
+                  listItem.querySelector('.email').onclick = () => {
+                      followingListModal.style.display = "none";
+                      showUserProfile(followedUid);
+                  };
+                  const followBtn = listItem.querySelector('.follow-btn');
+                  if (followBtn) {
+                      followBtn.onclick = async (e) => {
+                          const targetUid = e.target.dataset.uid;
+                          if (following.has(targetUid)) {
+                              await db.collection("users").doc(currentUser.uid).update({ 
+                                  following: firebase.firestore.FieldValue.arrayRemove(targetUid) 
+                              });
+                              following.delete(targetUid);
+                              delete userFeedPreferences.followedUserPreferences[targetUid];
+                              alert(`You have unfollowed ${followedUserData.displayName || followedUserData.email}.`);
+                          } else {
+                              await db.collection("users").doc(currentUser.uid).update({ 
+                                  following: firebase.firestore.FieldValue.arrayUnion(targetUid) 
+                              });
+                              following.add(targetUid);
+                              userFeedPreferences.followedUserPreferences[targetUid] = { score: 7.3, lastInteraction: firebase.firestore.Timestamp.now() };
+                              alert(`You are now following ${followedUserData.displayName || followedUserData.email}!`);
+                          }
+                          await updateUserPreferencesInFirestore();
+                          showFollowingList(uid); 
+                          followersCountSpan.textContent = (await db.collection("users").where("following", "array-contains", targetUid).get()).size;
+                          followingCountSpan.textContent = following.size;
+                      };
+                  }
+              }
+          }
+      }
+    </script>
+  </body>
+</html>

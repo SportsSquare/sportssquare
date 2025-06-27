@@ -4,75 +4,231 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sports Square Rich Text Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+
   <style>
+    :root {
+      
+      --background-dark: #000000;
+      
+      --accent-dark: #191970;
+
+      
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+      
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0; 
+      --button-text-dark: #000000; 
+      --input-text-color: #e0e0e0; 
+      --placeholder-color: #888; 
+    }
+
     body {
       font-family: 'Montserrat', sans-serif;
-      background-color: rgb(249, 251, 231);
-      color: #333;
-      max-width: 800px;
+      background-color: var(--background-dark);
+      color: var(--text-light);
+      max-width: 900px; 
       margin: auto;
       padding: 2rem;
       text-align: center;
-      /* Initially hide the body to prevent content flickering before auth check */
+      
       display: none;
+      line-height: 1.6;
+    }
+    h1, h2, h3 {
+        font-family: 'Montserrat', sans-serif; 
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--neon-green); 
+        text-shadow: 0 0 8px var(--neon-green), 0 0 15px var(--neon-green);
+        margin-bottom: 20px;
     }
     #loadingMessage {
-        display: block; /* Show loading message initially */
+        display: block; 
         text-align: center;
         padding-top: 50px;
-        font-size: 1.2rem;
-        color: #555;
+        font-size: 1.5rem;
+        color: var(--text-light);
     }
     #accessDeniedMessage {
-        display: none; /* Hide access denied message initially */
+        display: none; 
         text-align: center;
         padding-top: 50px;
-        color: #e74c3c;
-        font-size: 1.5rem;
+        color: var(--neon-yellow); 
+        text-shadow: 0 0 5px var(--neon-yellow);
+        font-size: 1.8rem;
         font-weight: bold;
     }
+    #accessDeniedMessage p {
+        color: var(--text-light);
+        font-size: 1.1rem;
+        margin-top: 15px;
+    }
+    #accessDeniedMessage button {
+        background-color: var(--neon-blue);
+        color: var(--button-text-dark);
+        padding: 12px 25px;
+        border: none;
+        border-radius: 50px; 
+        cursor: pointer;
+        font-size: 1.1em;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        box-shadow: 0 0 15px var(--neon-blue);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+        margin-top: 20px;
+    }
+    #accessDeniedMessage button:hover {
+        background-color: var(--neon-green);
+        box-shadow: 0 0 25px var(--neon-green);
+        transform: translateY(-2px);
+    }
+
     input[type="text"] {
       width: 100%;
-      padding: 8px;
-      margin: 10px 0;
+      padding: 12px;
+      margin: 15px 0;
       font-family: 'Montserrat', sans-serif;
-      font-size: 1rem;
+      font-size: 1.1rem;
+      background-color: var(--accent-dark); 
+      border: 2px solid var(--neon-green); 
+      border-radius: 8px;
+      color: var(--input-text-color);
+      box-shadow: 0 0 8px rgba(0, 255, 0, 0.2);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
+    input[type="text"]::placeholder {
+        color: var(--placeholder-color);
+    }
+    input[type="text"]:focus {
+        outline: none;
+        border-color: var(--neon-yellow);
+        box-shadow: 0 0 15px var(--neon-yellow);
+    }
+
     #toolbar {
-      margin-bottom: 10px;
+      margin-bottom: 20px;
+      background-color: var(--accent-dark); 
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--neon-blue);
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
     }
     #toolbar button {
-      background: #2ECC71;
+      background-color: var(--neon-blue);
       border: none;
-      color: white;
-      padding: 6px 10px;
-      margin-right: 5px;
-      border-radius: 3px;
+      color: var(--button-text-dark);
+      padding: 8px 12px;
+      border-radius: 5px;
       cursor: pointer;
       font-weight: bold;
       font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 0 8px var(--neon-blue);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    }
+    #toolbar button:hover {
+      background-color: var(--neon-green);
+      box-shadow: 0 0 15px var(--neon-green);
+      transform: translateY(-2px);
     }
     #content {
-      border: 1px solid #ccc;
-      min-height: 200px;
-      padding: 10px;
+      border: 2px solid var(--neon-green); 
+      min-height: 300px; 
+      padding: 15px;
       text-align: left;
-      font-size: 1rem;
-      background: white;
-      border-radius: 4px;
+      font-size: 1.1rem;
+      background: var(--background-dark); 
+      color: var(--text-light);
+      border-radius: 8px;
       overflow-y: auto;
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+      line-height: 1.8; 
     }
+    #content:focus {
+        outline: none;
+        border-color: var(--neon-yellow);
+        box-shadow: 0 0 20px var(--neon-yellow);
+    }
+
     button#submitBtn {
-      margin-top: 15px;
-      padding: 12px 24px;
-      font-size: 1.2rem;
+      margin-top: 25px; 
+      padding: 18px 40px; 
+      font-size: 1.5rem; 
       font-weight: bold;
       cursor: pointer;
+      background-color: var(--neon-yellow);
+      color: var(--button-text-dark);
+      border: none;
+      border-radius: 50px; 
+      box-shadow: 0 0 20px var(--neon-yellow);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
     }
+    button#submitBtn:hover {
+        background-color: var(--neon-green);
+        box-shadow: 0 0 30px var(--neon-green);
+        transform: translateY(-3px);
+    }
+    button#submitBtn:disabled {
+        background-color: #666; 
+        box-shadow: none;
+        cursor: not-allowed;
+        transform: none;
+    }
+
     #userStatus {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       font-weight: bold;
-      color: #2ECC71;
+      color: var(--neon-blue); 
+      text-shadow: 0 0 5px var(--neon-blue);
+      font-size: 1.1em;
+    }
+
+    
+    .post-page-style body {
+      background-color: var(--background-dark) !important;
+      color: var(--text-light) !important;
+      font-family: 'Montserrat', sans-serif !important;
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+    .post-page-style h1, .post-page-style h2, .post-page-style h3 {
+      color: var(--neon-green) !important; 
+      text-shadow: 0 0 8px var(--neon-green);
+    }
+    .post-page-style p {
+        color: var(--text-light) !important;
+    }
+    .post-page-style em {
+        color: var(--neon-yellow) !important; 
+    }
+    .post-page-style blockquote {
+      border-left: 4px solid var(--neon-blue) !important; 
+      margin-left: 0;
+      padding-left: 1rem;
+      font-style: italic;
+      color: var(--text-lighter) !important;
+    }
+    .post-page-style a {
+      color: var(--neon-blue) !important;
+      text-decoration: underline !important; 
+    }
+    .post-page-style a:hover {
+      color: var(--neon-green) !important;
     }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -86,7 +242,7 @@
   <div id="accessDeniedMessage">
     <h1>Access Denied</h1>
     <p>You do not have permission to access this page. Please log in with an authorized account.</p>
-    <button onclick="window.location.href='/login.html'">Go to Login</button>
+    <button onclick="window.location.href='/signup.html'">Go to Login</button>
   </div>
 
   <div id="editorContent" style="display: none;">
@@ -113,7 +269,7 @@
   </div>
 
   <script>
-    // Initialize Firebase (replace with your config)
+
     const firebaseConfig = {
       apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
       authDomain: "sportssquare-b96ed.firebaseapp.com",
@@ -128,7 +284,6 @@
     const auth = firebase.auth();
     const db = firebase.database();
 
-    // Elements for controlling visibility
     const loadingMessageEl = document.getElementById('loadingMessage');
     const accessDeniedMessageEl = document.getElementById('accessDeniedMessage');
     const editorContentEl = document.getElementById('editorContent');
@@ -136,22 +291,20 @@
     const userStatusEl = document.getElementById('userStatus');
     const submitBtn = document.getElementById('submitBtn');
 
-    // Admin UID (replace with your actual UID)
     const ADMIN_UID = 'ibLtQvJhIPN2icV7IyB1IUIgzN12';
 
-    // Show/hide submit button and editor content based on auth state and UID
     auth.onAuthStateChanged(user => {
       loadingMessageEl.style.display = 'none'; // Hide loading message once auth state is known
 
       if (user && user.uid === ADMIN_UID) {
-        // User is the specific admin. Show the editor.
+
         userStatusEl.textContent = `Signed in as: ${user.email}`;
         submitBtn.disabled = false;
         editorContentEl.style.display = 'block'; // Show the editor content
         document.body.style.display = 'block'; // Ensure body is visible
         accessDeniedMessageEl.style.display = 'none'; // Hide access denied message
       } else {
-        // User is not signed in OR is signed in but not the admin. Deny access.
+
         userStatusEl.textContent = 'You do not have permission.';
         submitBtn.disabled = true;
         editorContentEl.style.display = 'none'; // Hide the editor content
@@ -160,9 +313,7 @@
       }
     });
 
-    // --- Rest of your editor functions (unchanged) ---
 
-    // Formatting helpers
     function format(command) {
       document.execCommand(command, false, null);
       document.getElementById('content').focus();
@@ -181,7 +332,6 @@
       document.getElementById('content').focus();
     }
 
-    // Sanitize title to make a file-friendly key
     function sanitizeTitle(str) {
       return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     }
@@ -196,7 +346,6 @@
       })[m]);
     }
 
-    // Download file helper
     function downloadFile(filename, content) {
       const blob = new Blob([content], { type: 'text/html' });
       const a = document.createElement('a');
@@ -210,7 +359,7 @@
 
     async function submitPost() {
       const user = auth.currentUser;
-      // This check is redundant due to UI hiding, but good for robustness
+
       if (!user || user.uid !== ADMIN_UID) {
         alert('Access denied. You are not authorized to submit posts.');
         return;
@@ -233,18 +382,16 @@
       const postKey = sanitizeTitle(title);
       const timestamp = Date.now();
 
-      // Prepare updates for tags node
       const updates = {};
       tags.forEach(tag => {
         updates[`tags/${tag}/${postKey}`] = { title, timestamp };
       });
 
       try {
-        // Update tags
+
         await db.ref().update(updates);
         console.log('Tags updated in Firebase');
 
-        // Save post content under /posts
         await db.ref(`posts/${postKey}`).set({
           title,
           content,
@@ -261,44 +408,84 @@
         return;
       }
 
-      // Prepare downloadable HTML preserving formatting
       const postHtml = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${escapeHtml(title)}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
+    :root {
+      --background-dark: #000000;
+      --accent-dark: #191970;
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0;
+    }
     body {
       font-family: 'Montserrat', sans-serif;
-      background-color: rgb(249, 251, 231);
-      color: #333;
+      background-color: var(--background-dark);
+      color: var(--text-light);
       max-width: 800px;
       margin: auto;
       padding: 2rem;
+      line-height: 1.6;
     }
     h1, h2, h3 {
-      color: #222;
+      color: var(--neon-green);
+      text-shadow: 0 0 8px var(--neon-green);
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
+    h1 { font-size: 2.5em; margin-bottom: 20px; }
+    h2 { font-size: 2em; margin-bottom: 15px; }
+    h3 { font-size: 1.5em; margin-bottom: 10px; }
+    p { margin-bottom: 1em; }
     blockquote {
-      border-left: 4px solid #888;
+      border-left: 4px solid var(--neon-blue);
       margin-left: 0;
-      padding-left: 1rem;
+      padding-left: 1.5rem;
       font-style: italic;
-      color: #555;
+      color: var(--text-lighter);
+      background-color: rgba(25, 25, 112, 0.3); 
+      border-radius: 8px;
+      padding-top: 10px;
+      padding-bottom: 10px;
     }
     a {
-      color: #2ECC71;
-      text-decoration: none;
+      color: var(--neon-blue);
+      text-decoration: underline;
+      transition: color 0.3s ease;
     }
     a:hover {
-      text-decoration: underline;
+      color: var(--neon-green);
+    }
+    em {
+        color: var(--neon-yellow); 
+        text-shadow: 0 0 5px var(--neon-yellow);
+    }
+    strong {
+        color: var(--neon-blue); 
+        text-shadow: 0 0 3px var(--neon-blue);
+    }
+    
+    @media (max-width: 600px) {
+        body { padding: 1rem; }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.3em; }
     }
   </style>
 </head>
 <body>
   <h1>${escapeHtml(title)}</h1>
-  <p><em>Tags: ${tags.map(escapeHtml).join(', ')}</em></p>
+  <p style="color: var(--text-lighter);"><em>Tags: ${tags.map(escapeHtml).join(', ')}</em></p>
   <div>${content}</div>
 </body>
 </html>
@@ -307,7 +494,6 @@
       downloadFile(postKey + '.html', postHtml);
       alert('Post saved as HTML file and uploaded to Firebase.');
 
-      // Optionally reset form
       document.getElementById('title').value = '';
       document.getElementById('tags').value = '';
       contentEl.innerHTML = '';

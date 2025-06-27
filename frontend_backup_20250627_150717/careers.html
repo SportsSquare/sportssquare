@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <style>
+        body {
+            background-color: rgb(249, 251, 231);
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: white;
+        }
+        p {
+            line-height: 1.6;
+            color: white;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        :root {
+          /* Dark background as requested */
+          --background-dark: #1a1a2e;
+          /* Neon colors remain vibrant */
+          --neon-green: #00ff00;
+          --neon-blue: #00ffff;
+          --neon-yellow: #faff00;
+          /* Text colors adjusted for dark background */
+          --text-light: #e0e0e0;
+          --text-lighter: #b0b0b0; /* For less prominent text */
+          --accent-dark: #0f3460; /* Dark accent for cards/containers */
+          --button-text-dark: #1a1a2e; /* Text color for neon buttons */
+          --input-text-color: #e0e0e0; /* Input text on dark background */
+          --placeholder-color: #888; /* Placeholder text */
+        }
+
+        body {
+          background-color: var(--background-dark);
+          font-family: 'Montserrat', sans-serif;
+          text-align: center;
+          padding: 50px;
+          color: var(--text-light); /* Light text on dark background */
+          margin: 0;
+          line-height: 1.6;
+        }
+    </style>
+
+    <h1>Join the Sports Square Team</h1>
+    <p>At Sports Square, we are always looking for passionate individuals to join our team. If you have a love for sports and a desire to contribute to the world of sports journalism, we want to hear from you!</p>
+    <p><strong>REQUIREMENTS:</strong></p>
+    <p>At least 5 public articles.</p>
+    <p>A Social Media Account (X is preferred)</p>
+    <p>You need to be 16 years old.</p>
+    <hr>
+    <p>On the job, you must commit to at least 2 articles a week.</p>
+    <p>This is completely voluntary. We do not pay. At Sports Square, we're trying to give you the experience you need to get paid at the next level.</p>
+    <p><strong>POSITIONS OPEN:</strong></p>
+    <ul>
+        <li>Sports Writer</li>
+        <li>Social Media Manager</li>
+        <li>Graphic Designer</li>
+        <li>Video Content Creator</li>
+        <li>Podcast Host</li>
+        <li>Research Analyst</li>
+        <li>Computer Programmer (Small Tasks)</li>
+    </ul>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-6CR81XMZN5');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
+     crossorigin="anonymous"></script>
+
+    <script src="./firebase-config.js"></script>
+
+    <script src="./presence.js"></script>
+    <script src="./notifications.js"></script>
+
+    <div style="margin-top: 20px; padding: 10px; background-color: var(--neon-yellow); border-radius: 5px; color: black;">
+        <footer>
+            <p style="color: black;">&copy; 2025 Sports Square. All rights reserved.</p>
+            <p style="color: black;">Follow us on <a href="https://x.com/Sports__Square" target="_blank" style="color: var(--neon-blue);">X</a></p>
+        </footer>
+        <p><a href="./sitemap.html" style="color: var(--neon-blue);">Sitemap</a></p>
+    </div>
+</body>
+</html>

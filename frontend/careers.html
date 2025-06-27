@@ -4,31 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Careers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
 </head>
-<script src="./notifications.js"></script>
-<style>
-    body {
-        background-color: rgb(249, 251, 231);
-        font-family: 'Montserrat', sans-serif;
-        text-align: center;
-        padding: 50px;
-    }
-    h1 {
-        color: #2c3e50;
-    }
-    p {
-        line-height: 1.6;
-        color: #333;
-    }
-    a {
-        color: #3498db;
-        text-decoration: none;
-    }
-    a:hover {
-        text-decoration: underline;
-    }
-</style>
 <body>
+    <style>
+        body {
+            background-color: rgb(249, 251, 231);
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: white;
+        }
+        p {
+            line-height: 1.6;
+            color: white;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        :root {
+          
+          --background-dark: #1a1a2e;
+          
+          --neon-green: #00ff00;
+          --neon-blue: #00ffff;
+          --neon-yellow: #faff00;
+          
+          --text-light: #e0e0e0;
+          --text-lighter: #b0b0b0; 
+          --accent-dark: #0f3460; 
+          --button-text-dark: #1a1a2e; 
+          --input-text-color: #e0e0e0; 
+          --placeholder-color: #888; 
+        }
+
+        body {
+          background-color: var(--background-dark);
+          font-family: 'Montserrat', sans-serif;
+          text-align: center;
+          padding: 50px;
+          color: var(--text-light); 
+          margin: 0;
+          line-height: 1.6;
+        }
+        nav {
+            background-color: rgba(255, 0, 0, 0.6);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px; 
+        padding: 20px 0; 
+        max-width: 100%; 
+    }
+    nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    nav li {
+        margin: 0 10px; 
+    }
+    nav a {
+        color: var(--neon-blue);
+        text-decoration: none;
+        font-size: 1.2rem; 
+        padding: 10px 15px; 
+        border-radius: 6px; 
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    nav a:hover {
+        background-color: rgba(0, 255, 255, 0.1); 
+        color: var(--neon-green); 
+    }
+    nav a:active {
+        background-color: rgba(0, 255, 255, 0.2); 
+        color: var(--neon-yellow); 
+    }
+    </style>
+    <nav>
+        <ul>
+          <li><a href="./index.html">Home</a></li>
+          <li><a href="./tags.html">Posts</a></li>
+          <li><a href="./sportscalendar.html">Calendar</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="./subscriberchat.html">Subscriber Chat</a></li>
+          <li><a href="./podcast.html">Podcast</a></li>
+          <li><a href="./social.html">Social Media</a></li>
+        </ul>
+      </nav>
     <h1>Join the Sports Square Team</h1>
     <p>At Sports Square, we are always looking for passionate individuals to join our team. If you have a love for sports and a desire to contribute to the world of sports journalism, we want to hear from you!</p>
     <p><strong>REQUIREMENTS:</strong></p>
@@ -48,19 +124,34 @@
         <li>Research Analyst</li>
         <li>Computer Programmer (Small Tasks)</li>
     </ul>
-    <footer style="margin-top: 20px;">
-        <p>&copy; 2025 Sports Square. All rights reserved.</p>
-        <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
-    </footer>
-<!-- Firebase SDKs: include these ONCE per page -->
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
 
-<!-- Your config and presence scripts -->
-<script src="/path/to/firebase-config.js"></script>
-<script src="/path/to/presence.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
-    <p><a href="./sitemap.html">Sitemap</p></a>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-6CR81XMZN5');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
+     crossorigin="anonymous"></script>
+
+    <script src="./firebase-config.js"></script>
+
+    <script src="./presence.js"></script>
+    <script src="./notifications.js"></script>
+
+    <div style="margin-top: 20px; padding: 10px; background-color: var(--neon-yellow); border-radius: 5px; color: black;">
+        <footer>
+            <p style="color: black;">&copy; 2025 Sports Square. All rights reserved.</p>
+            <p style="color: black;">Follow us on <a href="https://x.com/Sports__Square" target="_blank" style="color: var(--neon-blue);">X</a></p>
+        </footer>
+        <p><a href="./sitemap.html" style="color: var(--neon-blue);">Sitemap</a></p>
+    </div>
 </body>
 </html>

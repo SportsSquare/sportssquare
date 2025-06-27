@@ -2,167 +2,257 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Subscriber Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Subscriber Dashboard - Sports Square</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
   <style>
+    :root {
+      --background-dark: #000000;
+      --accent-dark: #191970;
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0;
+      --button-text-dark: #000000;
+    }
     body {
       font-family: 'Montserrat', sans-serif;
-      max-width: 800px;
-      margin: auto;
-      padding: 2rem;
-      background-color: #f7f9f4;
-      color: #333;
+      background-color: var(--background-dark);
+      color: var(--text-light);
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
     }
-    h1, h2 {
-      color: #222;
+    .dashboard-container {
+      background-color: var(--accent-dark);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      border: 2px solid var(--neon-blue);
+      max-width: 900px;
+      width: 100%;
+      margin-bottom: 30px;
+      box-sizing: border-box;
     }
-    .article-item {
-      background: #fff;
-      padding: 1rem;
+    h1 {
+      color: var(--neon-green);
+      font-size: 2.8rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+    h2 {
+      color: var(--neon-blue);
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-top: 2rem;
       margin-bottom: 1rem;
-      border-radius: 6px;
-      box-shadow: 0 0 6px rgba(0,0,0,0.05);
+      text-shadow: 0 0 5px var(--neon-blue);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
     .logout {
       float: right;
-      background: #ff4d4d;
+      background-color: #ff6666;
       color: white;
       border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
+      padding: 8px 16px;
+      border-radius: 6px;
       cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 10px rgba(255, 102, 102, 0.3);
     }
-    /* Styles for the new favorite team section */
+    .logout:hover {
+      background-color: #e60000;
+      box-shadow: 0 4px 15px rgba(255, 0, 0, 0.5);
+    }
+    #userEmail {
+      color: var(--text-lighter);
+      font-size: 1.1em;
+      margin-top: 15px;
+      text-align: left;
+      padding-left: 20px;
+    }
+    #userEmail::before {
+      content: "👤 ";
+    }
     .preference-section {
-        padding-top: 1rem;
-        margin-top: 2rem;
-        border-top: 1px solid #e0e0e0;
-        text-align: center;
+      padding-top: 2rem;
+      margin-top: 3rem;
+      border-top: 2px solid var(--neon-green);
+      text-align: center;
     }
     #favoriteTeamDisplay {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #333;
-        display: block;
-        margin-top: 0.5rem;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--neon-yellow);
+      display: block;
+      margin-top: 0.8rem;
+      text-shadow: 0 0 8px var(--neon-yellow);
     }
     .message-box {
-        margin-top: 15px;
-        padding: 10px;
-        border-radius: 5px;
-        font-size: 0.9em;
-        display: none;
-        word-break: break-word;
-        text-align: center;
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.95em;
+      display: none;
+      word-break: break-word;
+      text-align: center;
+      font-weight: bold;
     }
     .message-box.success {
-        background-color: #e6ffed;
-        color: #2f855a;
-        border: 1px solid #68d391;
+      background-color: rgba(0, 255, 0, 0.2);
+      color: var(--neon-green);
+      border: 1px solid var(--neon-green);
     }
     .message-box.error {
-        background-color: #fff5f5;
-        color: #c53030;
-        border: 1px solid #fc8181;
+      background-color: rgba(255, 0, 0, 0.2);
+      color: #ff6666;
+      border: 1px solid #ff6666;
     }
     .message-box.info {
-        background-color: #ebf8ff;
-        color: #2b6cb0;
-        border: 1px solid #63b3ed;
+      background-color: rgba(0, 255, 255, 0.2);
+      color: var(--neon-blue);
+      border: 1px solid var(--neon-blue);
     }
     .contact-admin {
-        margin-top: 25px;
-        padding: 15px;
-        background-color: #f0f0f0;
-        border-radius: 8px;
-        color: #333;
-        font-size: 0.95rem;
-        line-height: 1.5;
-        text-align: center;
+      margin-top: 30px;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+      color: var(--text-lighter);
+      font-size: 1rem;
+      line-height: 1.5;
+      text-align: center;
+      border: 1px dashed var(--neon-blue);
     }
     .contact-admin a {
-        color: #007bff;
-        text-decoration: none;
-        font-weight: bold;
+      color: var(--neon-yellow);
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
     }
     .contact-admin a:hover {
-        text-decoration: underline;
+      color: var(--neon-green);
+      text-decoration: underline;
+      text-shadow: 0 0 5px var(--neon-green);
+    }
+    .contact-admin #displayUserId {
+      color: var(--neon-green);
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+    }
+    footer {
+      margin-top: auto;
+      padding: 30px;
+      background-color: var(--neon-yellow);
+      box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+      color: var(--button-text-dark);
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: 1px;
+      width: 100%;
+      text-align: center;
+    }
+    footer p {
+      margin: 5px 0;
+      font-size: 1.1em;
+      color: var(--button-text-dark);
+    }
+    footer a {
+      color: var(--neon-blue);
+      text-decoration: underline;
+      font-weight: bold;
+    }
+    footer a:hover {
+      color: var(--neon-green);
+    }
+    nav {
+      background-color: rgba(255, 0, 0, 0.6);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px; 
+        padding: 20px 0; 
+        max-width: 100%; 
+    }
+    nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    nav li {
+        margin: 0 10px; 
+    }
+    nav a {
+        color: var(--neon-blue);
+        text-decoration: none;
+        font-size: 1.2rem; 
+        padding: 10px 15px; 
+        border-radius: 6px; 
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    nav a:hover {
+        background-color: rgba(0, 255, 255, 0.1); 
+        color: var(--neon-green); 
+    }
+    nav a:active {
+        background-color: rgba(0, 255, 255, 0.2); 
+        color: var(--neon-yellow); 
     }
   </style>
 </head>
 <body>
-  <!--
-    IMPORTANT: Firebase Compat SDKs (v10.4.0) and their initialization
-    MUST come BEFORE any other script (like notifications.js) that depends
-    on the global 'firebase' object.
-  -->
-  <script>
-    // Firebase config for the global 'firebase' object (used by compat SDKs)
-    // This MUST match your project's config from Firebase Console.
-    const firebaseConfig_global = {
-      apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
-      authDomain: "sportssquare-b96ed.firebaseapp.com",
-      projectId: "sportssquare-b96ed",
-      storageBucket: "sportssquare-b96ed.appspot.com",
-      messagingSenderId: "844736978057",
-      appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
-    };
-  </script>
+  <nav>
+    <ul>
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./tags.html">Posts</a></li>
+      <li><a href="./sportscalendar.html">Calendar</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="./subscriberchat.html">Subscriber Chat</a></li>
+      <li><a href="./podcast.html">Podcast</a></li>
+      <li><a href="./social.html">Social Media</a></li>
+    </ul>
+  </nav>
+  <div class="dashboard-container">
+    <h1>Welcome to Your Dashboard</h1>
+    <button class="logout" id="logoutBtn">Logout</button>
+    <p id="userEmail">Loading user...</p>
 
-  <!-- Load Firebase Compat SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script> <!-- Added firestore compat here explicitly -->
-  
-  <!-- Initialize the Firebase App for Compat SDKs immediately after they load -->
-  <script>
-    // Check if 'firebase' global object exists and if no app has been initialized yet
-    if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig_global);
-      console.log("Firebase Compat App initialized for global scripts.");
-    }
-    // Explicitly access Firestore via the compat app to ensure it's loaded and available globally
-    // This acts as a 'warm-up' for the service.
-    if (typeof firebase !== 'undefined' && firebase.apps.length && typeof firebase.firestore === 'function') {
-        const compatDb = firebase.firestore();
-        console.log("Firebase Firestore Compat service explicitly accessed.");
-    } else {
-        console.warn("Firebase Firestore Compat service might not be available or fully loaded yet.");
-    }
-  </script>
+    <div class="preference-section">
+      <h2>Your Favorite Team:</h2>
+      <span id="favoriteTeamDisplay">Loading...</span>
+      <div id="favoriteTeamMessage" class="message-box"></div>
 
-  <!-- Your notifications.js script (now loads AFTER Firebase Compat SDKs and their init) -->
-  <script src="./notifications.js"></script>
-
-  <h1>Welcome to Your Dashboard</h1>
-  <button class="logout" id="logoutBtn">Logout</button>
-  <p id="userEmail">Loading user...</p>
-
-  <h2>Articles You've Read:</h2>
-  <div id="readArticles">Loading...</div>
-
-  <!-- Favorite Team Section -->
-  <div class="preference-section">
-    <h2 class="text-xl font-semibold text-gray-800 mb-3">Your Favorite Teams:</h2>
-    <span id="favoriteTeamDisplay" class="text-gray-700">Loading...</span>
-    <div id="favoriteTeamMessage" class="message-box"></div>
-
-    <div class="contact-admin">
-        <p>To change your favorite team, please contact the administrator at <a href="mailto:sportssquareauthor@gmail.com">sportssquareauthor@gmail.com</a> with your user details.</p>
-        <p>Your User ID: <span id="displayUserId" class="font-bold text-gray-800">Loading...</span></p>
+      <div class="contact-admin">
+        <p>To change your favorite team, contact the admin at 
+          <a href="mailto:sportssquareauthor@gmail.com">sportssquareauthor@gmail.com</a>
+        </p>
+        <p>Your User ID: <span id="displayUserId">Loading...</span></p>
+      </div>
     </div>
-</div>
+  </div>
 
   <script type="module">
-    // Firebase Modular SDK Imports (for Firestore and Auth logic)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-    import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
-    // IMPORTANT: This 'firebaseConfig' is for the Modular SDKs in this script module.
-    // It is separate from 'firebaseConfig_global' used by compat SDKs.
-    const firebaseConfig_modular = {
+    const firebaseConfig = {
       apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
       authDomain: "sportssquare-b96ed.firebaseapp.com",
       projectId: "sportssquare-b96ed",
@@ -171,114 +261,62 @@
       appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
     };
 
-    const app = initializeApp(firebaseConfig_modular);
+    const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // Get DOM elements for existing dashboard features
-    const readArticlesDiv = document.getElementById("readArticles");
+    const logoutBtn = document.getElementById("logoutBtn");
     const userEmail = document.getElementById("userEmail");
-    const logoutBtn = document.getElementById('logoutBtn');
-
-    // Get DOM elements for favorite team display and user ID
     const favoriteTeamDisplay = document.getElementById('favoriteTeamDisplay');
     const favoriteTeamMessage = document.getElementById('favoriteTeamMessage');
     const displayUserId = document.getElementById('displayUserId');
 
-    // Function to display messages to the user (can be used for any message box)
-    function showMessage(message, type, targetElement) {
-        targetElement.textContent = message;
-        targetElement.className = `message-box ${type}`;
-        targetElement.style.display = 'block';
-        setTimeout(() => {
-            targetElement.style.display = 'none';
-            targetElement.textContent = '';
-        }, 5000); // Hide after 5 seconds
-    }
-
-    logoutBtn.addEventListener('click', async () => {
+    logoutBtn.onclick = async () => {
       await signOut(auth);
-      // Redirect to signup.html. Ensure this path is correct based on your file structure.
       window.location.href = "signup.html";
-    });
+    };
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         userEmail.textContent = "Not logged in.";
-        readArticlesDiv.innerHTML = "<p>Please log in to see your reading history.</p>";
-        // Clear favorite team display if not logged in
         favoriteTeamDisplay.textContent = 'N/A';
         displayUserId.textContent = 'N/A';
         return;
       }
 
       userEmail.textContent = `Logged in as: ${user.email}`;
+      displayUserId.textContent = user.uid;
 
-      // --- Reading History Logic ---
       try {
-        // This 'globalRef' likely tracks a specific article's global read count.
-        // Ensure 'so-long-pops' is a valid document ID in your 'articles' collection.
-        const globalRef = doc(db, "articles", "so-long-pops"); 
-        const globalSnap = await getDoc(globalRef);
-        const globalData = globalSnap.data();
-        const globalReadCount = globalData?.readCount || 0;
-
-        const q = query(collection(db, "reads"), where("userId", "==", user.uid));
-        const snapshot = await getDocs(q);
-
-        let html = `<p><strong>Total Global Reads of 'So Long Pops': </strong> ${globalReadCount}</p>`;
-
-        if (snapshot.empty) {
-          html += "<p>You haven't finished reading any articles yet.</p>";
+        const userPrefDoc = await getDoc(doc(db, "userPreferences", user.uid));
+        if (userPrefDoc.exists() && userPrefDoc.data().favoriteTeam) {
+          favoriteTeamDisplay.textContent = userPrefDoc.data().favoriteTeam;
+          showMessage(`Your current favorite team is the: "${userPrefDoc.data().favoriteTeam}".`, 'success', favoriteTeamMessage);
         } else {
-          html += "<h3>Your Reading History:</h3><ul>";
-          snapshot.forEach(docSnap => {
-            const data = docSnap.data();
-            const title = data.title || data.articleId;
-            const duration = data.duration || 0;
-            const mins = Math.round(duration / 60);
-            html += `
-              <li class="article-item">
-                <strong>${title}</strong><br>
-                <small>Read on: ${data.timestamp?.toDate()?.toLocaleString() || 'Unknown'}</small><br>
-                <small>Time spent: ${mins > 0 ? mins + ' min' : '<1 min'}</small>
-              </li>
-            `;
-          });
-          html += "</ul>";
+          favoriteTeamDisplay.textContent = 'Not set yet';
+          showMessage("No favorite team set yet. Please update it on the welcome page!", 'info', favoriteTeamMessage);
         }
-
-        readArticlesDiv.innerHTML = html;
-      } catch (err) {
-        console.error("Error fetching read history:", err);
-        readArticlesDiv.innerHTML = "<p>Failed to load reading history. This is often due to Firebase Security Rules. Please check your Firestore rules for 'articles' and 'reads' collections and ensure read permissions are granted to authenticated users. If fetching user-specific reads, ensure the rule is 'if request.auth.uid == resource.data.userId;'.</p>";
-      }
-
-      // --- Favorite Team Display Logic ---
-      displayUserId.textContent = user.uid; // Display the user's UID
-
-      try {
-          const userPrefDoc = await getDoc(doc(db, "userPreferences", user.uid));
-          if (userPrefDoc.exists() && userPrefDoc.data().favoriteTeam) {
-              favoriteTeamDisplay.textContent = userPrefDoc.data().favoriteTeam;
-              console.log("Loaded favorite team:", userPrefDoc.data().favoriteTeam);
-              showMessage(`Your current favorite team is the: "${userPrefDoc.data().favoriteTeam}".`, 'success', favoriteTeamMessage);
-          } else {
-              console.log("No favorite team found for this user.");
-              favoriteTeamDisplay.textContent = 'Not set yet';
-              showMessage("No favorite team set yet. Please update it on the welcome page!", 'info', favoriteTeamMessage);
-          }
       } catch (error) {
-          console.error("Error loading favorite team preference:", error);
-          favoriteTeamDisplay.textContent = 'Error loading';
-          showMessage(`Error loading team preference: ${error.message}. Please check console for details.`, 'error', favoriteTeamMessage);
+        console.error("Error loading favorite team preference:", error);
+        favoriteTeamDisplay.textContent = 'Error loading';
+        showMessage(`Error loading team preference: ${error.message}`, 'error', favoriteTeamMessage);
       }
     });
+
+    function showMessage(message, type, targetElement) {
+      targetElement.textContent = message;
+      targetElement.className = `message-box ${type}`;
+      targetElement.style.display = 'block';
+      setTimeout(() => {
+        targetElement.style.display = 'none';
+        targetElement.textContent = '';
+      }, 5000);
+    }
   </script>
-  <footer style="margin-top: 20px; text-align: center;">
+
+  <footer>
     <p>&copy; 2025 Sports Square. All rights reserved.</p>
     <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
-    <p><a href="./sitemap.html">Sitemap</p></a>
-</footer>
+  </footer>
 </body>
 </html>

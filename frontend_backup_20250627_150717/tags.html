@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tags - Sports Square</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    /* Color variables for consistency */
+    :root {
+        /* Top color: Black */
+        --background-dark: #000000;
+        /* 2nd level color: Midnight Blue */
+        --accent-dark: #191970;
+
+        /* Neon colors remain vibrant */
+        --neon-green: #00ff00;
+        --neon-blue: #00ffff;
+        --neon-yellow: #faff00;
+        /* Text colors adjusted for dark background */
+        --text-light: #e0e0e0;
+        --text-lighter: #b0b0b0; /* For less prominent text */
+        --button-text-dark: #000000; /* Dark text for neon buttons */
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-dark); /* Dark background */
+      color: var(--text-light); /* Light text for readability */
+      text-align: center;
+      padding: 50px 20px; /* Add horizontal padding */
+      line-height: 1.6;
+      min-height: 100vh; /* Ensure it takes full viewport height */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    .main-content-container {
+        background-color: var(--accent-dark); /* Midnight blue container */
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+        border: 2px solid var(--neon-blue); /* Neon blue border */
+        max-width: 900px;
+        width: 100%;
+        margin-bottom: 30px;
+        box-sizing: border-box;
+    }
+
+    h1 {
+      color: var(--neon-green); /* Neon green for main heading */
+      font-size: 2.8rem; /* Larger font size */
+      font-weight: bold;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      line-height: 1.2;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px; /* Increased gap */
+      justify-content: center;
+      margin-bottom: 3rem; /* More space below tags */
+    }
+    .tag {
+      background-color: var(--neon-yellow); /* Neon yellow for tags */
+      color: var(--button-text-dark); /* Dark text on tag */
+      padding: 10px 20px; /* Larger padding */
+      border-radius: 50px; /* Pill shape */
+      cursor: pointer;
+      user-select: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 0 10px var(--neon-yellow); /* Yellow glow */
+    }
+    .tag:hover {
+      background-color: var(--neon-green); /* Neon green on hover */
+      transform: translateY(-3px); /* Slight lift */
+      box-shadow: 0 0 20px var(--neon-green); /* Stronger green glow */
+    }
+
+    .posts-list {
+      max-width: 700px; /* Slightly wider for posts */
+      margin: auto;
+      padding: 0 10px; /* Add some padding to the sides */
+    }
+    .posts-list h2 {
+      text-align: center;
+      color: var(--neon-blue); /* Neon blue for post list heading */
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 8px var(--neon-blue);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    .posts-list p {
+        color: var(--text-lighter); /* Lighter text for no posts message */
+        font-size: 1.1rem;
+        font-style: italic;
+    }
+
+    .post-item {
+      background: rgba(0, 0, 0, 0.4); /* Semi-transparent black for article items */
+      border-radius: 10px; /* More rounded corners */
+      padding: 1.5rem;
+      margin-bottom: 15px; /* More space between items */
+      border: 1px solid rgba(0, 255, 255, 0.3); /* Subtle neon blue border */
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.2); /* Subtle neon blue glow */
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-align: left; /* Align text to left */
+    }
+    .post-item:hover {
+        transform: translateY(-5px); /* Lift on hover */
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.4); /* Stronger glow on hover */
+    }
+    .post-item a {
+      color: var(--neon-green); /* Neon green for post links */
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.25rem; /* Larger font size for links */
+      display: block; /* Make link a block for full click area */
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+    .post-item a:hover {
+      color: var(--neon-yellow); /* Neon yellow on hover */
+      text-shadow: 0 0 8px var(--neon-yellow);
+    }
+
+    /* Footer styling */
+    footer {
+        margin-top: auto; /* Push footer to the bottom */
+        padding: 30px;
+        background-color: var(--neon-yellow);
+        box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+        color: var(--button-text-dark);
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 1px;
+        width: 100%; /* Ensure footer takes full width */
+        text-align: center;
+    }
+
+    footer p {
+        margin: 5px 0;
+        font-size: 1.1em;
+        color: var(--button-text-dark);
+    }
+    footer a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    footer a:hover {
+        color: var(--neon-green);
+    }
+
+    /* Sitemap link outside footer */
+    body > p:last-of-type {
+        margin-top: 20px;
+        margin-bottom: 20px; /* Add some margin for the sitemap link */
+    }
+    body > p:last-of-type a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    body > p:last-of-type a:hover {
+        color: var(--neon-green);
+    }
+
+    /* Media Queries for responsiveness */
+    @media (max-width: 768px) {
+        .main-content-container {
+            padding: 30px;
+        }
+        h1 {
+            font-size: 2.2rem;
+        }
+        .posts-list h2 {
+            font-size: 1.7rem;
+        }
+        .tag {
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+        .post-item {
+            padding: 1.2rem;
+        }
+        .post-item a {
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        body {
+            padding: 20px 10px;
+        }
+        .main-content-container {
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h1 {
+            font-size: 1.8rem;
+        }
+        .posts-list h2 {
+            font-size: 1.5rem;
+        }
+        .tag-list {
+            gap: 10px;
+        }
+        .tag {
+            padding: 6px 12px;
+            font-size: 0.8em;
+        }
+        .post-item {
+            padding: 1rem;
+        }
+        .post-item a {
+            font-size: 1rem;
+        }
+    }
+  </style>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+</head>
+<body>
+<div class="main-content-container">
+  <h1>Tags - Sports Square</h1>
+
+  <div class="tag-list" id="tagList"></div>
+
+  <div class="posts-list" id="postsList"></div>
+</div>
+
+  <script>
+    // Initialize Firebase (same config as editor.html)
+    const firebaseConfig = {
+    apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+    authDomain: "sportssquare-b96ed.firebaseapp.com",
+    databaseURL: "https://sportssquare-b96ed-default-rtdb.firebaseio.com",
+    projectId: "sportssquare-b96ed",
+    storageBucket: "sportssquare-b96ed.firebasestorage.app",
+    messagingSenderId: "844736978057",
+    appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+  };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const tagListEl = document.getElementById('tagList');
+    const postsListEl = document.getElementById('postsList');
+
+    // Load all tags and show them
+    db.ref('tags').once('value').then(snapshot => {
+      const tags = snapshot.val() || {};
+      // Clear
+      tagListEl.innerHTML = '';
+
+      Object.keys(tags).forEach(tag => {
+        const tagBtn = document.createElement('div');
+        tagBtn.classList.add('tag');
+        tagBtn.textContent = tag;
+        tagBtn.onclick = () => showPostsForTag(tag);
+        tagListEl.appendChild(tagBtn);
+      });
+
+      if(Object.keys(tags).length === 0) {
+        tagListEl.textContent = 'No tags found.';
+      }
+    }).catch(error => {
+        console.error("Error loading tags:", error);
+        tagListEl.textContent = 'Error loading tags.';
+    });
+
+    // Show posts for selected tag
+    function showPostsForTag(tag) {
+      postsListEl.innerHTML = `<h2>Posts tagged with "${tag}"</h2>`;
+      db.ref(`tags/${tag}`).once('value').then(snapshot => {
+        const posts = snapshot.val() || {};
+        if (Object.keys(posts).length === 0) {
+          postsListEl.innerHTML += '<p>No posts found for this tag.</p>';
+          return;
+        }
+
+        Object.entries(posts)
+          // Sort by timestamp descending
+          .sort((a, b) => b[1].timestamp - a[1].timestamp)
+          .forEach(([postKey, meta]) => {
+            // postKey = sanitized title
+            // meta.title is full title
+            const postDiv = document.createElement('div');
+            postDiv.classList.add('post-item');
+            const link = document.createElement('a');
+            // MODIFIED LINE HERE:
+            link.href = `/frontend/posts/${postKey}.html`; // Link to posts under /frontend/posts
+            link.target = '_blank';
+            link.textContent = meta.title;
+            postDiv.appendChild(link);
+            postsListEl.appendChild(postDiv);
+          });
+      }).catch(error => {
+          console.error(`Error loading posts for tag "${tag}":`, error);
+          postsListEl.innerHTML += `<p>Error loading posts for this tag.</p>`;
+      });
+    }
+  </script>
+<footer>
+  <p>&copy; 2025 Sports Square. All rights reserved.</p>
+  <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+</footer>
+<p><a href="./sitemap.html">Sitemap</a></p>
+</body>
+</html>

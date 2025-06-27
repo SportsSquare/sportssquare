@@ -3,318 +3,747 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>So Long Pops</title>
+  <title>So Long Pops - Sports Square</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
   <style>
+    
+    :root {
+      
+      --background-dark: #000000;
+      
+      --accent-dark: #191970;
+
+      
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+      
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0; 
+      --button-text-dark: #000000; 
+      --input-background: rgba(0, 0, 0, 0.5); 
+      --input-border: rgba(0, 255, 0, 0.5); 
+      --input-focus-border: var(--neon-yellow);
+      --input-text: var(--input-border); 
+      --placeholder-color: #888;
+    }
+
     body {
       font-family: 'Montserrat', sans-serif;
-      background-color: rgb(249, 251, 231);
-      color: #333;
-      max-width: 800px;
-      margin: auto;
-      padding: 2rem;
+      background-color: var(--background-dark); 
+      color: var(--text-light); 
       text-align: center;
+      padding: 50px 20px; 
+      line-height: 1.6;
+      min-height: 100vh; 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
     }
-    h1, h2 {
-      color: #222;
+
+    .article-container {
+        background-color: var(--accent-dark); 
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); 
+        border: 2px solid var(--neon-blue); 
+        max-width: 900px;
+        width: 100%;
+        margin-bottom: 30px;
+        box-sizing: border-box;
+        text-align: left; 
     }
+
+    h1 {
+      color: var(--neon-green); 
+      font-size: 2.8rem; 
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      line-height: 1.2;
+      text-align: center; 
+    }
+
+    h2 {
+      color: var(--neon-blue); 
+      font-size: 1.8rem;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      text-shadow: 0 0 8px var(--neon-blue);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    p {
+      color: var(--text-light);
+      margin-bottom: 15px;
+    }
+    p a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    p a:hover {
+        color: var(--neon-green);
+    }
+
+    .article-container > a { 
+        display: inline-block;
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        font-size: 1.1em;
+    }
+    .article-container > a:hover {
+        color: var(--neon-green);
+    }
+
     img {
       max-width: 100%;
       height: auto;
+      border: 2px solid var(--neon-yellow); 
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(250, 255, 0, 0.4); 
+      margin: 20px auto;
+      display: block; 
     }
+
     blockquote {
-      border-left: 4px solid #888;
+      border-left: 4px solid var(--neon-green); 
       margin-left: 0;
-      padding-left: 1rem;
+      padding-left: 1.2rem;
       font-style: italic;
-      color: #555;
-    }
-    .footer {
-      margin-top: 3rem;
-      font-size: 0.9rem;
-      color: #777;
-      text-align: center;
-    }
-    button.like-btn {
-      background-color: #eee;
-      border: none;
+      color: var(--text-lighter); 
+      font-size: 1.1em;
+      background-color: rgba(0, 255, 0, 0.05); 
+      padding: 10px 1.2rem;
       border-radius: 4px;
-      cursor: pointer;
-      padding: 6px 12px;
-      margin-top: 5px;
-      font-family: 'Montserrat', sans-serif;
     }
-    #authStatus {
-      margin-bottom: 1rem;
-      font-weight: bold;
+    blockquote br {
+        margin-bottom: 0.5em; 
     }
-    #loginBtn, #logoutBtn {
-      background-color: #2ECC71;
-      color: white;
+
+
+    hr {
       border: none;
-      padding: 6px 14px;
-      border-radius: 5px;
-      cursor: pointer;
+      border-top: 2px dashed var(--neon-blue); 
+      margin: 30px 0;
+    }
+
+    
+    button {
+      background-color: var(--neon-yellow); 
+      border: none;
+      color: var(--button-text-dark); 
+      padding: 10px 20px;
+      font-size: 1rem;
       font-weight: bold;
-      margin: 0 5px;
-      font-family: 'Montserrat', sans-serif;
+      cursor: pointer;
+      border-radius: 50px; 
+      transition: background-color 0.3s ease, transform 0.1s ease-out, box-shadow 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 0 10px var(--neon-yellow); 
+      margin: 5px;
     }
-    textarea {
-      width: 100%;
-      height: 80px;
-      padding: 8px;
-      margin: 10px 0;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1rem;
-      resize: vertical;
+    button:hover:not(:disabled) {
+      background-color: var(--neon-green); 
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px var(--neon-green); 
     }
-    input[type="text"] {
-      width: 100%;
-      padding: 8px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1rem;
+    button:disabled {
+      background-color: #666;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    
+    button.like-btn, #loginBtn, #logoutBtn {
+        background-color: var(--neon-blue); 
+        color: var(--button-text-dark);
+        box-shadow: 0 0 10px var(--neon-blue);
+        padding: 8px 18px; 
+        font-size: 0.95rem;
+    }
+    button.like-btn:hover, #loginBtn:hover, #logoutBtn:hover {
+        background-color: var(--neon-green);
+        box-shadow: 0 0 15px var(--neon-green);
+    }
+
+    #authStatus {
+      color: var(--text-light);
+      font-weight: bold;
+      margin-bottom: 20px;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--neon-blue);
+    }
+
+    textarea, input[type="text"] {
+      width: calc(100% - 24px); 
+      padding: 12px;
       margin: 10px 0;
+      font-size: 1rem;
+      background-color: var(--input-background);
+      border: 2px solid var(--input-border);
+      border-radius: 8px;
+      box-sizing: border-box;
+      color: var(--input-text);
+      transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      outline: none;
+    }
+    input[type="text"]::placeholder, textarea::placeholder {
+        color: var(--placeholder-color);
+    }
+    textarea:focus, input[type="text"]:focus {
+        border-color: var(--input-focus-border);
+        box-shadow: 0 0 0 3px rgba(250, 255, 0, 0.5), 0 0 15px var(--input-focus-border);
+    }
+
+    
+    form[action="https://formsubmit.co/sportssquareauthor@gmail.com"] {
+        margin: 40px auto;
+        padding: 30px;
+        background-color: rgba(0, 0, 0, 0.4);
+        border-radius: 10px;
+        border: 2px dashed var(--neon-green);
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+        max-width: 500px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    form[action="https://formsubmit.co/sportssquareauthor@gmail.com"] input[type="email"] {
+        width: 80%;
+        max-width: 300px;
+        margin-bottom: 20px;
+        padding: 12px;
+        font-size: 1.1em;
+        border-radius: 6px;
+    }
+    form[action="https://formsubmit.co/sportssquareauthor@gmail.com"] button[type="submit"] {
+        width: auto;
+        min-width: 150px;
+        padding: 12px 25px;
+        font-size: 1.1em;
+        background-color: var(--neon-green); 
+        color: var(--button-text-dark);
+        box-shadow: 0 0 10px var(--neon-green);
+    }
+    form[action="https://formsubmit.co/sportssquareauthor@gmail.com"] button[type="submit"]:hover {
+        background-color: var(--neon-yellow);
+        box-shadow: 0 0 20px var(--neon-yellow);
+    }
+
+    #comments-section {
+      margin-top: 50px;
+      padding: 30px;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+      border: 2px dashed var(--neon-blue);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+      text-align: left; 
+    }
+    #comments-section h2 {
+        text-align: center;
+        color: var(--neon-yellow); 
+        text-shadow: 0 0 5px var(--neon-yellow);
+    }
+    #commentsList {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(0, 255, 0, 0.2);
     }
     #commentsList > div {
-      text-align: left;
+      border-bottom: 1px solid rgba(0, 255, 0, 0.1); 
+      padding: 15px 0;
+      color: var(--text-light);
+    }
+    #commentsList > div strong {
+      color: var(--neon-green); 
+      font-size: 1.1em;
+    }
+    #commentsList > div p {
+      margin: 8px 0;
+    }
+    #commentsList > div small {
+      color: var(--text-lighter);
+      font-size: 0.85em;
+    }
+    #commentsList > div .like-btn {
+        background-color: var(--neon-blue); 
+        box-shadow: 0 0 8px var(--neon-blue);
+        padding: 5px 12px;
+        font-size: 0.85rem;
+    }
+    #commentsList > div .like-btn:hover {
+        background-color: var(--neon-green);
+        box-shadow: 0 0 12px var(--neon-green);
+    }
+
+    #rate-me {
+      font-family: 'Montserrat', sans-serif;
+      margin: 50px auto;
+      text-align: center;
+      padding: 30px;
+      border: 2px solid var(--neon-green); 
+      border-radius: 10px;
+      background-color: rgba(0, 0, 0, 0.4); 
+      max-width: 450px;
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.4); 
+      color: var(--text-light);
+    }
+    #rate-me label {
+      font-weight: bold;
+      color: var(--neon-yellow); 
+      font-size: 1.2rem;
+      text-shadow: 0 0 5px var(--neon-yellow);
+    }
+    #stars-container .star {
+      margin-right: 15px;
+      font-size: 3.5rem; 
+      color: var(--text-lighter); 
+      transition: color 0.2s ease, text-shadow 0.2s ease;
+      cursor: pointer;
+    }
+    #stars-container .star.rated { 
+      color: gold;
+      text-shadow: 0 0 8px gold;
+    }
+    #stars-container .star:hover {
+        color: var(--neon-yellow); 
+        text-shadow: 0 0 10px var(--neon-yellow);
+    }
+    #stars-container .star:hover ~ .star {
+        color: var(--text-lighter); 
+        text-shadow: none;
+    }
+    #rating-result {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-top: 15px;
+      color: var(--neon-green); 
+      text-shadow: 0 0 5px var(--neon-green);
+    }
+
+    
+    .message-box {
+      background-color: var(--accent-dark) !important; 
+      color: var(--text-light) !important;
+      border: 2px solid var(--neon-green);
+      box-shadow: 0 4px 15px rgba(0, 255, 0, 0.4) !important; 
+      border-radius: 10px !important;
+    }
+    .message-box p {
+      color: var(--text-light) !important;
+      margin-bottom: 15px;
+    }
+    .message-box button {
+      background-color: var(--neon-yellow) !important;
+      color: var(--button-text-dark) !important;
+      box-shadow: 0 0 10px var(--neon-yellow) !important;
+    }
+    .message-box button:hover {
+      background-color: var(--neon-green) !important;
+      box-shadow: 0 0 15px var(--neon-green) !important;
+    }
+
+    
+    .article-container p:last-of-type:not(.footer p) { 
+        font-weight: bold;
+        font-size: 1.4rem;
+        margin-top: 30px;
+        line-height: 1.5;
+        text-align: center;
+        color: var(--neon-yellow);
+        text-shadow: 0 0 8px var(--neon-yellow);
+    }
+    .article-container h3 { 
+        color: var(--neon-green);
+        font-size: 1.8rem;
+        margin: 5px 0;
+        text-align: center;
+        text-shadow: 0 0 8px var(--neon-green);
+        letter-spacing: 1px;
+    }
+
+
+    
+    footer {
+        margin-top: auto; 
+        padding: 30px;
+        background-color: var(--neon-yellow);
+        box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+        color: var(--button-text-dark);
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 1px;
+        width: 100%; 
+        text-align: center;
+    }
+
+    footer p {
+        margin: 5px 0;
+        font-size: 1.1em;
+        color: var(--button-text-dark);
+    }
+    footer a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    footer a:hover {
+        color: var(--neon-green);
+    }
+
+    
+    body > p:last-of-type:not(.footer p) { 
+        margin-top: 20px;
+        margin-bottom: 20px; 
+    }
+    body > p:last-of-type a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    body > p:last-of-type a:hover {
+        color: var(--neon-green);
+    }
+
+    
+    @media (max-width: 768px) {
+        .article-container {
+            padding: 30px;
+        }
+        h1 {
+            font-size: 2.2rem;
+        }
+        h2 {
+            font-size: 1.5rem;
+        }
+        p {
+            font-size: 1rem;
+        }
+        form[action="https://formsubmit.co/sportssquareauthor@gmail.com"] {
+            padding: 20px;
+        }
+        form[action="https://formsubmit.co/sportssquareauthor@gmail.com"] input[type="email"] {
+            width: 90%;
+        }
+        #comments-section, #rate-me {
+            padding: 20px;
+        }
+        .article-container p:last-of-type:not(.footer p) {
+            font-size: 1.2rem;
+        }
+        .article-container h3 {
+            font-size: 1.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        body {
+            padding: 20px 10px;
+        }
+        .article-container {
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h1 {
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+        }
+        h2 {
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+        }
+        p {
+            font-size: 0.95rem;
+        }
+        nav a {
+            font-size: 0.9em;
+        }
+        textarea, input[type="text"] {
+            width: calc(100% - 16px);
+            padding: 10px;
+        }
+        form[action="https://formsubmit.co/sportssquareauthor@gmail.com"] input[type="email"],
+        form[action="https://formsubmit.co/sportssquareauthor@gmail.com"] button[type="submit"] {
+            width: 100%;
+            max-width: none;
+        }
+        #comments-section, #rate-me {
+            padding: 15px;
+        }
+        #commentsList > div .like-btn {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+        }
+        #stars-container .star {
+            font-size: 2.5rem;
+            margin-right: 10px;
+        }
+        #rating-result {
+            font-size: 1.1rem;
+        }
+        .article-container p:last-of-type:not(.footer p) {
+            font-size: 1rem;
+        }
+        .article-container h3 {
+            font-size: 1.3rem;
+        }
+    }
+    nav {
+      background-color: rgba(255, 0, 0, 0.6);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px; 
+        padding: 20px 0; 
+        max-width: 100%; 
+    }
+    nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    nav li {
+        margin: 0 10px; 
+    }
+    nav a {
+        color: var(--neon-blue);
+        text-decoration: none;
+        font-size: 1.2rem; 
+        padding: 10px 15px; 
+        border-radius: 6px; 
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    nav a:hover {
+        background-color: rgba(0, 255, 255, 0.1); 
+        color: var(--neon-green); 
+    }
+    nav a:active {
+        background-color: rgba(0, 255, 255, 0.2); 
+        color: var(--neon-yellow); 
     }
   </style>
-  <script src="./notifications.js"></script>
 </head>
 
 <body>
-  <!-- Firebase SDKs: include these ONCE per page -->
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+  <nav>
+    <ul>
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./tags.html">Posts</a></li>
+      <li><a href="./sportscalendar.html">Calendar</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="./subscriberchat.html">Subscriber Chat</a></li>
+      <li><a href="./podcast.html">Podcast</a></li>
+      <li><a href="./social.html">Social Media</a></li>
+    </ul>
+  </nav>
+  <div class="article-container">
+    <h1>So Long Pops</h1>
+    <p>By: <a href="smayan.html">Smayan Srikanth</a></p>
 
-<!-- Your config and presence scripts -->
-<script src="/path/to/firebase-config.js"></script>
-<script src="/path/to/presence.js"></script>
+    <div id="authStatus">Loading authentication status...</div>
+    <button id="loginBtn" style="display: inline-block;">Login / Signup</button>
+    <button id="logoutBtn" style="display: none;">Logout</button>
 
-  <h1>So Long Pops</h1>
-  <p>By: <a href="smayan.html">Smayan Srikanth</a></p>
-  <a href="../index.html">Home</a>
+    <button class="like-btn" id="likeArticleBtn">❤️ Like Article (<span id="articleLikes">0</span>)</button>
 
-  <div id="authStatus">Loading authentication status...</div>
-  <button id="loginBtn" style="display: inline-block;">Login / Signup</button>
-  <button id="logoutBtn" style="display: none;">Logout</button>
+    <hr/>
+    <p><strong>Gregg Popovich Day</strong></p>
+    <p><strong>That’s what January 28th should be, every single year.</strong></p>
 
-  <button class="like-btn" id="likeArticleBtn">❤️ Like Article (<span id="articleLikes">0</span>)</button>
-
-  <hr style="border: 1px solid black; margin: 20px 0;" />
-  <p><strong>Gregg Popovich Day</strong></p>
-  <p><strong>That’s what January 28th should be, every single year.</strong></p>
-
-  <p>Thanks for reading Sports Square! Subscribe for free to receive new posts and support my work.</p>
-  <form action="https://formsubmit.co/sportssquareauthor@gmail.com" method="POST" style="margin-bottom: 3rem;">
-    <input
-      type="email"
-      name="email"
-      placeholder="Your email"
-      required
-      style="width: 300px; padding: 10px; margin-bottom: 10px;"
-    />
-    <input type="hidden" name="_next" value="https://sportssquare.netlify.app/subscribed.html" />
-    <input type="hidden" name="_captcha" value="false" />
-    <input type="hidden" name="_subject" value="New subscription from Sports Square" />
-    <input type="hidden" name="_message" value="A new user has subscribed to Sports Square." />
-    <br />
-    <button
-      type="submit"
-      style="
-        width: 120px;
-        height: 50px;
-        background-color: #2ecc71;
-        color: white;
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: bold;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-family: 'Montserrat', sans-serif;
-      "
-    >
-      Subscribe
-    </button>
-  </form>
-
-  <h2>Origins</h2>
-  <p>
-    The Popovich story began on that date in 1949, in bustling East Chicago, Indiana, home to the Indiana Harbor
-    and the Ship Canal. He was born to a Serbian father and a Croatian mother, graduating from Merrillville High School
-    in 1966.
-  </p>
-
-  <p>
-    He then attended the United States Air Force Academy, playing on the academy’s Air Force Falcons basketball team. In
-    his senior year, he even became the team captain and was the leading scorer that year. He graduated in 1970 and
-    considered a career with the CIA.
-  </p>
-
-  <p>
-    Pops then served in the US Air Force. During this time, he continued playing with the US Armed Forces basketball team,
-    becoming captain and winning the AAU championship. He was then invited to the 1972 US Olympic Trials — but was cut from
-    the team.
-  </p>
-
-  <h2>Early Coaching</h2>
-  <p>
-    Popovich began his coaching career as an assistant coach to Hank Egan at the Air Force Academy. During this time, he
-    earned a master’s degree in physical education and sports sciences from the University of Denver.
-  </p>
-
-  <p>
-    He worked there for 6 years (1973–1979), before moving to the Pomona-Pitzer Sagehens in Claremont, California — a small
-    DIII program. According to Popovich, he didn’t know the program was in rough shape. In 1980, he was just another coach
-    trying to figure it out.
-  </p>
-
-  <blockquote>
-    “It was a horrendous beginning,” Popovich recalled, “But be that as it may, I still fell in love with it.”
-  </blockquote>
-
-  <p><em>Popovich with Pomona-Pitzer. Courtesy: Peter Osgood.</em></p>
-  <img src="../image.png" alt="Popovich with Pomona-Pitzer" />
-
-  <p>
-    That first year, the Hens lost to Caltech, breaking their 99-game conference losing streak. But Popovich kept going,
-    sending thousands of recruiting letters nationwide. His assistant Charles Katsiaficas recalled the grind:
-  </p>
-
-  <blockquote>
-    “A lot of letter-writing, a lot of follow-up calls...you really had to work very hard at generating a recruiting list.”
-  </blockquote>
-
-  <p>Five seasons after a 2-22 season, the Sagehens were SCIAC champions. They lost in the first round, but they won the conference.</p>
-
-  <h2>Climbing to the NBA</h2>
-  <p>
-    Popovich volunteered under Larry Brown at Kansas, then returned to Pomona. By 1988, he joined Brown in the NBA as a Spurs
-    assistant, until 1992. He later served under Don Nelson at the Warriors, which Pop said helped him grow immensely.
-  </p>
-
-  <p>
-    He returned to San Antonio in 1994 as GM, signing Avery Johnson and trading Dennis Rodman. After a rough 3-15 start in
-    1996, Popovich fired head coach Bob Hill and took over himself on December 10.
-  </p>
-
-  <p>That poor season earned the Spurs the #1 draft pick, selecting Tim Duncan — changing the franchise forever.</p>
-
-  <h2>The Spurs Dynasty</h2>
-  <p>
-    With David Robinson and Tim Duncan, Popovich led the Spurs to 56 wins in 1997–98 and their first NBA title in 1999. Over
-    the next 20 years, he would win five championships (1999, 2003, 2005, 2007, and 2014), and three Coach of the Year awards.
-  </p>
-
-  <p>
-    Pop was never afraid to make unpopular decisions — like resting stars and getting fined for it — to protect his players’
-    longevity. His vision went beyond basketball.
-  </p>
-
-  <blockquote>
-    “This is probably the most meaningful of any award I've received... this place molded me from a wise guy to a half decent
-    person.”
-    <br />
-    – Gregg Popovich on becoming an Air Force Distinguished Graduate
-  </blockquote>
-
-  <h2>The Final Years</h2>
-  <p>
-    In 2021, Popovich coached Team USA to Olympic Gold. In 2022, he became the all-time regular season wins leader. In 2023,
-    he entered the Basketball Hall of Fame. And on November 2, 2024, Popovich suffered a stroke — his final game as coach
-    was against the Timberwolves.
-  </p>
-
-  <p>
-    He stepped down in 2025, ending a 29-year head-coaching reign, but continued as President of Basketball Operations.
-  </p>
-
-  <h2>Legacy and Impact</h2>
-  <p>
-    From Shaq to Steve Kerr, Pop’s impact is universally respected. He treated every player the same. He stood for
-    discipline, equality, humility, and honesty.
-  </p>
-
-  <blockquote>
-    “We used to call it ‘The Program.’ I love that man for a different reason... Pop gave us a couple pairs of shoes. He
-    never wanted anything in return.”
-    <br />
-    – Shaquille O’Neal
-  </blockquote>
-
-  <blockquote>
-    “Pop is one of the most important people in my life... for reasons that go way beyond basketball.”
-    <br />
-    – Steve Kerr
-  </blockquote>
-
-  <p>
-    He held players accountable — even legends like Tim Duncan — and inspired everyone in his orbit. He revolutionized the
-    way coaching is viewed in the NBA.
-  </p>
-
-  <h2>Forever Coach Pops</h2>
-  <p>I didn’t expect to publish this article so soon — maybe in 2028. But Pops deserves this. Forever.</p>
-
-  <h3>Because</h3>
-  <h3>That’s</h3>
-  <h3>The</h3>
-  <h3>Coach</h3>
-  <h3>Pops</h3>
-  <h3>Way.</h3>
-  <hr style="border: 1px solid black; margin: 40px 0;" />
-  <div id="comments-section">
-    <h2>Comments</h2>
-    <form id="commentForm">
-      <input type="text" id="name" placeholder="Your name (anonymous allowed)" required /><br />
-      <textarea id="comment" placeholder="Your comment" required></textarea><br />
-      <button type="submit">Post Comment</button>
+    <p>Thanks for reading Sports Square! Subscribe for free to receive new posts and support my work.</p>
+    <form action="https://formsubmit.co/sportssquareauthor@gmail.com" method="POST">
+      <input
+        type="email"
+        name="email"
+        placeholder="Your email"
+        required
+      />
+      <input type="hidden" name="_next" value="https://sportssquare.netlify.app/subscribed.html" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_subject" value="New subscription from Sports Square" />
+      <input type="hidden" name="_message" value="A new user has subscribed to Sports Square." />
+      <br />
+      <button type="submit">Subscribe</button>
     </form>
-    <div id="commentsList">Loading...</div>
-  </div>
 
-  <div
-    id="rate-me"
-    style="
-      font-family: Arial, sans-serif;
-      margin: 50px auto;
-      text-align: center;
-      padding: 20px;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      background-color: #f9f9f9;
-      max-width: 400px;
-    "
-  >
-    <label style="font-weight: bold;">Rate The Article:</label>
-    <br />
-    <div
-      id="stars-container"
-      class="stars"
-      style="display: flex; justify-content: center; cursor: pointer; font-size: 3rem; color: lightgray; text-align: center;"
-    >
-      <span class="star" data-value="1" style="margin-right: 10px;">★</span>
-      <span class="star" data-value="2" style="margin-right: 10px;">★</span>
-      <span class="star" data-value="3" style="margin-right: 10px;">★</span>
-      <span class="star" data-value="4" style="margin-right: 10px;">★</span>
-      <span class="star" data-value="5">★</span>
+    <h2>Origins</h2>
+    <p>
+      The Popovich story began on that date in 1949, in bustling East Chicago, Indiana, home to the Indiana Harbor
+      and the Ship Canal. He was born to a Serbian father and a Croatian mother, graduating from Merrillville High School
+      in 1966.
+    </p>
+
+    <p>
+      He then attended the United States Air Force Academy, playing on the academy’s Air Force Falcons basketball team. In
+      his senior year, he even became the team captain and was the leading scorer that year. He graduated in 1970 and
+      considered a career with the CIA.
+    </p>
+
+    <p>
+      Pops then served in the US Air Force. During this time, he continued playing with the US Armed Forces basketball team,
+      becoming captain and winning the AAU championship. He was then invited to the 1972 US Olympic Trials — but was cut from
+      the team.
+    </p>
+
+    <h2>Early Coaching</h2>
+    <p>
+      Popovich began his coaching career as an assistant coach to Hank Egan at the Air Force Academy. During this time, he
+      earned a master’s degree in physical education and sports sciences from the University of Denver.
+    </p>
+
+    <p>
+      He worked there for 6 years (1973–1979), before moving to the Pomona-Pitzer Sagehens in Claremont, California — a small
+      DIII program. According to Popovich, he didn’t know the program was in rough shape. In 1980, he was just another coach
+      trying to figure it out.
+    </p>
+
+    <blockquote>
+      “It was a horrendous beginning,” Popovich recalled, “But be that as it may, I still fell in love with it.”
+    </blockquote>
+
+    <p><em>Popovich with Pomona-Pitzer. Courtesy: Peter Osgood.</em></p>
+    <img src="../image.png" alt="Popovich with Pomona-Pitzer" />
+
+    <p>
+      That first year, the Hens lost to Caltech, breaking their 99-game conference losing streak. But Popovich kept going,
+      sending thousands of recruiting letters nationwide. His assistant Charles Katsiaficas recalled the grind:
+    </p>
+
+    <blockquote>
+      “A lot of letter-writing, a lot of follow-up calls...you really had to work very hard at generating a recruiting list.”
+    </blockquote>
+
+    <p>Five seasons after a 2-22 season, the Sagehens were SCIAC champions. They lost in the first round, but they won the conference.</p>
+
+    <h2>Climbing to the NBA</h2>
+    <p>
+      Popovich volunteered under Larry Brown at Kansas, then returned to Pomona. By 1988, he joined Brown in the NBA as a Spurs
+      assistant, until 1992. He later served under Don Nelson at the Warriors, which Pop said helped him grow immensely.
+    </p>
+
+    <p>
+      He returned to San Antonio in 1994 as GM, signing Avery Johnson and trading Dennis Rodman. After a rough 3-15 start in
+      1996, Popovich fired head coach Bob Hill and took over himself on December 10.
+    </p>
+
+    <p>That poor season earned the Spurs the #1 draft pick, selecting Tim Duncan — changing the franchise forever.</p>
+
+    <h2>The Spurs Dynasty</h2>
+    <p>
+      With David Robinson and Tim Duncan, Popovich led the Spurs to 56 wins in 1997–98 and their first NBA title in 1999. Over
+      the next 20 years, he would win five championships (1999, 2003, 2005, 2007, and 2014), and three Coach of the Year awards.
+    </p>
+
+    <p>
+      Pop was never afraid to make unpopular decisions — like resting stars and getting fined for it — to protect his players’
+      longevity. His vision went beyond basketball.
+    </p>
+
+    <blockquote>
+      “This is probably the most meaningful of any award I've received... this place molded me from a wise guy to a half decent
+      person.”
+      <br />
+      – Gregg Popovich on becoming an Air Force Distinguished Graduate
+    </blockquote>
+
+    <h2>The Final Years</h2>
+    <p>
+      In 2021, Popovich coached Team USA to Olympic Gold. In 2022, he became the all-time regular season wins leader. In 2023,
+      he entered the Basketball Hall of Fame. And on November 2, 2024, Popovich suffered a stroke — his final game as coach
+      was against the Timberwolves.
+    </p>
+
+    <p>
+      He stepped down in 2025, ending a 29-year head-coaching reign, but continued as President of Basketball Operations.
+    </p>
+
+    <h2>Legacy and Impact</h2>
+    <p>
+      From Shaq to Steve Kerr, Pop’s impact is universally respected. He treated every player the same. He stood for
+      discipline, equality, humility, and honesty.
+    </p>
+
+    <blockquote>
+      “We used to call it ‘The Program.’ I love that man for a different reason... Pop gave us a couple pairs of shoes. He
+      never wanted anything in return.”
+      <br />
+      – Shaquille O’Neal
+    </blockquote>
+
+    <blockquote>
+      “Pop is one of the most important people in my life... for reasons that go way beyond basketball.”
+      <br />
+      – Steve Kerr
+    </blockquote>
+
+    <p>
+      He held players accountable — even legends like Tim Duncan — and inspired everyone in his orbit. He revolutionized the
+      way coaching is viewed in the NBA.
+    </p>
+
+    <h2>Forever Coach Pops</h2>
+    <p>I didn’t expect to publish this article so soon — maybe in 2028. But Pops deserves this. Forever.</p>
+
+    <h3>Because</h3>
+    <h3>That’s</h3>
+    <h3>The</h3>
+    <h3>Coach</h3>
+    <h3>Pops</h3>
+    <h3>Way.</h3>
+    <hr/>
+    <div id="comments-section">
+      <h2>Comments</h2>
+      <form id="commentForm">
+        <input type="text" id="name" placeholder="Your name (anonymous allowed)" required /><br />
+        <textarea id="comment" placeholder="Your comment" required></textarea><br />
+        <button type="submit">Post Comment</button>
+      </form>
+      <div id="commentsList">Loading...</div>
     </div>
-    <p id="rating-result" style="font-size: 1.2rem; font-weight: bold;"></p>
+
+    <div id="rate-me">
+      <label>Rate The Article:</label>
+      <br />
+      <div id="stars-container" class="stars">
+        <span class="star" data-value="1">★</span>
+        <span class="star" data-value="2">★</span>
+        <span class="star" data-value="3">★</span>
+        <span class="star" data-value="4">★</span>
+        <span class="star" data-value="5">★</span>
+      </div>
+      <p id="rating-result"></p>
+    </div>
   </div>
 
-  <div class="footer">
-    <p>© 2025 Sports Square. All rights reserved.</p>
-  </div>
+  <footer>
+    <p>&copy; 2025 Sports Square. All rights reserved.</p>
+    <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+  </footer>
+  <p><a href="./sitemap.html">Sitemap</a></p>
 
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
   <script>
-    // IMPORTANT: This Firebase config is now set to sportssquare-b96ed.
-    // This must match the configuration in your signup.html file for consistent authentication.
+
     const firebaseConfig = {
       apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
       authDomain: "sportssquare-b96ed.firebaseapp.com",
@@ -324,7 +753,17 @@
       appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+        console.log("Firebase App initialized.");
+    } else {
+        console.log("Firebase App already initialized.");
+    }
+  </script>
+
+  <script src="../notifications.js"></script>
+
+  <script>
     const auth = firebase.auth();
     const db = firebase.firestore();
 
@@ -337,6 +776,10 @@
     const commentForm = document.getElementById("commentForm");
     const starsContainer = document.getElementById("stars-container");
     const ratingResult = document.getElementById("rating-result");
+
+
+
+    const articleId = "so-long-pops";
 
     let currentUser = null;
 
@@ -363,7 +806,7 @@
     });
 
     loginBtn.onclick = () => {
-      // Pass the current article URL as a redirect parameter
+
       window.location.href = `../signup.html?redirect=${encodeURIComponent(window.location.href)}`;
     };
 
@@ -373,132 +816,100 @@
 
     async function loadArticleLikes() {
       try {
-        const doc = await db.collection("likes").doc("article").get();
-        const likesCount = doc.exists && doc.data().count ? doc.data().count : 0;
+        const likesSnapshot = await db.collection("posts").doc(articleId).collection("likes").get();
+        const likesCount = likesSnapshot.size;
         articleLikesSpan.textContent = likesCount;
+
       } catch (error) {
         console.error("Failed to load article likes:", error);
+
       }
     }
 
     likeArticleBtn.onclick = async () => {
       if (!currentUser) {
-        // Using a custom message box instead of alert()
         showMessageBox("You need to be logged in to like the article.");
         return;
       }
+
       try {
-        const userLikeDoc = await db
-          .collection("likes")
-          .doc("articleLikesUsers")
-          .collection("users")
-          .doc(currentUser.uid)
-          .get();
+        const userLikeRef = db.collection("posts").doc(articleId).collection("likes").doc(currentUser.uid);
+        const userLikeDoc = await userLikeRef.get();
 
         if (userLikeDoc.exists) {
           showMessageBox("You already liked this article!");
           return;
         }
 
-        await db
-          .collection("likes")
-          .doc("articleLikesUsers")
-          .collection("users")
-          .doc(currentUser.uid)
-          .set({ liked: true });
-
-        const articleLikesRef = db.collection("likes").doc("article");
-        await db.runTransaction(async (transaction) => {
-          const doc = await transaction.get(articleLikesRef);
-          if (!doc.exists) {
-            transaction.set(articleLikesRef, { count: 1 });
-          } else {
-            const newCount = (doc.data().count || 0) + 1;
-            transaction.update(articleLikesRef, { count: newCount });
-          }
+        await userLikeRef.set({
+          uid: currentUser.uid,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
 
         await loadArticleLikes();
+        showMessageBox("Article liked successfully!");
+
       } catch (error) {
-        console.error("Error liking article:", error);
-        showMessageBox("Failed to like the article. Please try again.");
+        console.error("Error liking article:", error)
       }
     };
 
+
     async function loadComments() {
       try {
-        const snapshot = await db.collection("comments").orderBy("timestamp", "desc").get();
-        commentsList.innerHTML = "";
+
+
+        const commentsRef = db.collection("comments").where("postId", "==", articleId);
+        const snapshot = await commentsRef.orderBy("timestamp", "desc").get();
+        commentsList.innerHTML = ""; // Clear existing comments
+
         if (snapshot.empty) {
           commentsList.textContent = "No comments yet. Be the first!";
           return;
         }
+
         snapshot.forEach((doc) => {
           const data = doc.data();
           const commentDiv = document.createElement("div");
-          commentDiv.style.borderBottom = "1px solid #ddd";
-          commentDiv.style.padding = "10px 0";
-
           const commentId = doc.id;
 
           const commentLikeBtn = document.createElement("button");
           commentLikeBtn.className = "like-btn";
-          commentLikeBtn.textContent = `❤️ Like Comment (0)`;
+          const currentLikes = data.likes ? data.likes.length : 0;
+          commentLikeBtn.textContent = `❤️ Like Comment (${currentLikes})`;
           commentLikeBtn.style.marginTop = "5px";
 
           commentLikeBtn.onclick = async () => {
-            if (!currentUser) {
-              showMessageBox("You need to be logged in to like comments.");
-              return;
-            }
-            try {
-              const userCommentLikeDoc = await db
-                .collection("commentLikes")
-                .doc(commentId)
-                .collection("users")
-                .doc(currentUser.uid)
-                .get();
+            const commentRef = db.collection("comments").doc(commentId);
 
-              if (userCommentLikeDoc.exists) {
-                showMessageBox("You already liked this comment!");
+            try {
+              if (currentUser) {
+                const currentCommentDoc = await commentRef.get();
+                if (currentCommentDoc.exists && currentCommentDoc.data().likes && currentCommentDoc.data().likes.includes(currentUser.uid)) {
+                  showMessageBox("You already liked this comment!");
+                  return;
+                }
+                await commentRef.update({
+                  likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+                });
+              } else {
+                showMessageBox("Please log in to uniquely like comments.");
                 return;
               }
 
-              await db
-                .collection("commentLikes")
-                .doc(commentId)
-                .collection("users")
-                .doc(currentUser.uid)
-                .set({ liked: true });
+              const updatedCommentDoc = await commentRef.get();
+              const updatedLikesCount = updatedCommentDoc.data().likes ? updatedCommentDoc.data().likes.length : 0;
+              commentLikeBtn.textContent = `❤️ Like Comment (${updatedLikesCount})`;
+              showMessageBox("Comment liked!");
 
-              const commentLikesRef = db.collection("commentLikes").doc(commentId);
-              await db.runTransaction(async (transaction) => {
-                const docSnap = await transaction.get(commentLikesRef);
-                if (!docSnap.exists) {
-                  transaction.set(commentLikesRef, { count: 1 });
-                } else {
-                  const newCount = (docSnap.data().count || 0) + 1;
-                  transaction.update(commentLikesRef, { count: newCount });
-                }
-              });
-
-              const newCountDoc = await db.collection("commentLikes").doc(commentId).get();
-              commentLikeBtn.textContent = `❤️ Like Comment (${newCountDoc.data().count || 0})`;
             } catch (err) {
               console.error("Error liking comment:", err);
-              showMessageBox("Failed to like the comment.");
             }
           };
 
-          (async () => {
-            try {
-              const commentLikesDoc = await db.collection("commentLikes").doc(commentId).get();
-              const likesCount = commentLikesDoc.exists && commentLikesDoc.data().count ? commentLikesDoc.data().count : 0;
-              commentLikeBtn.textContent = `❤️ Like Comment (${likesCount})`;
-            } catch {
-              commentLikeBtn.textContent = `❤️ Like Comment (0)`;
-            }
-          })();
+          const initialLikesCount = data.likes ? data.likes.length : 0;
+          commentLikeBtn.textContent = `❤️ Like Comment (${initialLikesCount})`;
+
 
           commentDiv.innerHTML = `
             <strong>${escapeHtml(data.name)}</strong><br />
@@ -511,7 +922,6 @@
         });
       } catch (error) {
         console.error("Error loading comments:", error);
-        commentsList.textContent = "Failed to load comments.";
       }
     }
 
@@ -527,16 +937,21 @@
       }
 
       try {
+
+
+
         await db.collection("comments").add({
           name,
           comment,
+          postId: articleId, // Link comment to the current article
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          likes: [] // Initialize likes as an empty array
         });
         commentForm.reset();
         loadComments();
+        showMessageBox("Comment posted successfully!");
       } catch (error) {
         console.error("Error posting comment:", error);
-        showMessageBox("Failed to post comment.");
       }
     };
 
@@ -550,15 +965,18 @@
       if (!clickedStar) return;
 
       const ratingValue = parseInt(clickedStar.dataset.value, 10);
-      const userRatingRef = db.collection("ratings").doc(currentUser.uid);
-
       try {
-        await userRatingRef.set({ rating: ratingValue });
+        const userRatingRef = db.collection("posts").doc(articleId).collection("ratings").doc(currentUser.uid);
+        await userRatingRef.set({
+            rating: ratingValue,
+            uid: currentUser.uid, // Store user ID with the rating
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
         showStarRating(ratingValue);
         ratingResult.textContent = `You rated this article ${ratingValue} star${ratingValue > 1 ? "s" : ""}.`;
+        showMessageBox(`Rated ${ratingValue} stars!`);
       } catch (error) {
         console.error("Error submitting rating:", error);
-        showMessageBox("Failed to submit rating.");
       }
     });
 
@@ -569,7 +987,7 @@
         return;
       }
       try {
-        const userRatingDoc = await db.collection("ratings").doc(currentUser.uid).get();
+        const userRatingDoc = await db.collection("posts").doc(articleId).collection("ratings").doc(currentUser.uid).get();
         if (userRatingDoc.exists) {
           const ratingValue = userRatingDoc.data().rating;
           showStarRating(ratingValue);
@@ -584,45 +1002,33 @@
     }
 
     function showStarRating(value) {
-      const stars = document.querySelectorAll(".star");
+      const stars = document.querySelectorAll("#stars-container .star");
       stars.forEach((star) => {
         const starValue = parseInt(star.dataset.value, 10);
-        star.style.color = starValue <= value ? "gold" : "lightgray";
+        star.style.color = starValue <= value ? "gold" : "var(--text-lighter)";
+        star.style.textShadow = starValue <= value ? "0 0 8px gold" : "none";
       });
     }
 
-    // Custom message box function to replace alert()
     function showMessageBox(message) {
       const messageBox = document.createElement('div');
+      messageBox.className = 'message-box';
       messageBox.style.cssText = `
         position: fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background-color: #fff;
         padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         z-index: 1000;
         text-align: center;
         font-family: 'Montserrat', sans-serif;
         font-size: 1.1rem;
-        color: #333;
         max-width: 80%;
         min-width: 250px;
       `;
       messageBox.innerHTML = `
         <p>${message}</p>
-        <button style="
-          background-color: #2ECC71;
-          color: white;
-          border: none;
-          padding: 8px 15px;
-          border-radius: 5px;
-          cursor: pointer;
-          margin-top: 15px;
-          font-weight: bold;
-        ">OK</button>
+        <button>OK</button>
       `;
       document.body.appendChild(messageBox);
 

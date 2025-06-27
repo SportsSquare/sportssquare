@@ -4,40 +4,66 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Welcome to Sports Square</title>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <!-- Removed Tailwind CSS CDN as per your request not to change CSS setup for this file -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
+     crossorigin="anonymous"></script>
+     <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <style>
+        :root {
+            
+            --background-dark: #000000;
+            
+            --accent-dark: #191970;
+
+            
+            --neon-green: #00ff00;
+            --neon-blue: #00ffff;
+            --neon-yellow: #faff00;
+            
+            --text-light: #e0e0e0;
+            --text-lighter: #b0b0b0; 
+            --button-text-dark: #000000; 
+            --input-text-color: #e0e0e0; 
+            --placeholder-color: #888; 
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background-dark);
             display: flex;
-            justify-content: center;
+            flex-direction: column; 
+            justify-content: space-between; 
             align-items: center;
             min-height: 100vh;
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
+            color: var(--text-light); 
         }
         .container {
-            background-color: #ffffff;
+            background-color: var(--accent-dark); 
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); 
             text-align: center;
             max-width: 600px;
             width: 100%;
-            border: 1px solid #e0e0e0;
+            border: 2px solid var(--neon-blue); 
+            margin-bottom: 30px; 
         }
         h1 {
-            color: #1a202c;
-            font-size: 2.25rem;
+            color: var(--neon-green); 
+            font-size: 2.5rem; 
             font-weight: bold;
             margin-bottom: 1rem;
+            text-shadow: 0 0 8px var(--neon-green), 0 0 15px var(--neon-green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
         p {
-            color: #4a5568;
+            color: var(--text-light); 
             font-size: 1.125rem;
             line-height: 1.6;
             margin-bottom: 1.5rem;
@@ -47,61 +73,209 @@
             max-width: 350px;
             padding: 12px 16px;
             margin-top: 1rem;
-            border: 2px solid #cbd5e0;
+            background-color: rgba(0, 0, 0, 0.5); 
+            border: 2px solid var(--neon-blue); 
             border-radius: 8px;
             font-size: 1rem;
             text-align: center;
+            color: var(--input-text-color); 
             transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             outline: none;
         }
+        input[type="text"]::placeholder {
+            color: var(--placeholder-color); 
+        }
         input[type="text"]:focus {
-            border-color: #4299e1;
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+            border-color: var(--neon-yellow); 
+            box-shadow: 0 0 0 3px rgba(250, 255, 0, 0.5), 0 0 15px var(--neon-yellow); 
         }
         button {
-            background-color: #48bb78; /* Lime Green */
-            color: white;
+            background-color: var(--neon-green); 
+            color: var(--button-text-dark); 
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 50px; 
             font-size: 1.125rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s ease-in-out, transform 0.1s ease-out;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-out, box-shadow 0.2s ease-in-out;
             margin-top: 2rem;
-            display: inline-block; /* For better centering */
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.6); 
         }
         button:hover {
-            background-color: #38a169;
-            transform: translateY(-1px);
+            background-color: var(--neon-yellow); 
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(250, 255, 0, 0.8); 
         }
         button:active {
             transform: translateY(0);
         }
+        button:disabled {
+            background-color: #666; 
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .message-box {
             margin-top: 20px;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 0.9em;
             display: none;
-            word-break: break-word; /* Ensure messages wrap */
+            word-break: break-word;
+            font-weight: bold;
         }
         .message-box.success {
-            background-color: #e6ffed;
-            color: #2f855a;
-            border: 1px solid #68d391;
+            background-color: rgba(0, 255, 0, 0.2); 
+            color: var(--neon-green); 
+            border: 1px solid var(--neon-green);
         }
         .message-box.error {
-            background-color: #fff5f5;
-            color: #c53030;
-            border: 1px solid #fc8181;
+            background-color: rgba(255, 0, 0, 0.2); 
+            color: #ff6666; 
+            border: 1px solid #ff6666;
         }
+        #resultDiv a {
+            color: var(--neon-blue); 
+            text-decoration: none;
+            transition: color 0.2s ease-in-out;
+            font-weight: bold;
+        }
+        #resultDiv a:hover {
+            color: var(--neon-green); 
+            text-decoration: underline;
+        }
+        #resultDiv p {
+             color: var(--text-light); 
+        }
+        #resultDiv ul {
+            list-style-type: disc;
+            list-style-position: inside;
+            padding-left: 0;
+            color: var(--text-lighter); 
+        }
+        #resultDiv li {
+            margin-bottom: 8px;
+        }
+        #resultDiv span {
+            color: var(--neon-yellow); 
+            text-shadow: 0 0 5px rgba(250, 255, 0, 0.5);
+        }
+
+        
+        footer {
+            margin-top: auto; 
+            padding: 30px;
+            background-color: var(--neon-yellow);
+            box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+            color: var(--button-text-dark);
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            width: 100%; 
+        }
+
+        footer p {
+            margin: 5px 0;
+            font-size: 1.1em;
+            color: var(--button-text-dark);
+        }
+        footer a {
+            color: var(--neon-blue);
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        footer a:hover {
+            color: var(--neon-green);
+        }
+
+        
+        body > p:last-of-type {
+            margin-top: 20px;
+            margin-bottom: 20px; 
+        }
+        body > p:last-of-type a {
+            color: var(--neon-blue);
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        body > p:last-of-type a:hover {
+            color: var(--neon-green);
+        }
+
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            p {
+                font-size: 1rem;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+        nav {
+            background-color: rgba(255, 0, 0, 0.6);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px; 
+        padding: 20px 0; 
+        max-width: 100%; 
+    }
+    nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    nav li {
+        margin: 0 10px; 
+    }
+    nav a {
+        color: var(--neon-blue);
+        text-decoration: none;
+        font-size: 1.2rem; 
+        padding: 10px 15px; 
+        border-radius: 6px; 
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    nav a:hover {
+        background-color: rgba(0, 255, 255, 0.1); 
+        color: var(--neon-green); 
+    }
+    nav a:active {
+        background-color: rgba(0, 255, 255, 0.2); 
+        color: var(--neon-yellow); 
+    }
     </style>
 </head>
 <body>
+    <nav>
+        <ul>
+          <li><a href="./index.html">Home</a></li>
+          <li><a href="./tags.html">Posts</a></li>
+          <li><a href="./sportscalendar.html">Calendar</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="./subscriberchat.html">Subscriber Chat</a></li>
+          <li><a href="./podcast.html">Podcast</a></li>
+          <li><a href="./social.html">Social Media</a></li>
+        </ul>
+      </nav>
     <div class="container">
         <h1>Welcome to Sports Square</h1>
-        <p>Enter your **favorite sports teams (comma-separated)** to get personalized article recommendations!</p>
+        <p>Enter your **favorite sports teams** (comma-separated) to get personalized article recommendations!</p>
         <p>Type the names of your favorite teams below:</p>
         <input type="text" id="searchInput" placeholder="e.g., Lakers, Warriors, Spurs, Celtics">
         <div id="resultDiv" class="mt-4"></div>
@@ -109,49 +283,54 @@
         <button id="savePrefButton" style="display: none;">Save Preferences</button>
     </div>
 
+    <p>We are currently working on features that we can use with this data!</p>
+    <footer>
+        <p>&copy; 2025 Sports Square. All rights reserved.</p>
+        <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+    </footer>
+    <p><a href="./sitemap.html">Sitemap</a></p>
+
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
+    <script src="./firebase-config.js"></script>
+    <script src="./presence.js"></script>
+    <script src="./notifications.js"></script>
+    
     <script>
         const searchInput = document.getElementById('searchInput');
         const resultDiv = document.getElementById('resultDiv');
         const savePrefButton = document.getElementById('savePrefButton');
         const messageBox = document.getElementById('messageBox');
 
-        // Firebase Configuration (REPLACE WITH YOUR ACTUAL CONFIG)
-        const firebaseConfig = {
-            apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
-            authDomain: "sportssquare-b96ed.firebaseapp.com",
-            databaseURL: "https://sportssquare-b96ed-default-rtdb.firebaseio.com",
-            projectId: "sportssquare-b96ed",
-            storageBucket: "sportssquare-b96ed.firebasestorage.app",
-            messagingSenderId: "844736978057",
-            appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
-        };
 
-        // Initialize Firebase
-        const appFirebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : firebaseConfig;
-        const app = firebase.initializeApp(appFirebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+
+
+
+
 
         let currentUser = null;
 
-        // Function to display messages to the user
         function showMessage(message, type) {
             messageBox.textContent = message;
             messageBox.className = `message-box ${type}`;
             messageBox.style.display = 'block';
         }
 
-        // Authenticate user (using anonymous sign-in if no initial token)
-        auth.onAuthStateChanged(async (user) => {
+
+
+        window.auth.onAuthStateChanged(async (user) => { // Use window.auth to be explicit
             if (user) {
                 currentUser = user;
                 console.log("Authenticated as:", currentUser.uid);
-                // Try to load existing preferences from 'userPreferences' collection
+
                 try {
-                    const userDoc = await db.collection("userPreferences").doc(currentUser.uid).get();
+
+                    const userDoc = await window.db.collection("userPreferences").doc(currentUser.uid).get();
                     if (userDoc.exists) {
                         const userData = userDoc.data();
-                        // Now expecting 'favoriteTeams' as an array
+
                         if (userData.favoriteTeams && Array.isArray(userData.favoriteTeams) && userData.favoriteTeams.length > 0) {
                             searchInput.value = userData.favoriteTeams.join(', '); // Display as comma-separated string
                             displayTeamRecommendation(userData.favoriteTeams); // Pass the array
@@ -164,23 +343,17 @@
                 }
             } else {
                 try {
-                    // Use __initial_auth_token if available for sign-in, otherwise sign in anonymously
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await auth.signInWithCustomToken(__initial_auth_token);
-                    } else {
-                        await auth.signInAnonymously();
-                    }
-                    console.log("Firebase auth successful (anonymous or custom token).");
+
+                    await window.auth.signInAnonymously();
+                    console.log("Firebase auth successful (anonymous).");
                 } catch (error) {
                     console.error("Firebase auth failed:", error);
-                    showMessage(`Authentication failed: ${error.message}. Please try again later.`, 'error');
+                    showMessage(`Authentication failed. You must be authenticated to use this page. To get this fixed as fast as possible, please contact us, or try again later.`, 'error');
                 }
             }
         });
 
 
-        // Function to display team-specific recommendations
-        // Now accepts an array of team names
         function displayTeamRecommendation(teamNames) {
             resultDiv.innerHTML = ''; // Clear previous results
             savePrefButton.style.display = 'inline-block'; // Always show button if there's input
@@ -193,19 +366,22 @@
 
             let recommendationHtml = `<p class="text-green-600 text-lg">Based on your teams: ${teamNames.map(t => `<span style="font-weight: bold; text-transform: capitalize;">${t}</span>`).join(', ')}, here are some articles you might enjoy:</p><ul class="list-disc list-inside text-gray-700 mt-2">`;
 
-            // Example recommendations - expand this logic with real data or LLM calls later
             teamNames.forEach(team => {
                 const lowerTeam = team.toLowerCase();
                 if (lowerTeam.includes('spurs')) {
                     recommendationHtml += `
-                        <li><a href="https://sportssquare.netlify.app/posts/so-long-pops" target="_blank" class="text-blue-600 hover:underline">So Long Pops (A Tribute To the Great Gregg Popovich)</a></li>
-                        <li><a href="https://www.sportssquarenews.com/p/victor-wembanyama-out-for-the-season?utm_source=publication-search" target="_blank" class="text-blue-600 hover:underline">The Spurs Can't Catch A Break, Can They?</a></li>
-                        <li><a href="https://www.sportssquarenews.com/p/tank-wars-the-race-for-cooper-flagg?utm_source=publication-search" target="_blank" class="text-blue-600 hover:underline">Tank Wars || The Race For Cooper Flagg Is On!</a></li>
+                        <li><a href="https://sportssquare.netlify.app/posts/so-long-pops" target="_blank">So Long Pops (A Tribute To the Great Gregg Popovich)</a></li>
+                        <li><a href="https://www.sportssquarenews.com/p/victor-wembanyama-out-for-the-season?utm_source=publication-search" target="_blank">The Spurs Can't Catch A Break, Can They?</a></li>
+                        <li><a href="https://www.sportssquarenews.com/p/tank-wars-the-race-for-cooper-flagg?utm_source=publication-search" target="_blank">Tank Wars || The Race For Cooper Flagg Is On!</a></li>
                     `;
                 } else if (lowerTeam.includes('warriors') || lowerTeam.includes('golden state')) {
-                    recommendationHtml += `<li><a href="#" target="_blank" class="text-blue-600 hover:underline">Article about Golden State Warriors (Placeholder)</a></li>`;
+                    recommendationHtml += `<li><a href="#" target="_blank">Article about Golden State Warriors (Placeholder)</a></li>`;
+                } else if (lowerTeam.includes('lakers') || lowerTeam.includes('la lakers')) {
+                    recommendationHtml += `<li><a href="#" target="_blank">Latest news on the Los Angeles Lakers (Placeholder)</a></li>`;
+                } else if (lowerTeam.includes('celtics') || lowerTeam.includes('boston celtics')) {
+                    recommendationHtml += `<li><a href="#" target="_blank">Insights into the Boston Celtics season (Placeholder)</a></li>`;
                 }
-                // Add more team-specific recommendations here
+
             });
 
             if (recommendationHtml === `<p class="text-green-600 text-lg">Based on your teams: ${teamNames.map(t => `<span style="font-weight: bold; text-transform: capitalize;">${t}</span>`).join(', ')}, here are some articles you might enjoy:</p><ul class="list-disc list-inside text-gray-700 mt-2">`) {
@@ -216,13 +392,12 @@
             resultDiv.innerHTML = recommendationHtml;
         }
 
-        // Listen for input changes in the search box
         searchInput.addEventListener('input', function() {
             const query = this.value.trim();
             messageBox.style.display = 'none'; // Hide messages
 
             if (query) {
-                // Parse comma-separated teams
+
                 const teams = query.split(',').map(team => team.trim()).filter(team => team !== '');
                 displayTeamRecommendation(teams);
             } else {
@@ -231,7 +406,6 @@
             }
         });
 
-        // Handle save preference button click
         savePrefButton.addEventListener('click', async () => {
             const inputVal = searchInput.value.trim();
             if (!inputVal) {
@@ -248,17 +422,17 @@
 
             savePrefButton.disabled = true; // Disable button to prevent multiple clicks
             try {
-                // Update the user's document in Firestore within the 'userPreferences' collection
-                await db.collection("userPreferences").doc(currentUser.uid).set({
+
+
+                await window.db.collection("userPreferences").doc(currentUser.uid).set({
                     favoriteTeams: favoriteTeams // Save as an array
                 }, { merge: true }); // Use merge to only update this field
 
                 showMessage(`Your favorite teams "${favoriteTeams.join(', ')}" have been saved!`, 'success');
                 console.log(`Favorite teams "${favoriteTeams.join(', ')}" saved for user ${currentUser.uid}`);
 
-                // --- Client-side call to FormSubmit for email notification ---
-                // IMPORTANT: Replace 'your_admin_email@example.com' with the actual email
-                // address where you want to receive notifications.
+
+
                 const formSubmitEndpoint = `https://formsubmit.co/sportssquareauthor@gmail.com`;
 
                 try {

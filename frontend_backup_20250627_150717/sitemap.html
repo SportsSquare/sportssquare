@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITEMAP - Sports Square</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+    <style>
+        /* Color variables for consistency */
+        :root {
+            /* Top color: Black */
+            --background-dark: #000000;
+            /* 2nd level color: Midnight Blue */
+            --accent-dark: #191970;
+
+            /* Neon colors remain vibrant */
+            --neon-green: #00ff00;
+            --neon-blue: #00ffff;
+            --neon-yellow: #faff00;
+            /* Text colors adjusted for dark background */
+            --text-light: #e0e0e0;
+            --text-lighter: #b0b0b0; /* For less prominent text */
+            --button-text-dark: #000000; /* Dark text for neon buttons */
+        }
+
+        body {
+            background-color: var(--background-dark); /* Dark background */
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-light); /* Light text for readability */
+            text-align: center;
+            padding: 50px 20px; /* Add horizontal padding */
+            line-height: 1.6;
+            min-height: 100vh; /* Ensure it takes full viewport height */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Center content vertically */
+        }
+
+        .sitemap-container {
+            background-color: var(--accent-dark); /* Midnight blue background for container */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+            border: 2px solid var(--neon-blue); /* Neon blue border */
+            max-width: 600px; /* Max width for better readability */
+            width: 100%; /* Occupy full width within max-width */
+            margin: auto; /* Center the container */
+        }
+
+        h1 {
+            color: var(--neon-green); /* Neon green for main heading */
+            font-size: 2.8rem; /* Larger font size */
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            line-height: 1.2;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+            display: grid; /* Use grid for a two-column layout */
+            grid-template-columns: 1fr; /* Default to single column */
+            gap: 10px; /* Space between list items */
+        }
+
+        @media (min-width: 600px) {
+            ul {
+                grid-template-columns: 1fr 1fr; /* Two columns on larger screens */
+                gap: 15px 30px; /* Adjust gap for two columns */
+            }
+        }
+
+        li {
+            margin: 0; /* Remove default margin from list items */
+            background-color: rgba(0, 0, 0, 0.3); /* Subtle dark background for each item */
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 255, 0.2); /* Faint neon blue border */
+            transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+        }
+
+        li:hover {
+            background-color: rgba(0, 255, 255, 0.1); /* Lighter hover background */
+            border-color: var(--neon-blue); /* More prominent border on hover */
+            transform: translateY(-3px); /* Slight lift effect */
+        }
+
+        a {
+            color: var(--neon-blue); /* Neon blue for links */
+            text-decoration: none;
+            font-size: 1.2rem; /* Slightly larger link text */
+            font-weight: 500;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+            display: block; /* Make the whole list item clickable */
+        }
+
+        a:hover {
+            color: var(--neon-yellow); /* Neon yellow on hover */
+            text-decoration: none; /* Remove underline on hover, rely on color change and shadow */
+            text-shadow: 0 0 8px var(--neon-yellow); /* Glow effect on hover */
+        }
+
+        /* Footer styling */
+        footer {
+            margin-top: auto; /* Push footer to the bottom */
+            padding: 30px;
+            background-color: var(--neon-yellow);
+            box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+            color: var(--button-text-dark);
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            width: 100%; /* Ensure footer takes full width */
+            text-align: center;
+        }
+
+        footer p {
+            margin: 5px 0;
+            font-size: 1.1em;
+            color: var(--button-text-dark);
+        }
+        footer a {
+            color: var(--neon-blue);
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        footer a:hover {
+            color: var(--neon-green);
+        }
+    </style>
+</head>
+<body>
+    <div class="sitemap-container">
+        <a href="index.html"><h1>Sports Square News Sitemap</h1></a>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="collaborations.html">Collaborations</a></li>
+            <li><a href="subscribed.html">Subscribe</a></li>
+            <li><a href="sitemap.html">Sitemap</a></li>
+            <li><a href="careers.html">Careers</a></li>
+            <li><a href="sportscalendar.html">Sports Calendar</a></li>
+            <li><a href="signup.html">Signup / Login</a></li>
+            <li><a href="adminnoti.html">Admin Notification Panel (RESTRICTED)</a></li>
+            <li><a href="subdash.html">Subscriber Dashboard</a></li>
+            <li><a href="./subscriberchat.html">Subscriber Chat</a></li>
+            <li><a href="editor.html">Rich Text Editor</a></li>
+            <li><a href="./podcast.html">Podcast Home</a></li>
+            <li><a href="./record.html">Podcast Recorder</a></li>
+            <li><a href="./social.html">Social Media</a></li>
+            <li><a href="./tags.html">Tags</a></li>
+            <li><a href="./recommend.html">Recommend Content</a></li>
+        </ul>
+    </div>
+
+
+    <footer>
+        <p>&copy; 2025 Sports Square. All rights reserved.</p>
+        <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+    </footer>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <script src="./firebase-config.js"></script>
+
+    <script src="./presence.js"></script>
+    <script src="./notifications.js"></script>
+</body>
+</html>

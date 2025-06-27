@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign Up / Login - Sports Square</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* Color variables for consistency */
+    :root {
+      /* Top color: Black */
+      --background-dark: #000000;
+      /* 2nd level color: Midnight Blue */
+      --accent-dark: #191970;
+
+      /* Neon colors remain vibrant */
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+      /* Text colors adjusted for dark background */
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0; /* For less prominent text */
+      --button-text-dark: #000000; /* Dark text for neon buttons */
+      --input-text-color: #e0e0e0; /* Input text on dark background */
+      --placeholder-color: #888; /* Placeholder text */
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-dark); /* Black background */
+      display: flex;
+      flex-direction: column; /* To stack container and footer vertically */
+      justify-content: space-between; /* Push footer to bottom */
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+      color: var(--text-light); /* Light text color */
+    }
+    .container {
+      background-color: var(--accent-dark); /* Midnight blue container */
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); /* Stronger shadow for depth */
+      text-align: center;
+      max-width: 450px; /* Slightly wider than original for better form layout */
+      width: 100%;
+      border: 2px solid var(--neon-blue); /* Neon blue border */
+      margin-bottom: 30px; /* Space between container and footer */
+    }
+    h1 {
+      color: var(--neon-green); /* Neon green for main heading */
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 8px var(--neon-green), 0 0 15px var(--neon-green);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    h2 {
+      color: var(--neon-blue); /* Neon blue for subheadings (Register/Login) */
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 5px var(--neon-blue);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    input {
+      width: calc(100% - 24px); /* Adjusted width for 12px padding on each side */
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 1rem;
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black for inputs */
+      border: 2px solid var(--neon-green); /* Neon green border */
+      border-radius: 8px;
+      box-sizing: border-box;
+      color: var(--input-text-color); /* Light text color for input */
+      transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      outline: none;
+    }
+    input::placeholder {
+        color: var(--placeholder-color); /* Placeholder color */
+    }
+    input:focus {
+        border-color: var(--neon-yellow); /* Neon yellow on focus */
+        box-shadow: 0 0 0 3px rgba(250, 255, 0, 0.5), 0 0 15px var(--neon-yellow); /* Yellow glow */
+    }
+    button {
+      background-color: var(--neon-yellow); /* Neon yellow button */
+      border: none;
+      color: var(--button-text-dark); /* Dark text on button */
+      padding: 12px 24px;
+      font-size: 1.125rem;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 50px; /* Pill shape for buttons */
+      transition: background-color 0.3s ease, transform 0.1s ease-out, box-shadow 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 0 15px var(--neon-yellow); /* Yellow glow */
+      width: calc(100% - 20px); /* Match input width logic */
+      max-width: 350px; /* Optional: limit button width */
+    }
+    button:hover:not(:disabled) {
+      background-color: var(--neon-green); /* Neon green on hover */
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px var(--neon-green); /* Stronger green glow */
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    button:disabled {
+      background-color: #666; /* Muted color when disabled */
+      cursor: not-allowed;
+      box-shadow: none; /* No glow when disabled */
+    }
+    .message {
+      margin: 1.5rem 0; /* More spacing for messages */
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.9em;
+      font-weight: bold;
+      word-break: break-word;
+    }
+    .message.success {
+      background-color: rgba(0, 255, 0, 0.2); /* Light green tint */
+      color: var(--neon-green); /* Neon green text */
+      border: 1px solid var(--neon-green);
+    }
+    .message.error {
+      background-color: rgba(255, 0, 0, 0.2); /* Light red tint */
+      color: #ff6666; /* Slightly softer red */
+      border: 1px solid #ff6666;
+    }
+
+    /* Footer styling */
+    footer {
+        margin-top: auto; /* Push footer to the bottom */
+        padding: 30px;
+        background-color: var(--neon-yellow);
+        box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+        color: var(--button-text-dark);
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 1px;
+        width: 100%; /* Ensure footer takes full width */
+    }
+
+    footer p {
+        margin: 5px 0;
+        font-size: 1.1em;
+        color: var(--button-text-dark);
+    }
+    footer a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    footer a:hover {
+        color: var(--neon-green);
+    }
+
+    /* Sitemap link outside footer */
+    body > p:last-of-type {
+        margin-top: 20px;
+        margin-bottom: 20px; /* Add some margin for the sitemap link */
+    }
+    body > p:last-of-type a {
+        color: var(--neon-blue);
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    body > p:last-of-type a:hover {
+        color: var(--neon-green);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+        .container {
+            padding: 25px;
+        }
+        h1 {
+            font-size: 2rem;
+        }
+        h2 {
+            font-size: 1.5rem;
+        }
+        input, button {
+            width: 100%; /* Full width on very small screens */
+            max-width: none;
+        }
+    }
+  </style>
+</head>
+<body>
+  <!-- Firebase SDKs: Only include this set ONCE, the other duplicate block below is removed -->
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+  <!-- NOTE: If you need Firestore, ensure the correct Firestore SDK is also included here -->
+
+  <!-- Your config and presence scripts (ensure paths are correct for your deployment) -->
+  <!-- <script src="/path/to/firebase-config.js"></script> -->
+  <!-- <script src="/path/to/presence.js"></script> -->
+
+  <div class="container">
+    <h1>Sports Square Authentication</h1>
+
+    <div id="auth-container">
+
+      <h2>Register</h2>
+      <input type="email" id="register-email" placeholder="Email" autocomplete="email" />
+      <input type="password" id="register-password" placeholder="Password" autocomplete="new-password" />
+      <button id="register-btn">Register</button>
+
+      <h2>Login</h2>
+      <input type="email" id="login-email" placeholder="Email" autocomplete="email" />
+      <input type="password" id="login-password" placeholder="Password" autocomplete="current-password" />
+      <button id="login-btn">Login</button>
+
+      <div class="message" id="message"></div>
+    </div>
+  </div>
+
+  <script>
+    console.log("Script started."); // Debugging: Confirm script execution
+
+    // Firebase Configuration - This block defines your project settings.
+    // It should only appear ONCE in your entire HTML file.
+    const firebaseConfig = {
+      apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
+      authDomain: "sportssquare-b96ed.firebaseapp.com",
+      projectId: "sportssquare-b96ed",
+      storageBucket: "sportssquare-b96ed.firebasestorage.app",
+      messagingSenderId: "844736978057",
+      appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
+    };
+
+    // Initialize Firebase app and get auth instance.
+    // This also should only be called ONCE.
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    console.log("Firebase initialized and auth instance retrieved."); // Debugging: Confirm Firebase init
+
+    // Self-executing async function to handle Firebase persistence and event listeners.
+    (async () => {
+      try {
+        // Set Firebase authentication persistence to local storage.
+        // This keeps the user logged in across browser sessions.
+        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+        console.log("Firebase persistence set to LOCAL.");
+      } catch (error) {
+        console.error("Error setting Firebase persistence:", error);
+        // Display error message to user if persistence fails (uncommon).
+        document.getElementById('message').style.color = 'red';
+        document.getElementById('message').textContent = `Authentication error: ${error.message}`;
+      }
+
+      // Get references to DOM elements for manipulation.
+      const messageEl = document.getElementById('message');
+      const registerBtn = document.getElementById('register-btn');
+      const loginBtn = document.getElementById('login-btn');
+      const authContainer = document.getElementById('auth-container');
+      console.log("DOM elements retrieved:", { messageEl, registerBtn, loginBtn, authContainer });
+
+      // Add event listener for the Register button.
+      if (registerBtn) { // Defensive check: ensure button exists before attaching listener.
+          registerBtn.addEventListener('click', async () => {
+            console.log("Register button clicked.");
+            messageEl.textContent = ''; // Clear any previous messages.
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value;
+
+            console.log("Register attempt with email:", email); // Log email for debugging, but not password.
+            
+            // Client-side input validation.
+            if (!email || !password) {
+              messageEl.classList.remove('success');
+              messageEl.classList.add('error');
+              messageEl.textContent = 'Please enter both email and password.';
+              console.log("Validation failed: Email or password missing.");
+              return; // Stop execution if validation fails.
+            }
+            if (password.length < 6) {
+              messageEl.classList.remove('success');
+              messageEl.classList.add('error');
+              messageEl.textContent = 'Password should be at least 6 characters.';
+              console.log("Validation failed: Password too short.");
+              return; // Stop execution if validation fails.
+            }
+
+            registerBtn.disabled = true; // Disable button to prevent multiple clicks during the async operation.
+            try {
+              // Firebase API call to create a new user with email and password.
+              const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+              console.log("createUserWithEmailAndPassword successful for user:", userCredential.user.email);
+              messageEl.classList.remove('error');
+              messageEl.classList.add('success');
+              messageEl.textContent = `Registration successful! Welcome ${email}`;
+
+              // Redirect after successful registration.
+              const params = new URLSearchParams(window.location.search);
+              // Use the 'redirect' URL parameter if present, otherwise default.
+              const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/';
+              console.log("Redirecting to:", redirectUrl);
+              window.location.href = redirectUrl; // Perform the redirect.
+            } catch (error) {
+              // Catch and display any errors from Firebase (e.g., email-already-in-use, weak-password).
+              messageEl.classList.remove('success');
+              messageEl.classList.add('error');
+              messageEl.textContent = `Error: ${error.message}`;
+              console.error("Registration error:", error);
+            } finally {
+              registerBtn.disabled = false; // Re-enable the button regardless of success or failure.
+            }
+          });
+      } else {
+          console.error("Register button element not found. Check ID 'register-btn' in your HTML.");
+      }
+
+      // Add event listener for the Login button.
+      if (loginBtn) { // Defensive check: ensure button exists.
+          loginBtn.addEventListener('click', async () => {
+            console.log("Login button clicked.");
+            messageEl.textContent = ''; // Clear any previous messages.
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            console.log("Login attempt with email:", email); // Log email, not password.
+
+            // Client-side input validation.
+            if (!email || !password) {
+              messageEl.classList.remove('success');
+              messageEl.classList.add('error');
+              messageEl.textContent = 'Please enter both email and password.';
+              console.log("Validation failed: Email or password missing.");
+              return;
+            }
+
+            loginBtn.disabled = true; // Disable button during async operation.
+            try {
+              // Firebase API call to sign in an existing user.
+              const userCredential = await auth.signInWithEmailAndPassword(email, password);
+              console.log("signInWithEmailAndPassword successful for user:", userCredential.user.email);
+              messageEl.classList.remove('error');
+              messageEl.classList.add('success');
+              messageEl.textContent = `Login successful! Welcome back ${email}`;
+
+              // Redirect after successful login.
+              const params = new URLSearchParams(window.location.search);
+              const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/posts/so-long-pops';
+              console.log("Redirecting to:", redirectUrl);
+              window.location.href = redirectUrl;
+            } catch (error) {
+              // Catch and display any errors from Firebase (e.g., user-not-found, wrong-password).
+              messageEl.classList.remove('success');
+              messageEl.classList.add('error');
+              messageEl.textContent = `Error: ${error.message}`;
+              console.error("Login error:", error);
+            } finally {
+              loginBtn.disabled = false; // Re-enable the button.
+            }
+          });
+      } else {
+          console.error("Login button element not found. Check ID 'login-btn' in your HTML.");
+      }
+
+      // Listener for Firebase authentication state changes.
+      // This runs on page load and whenever the user logs in/out.
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          console.log('User logged in (onAuthStateChanged):', user.email);
+          const params = new URLSearchParams(window.location.search);
+          const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/posts/so-long-pops';
+
+          // Prevent unnecessary redirects if the user is already on the target page
+          // or a page equivalent to the target URL's base path (e.g., if a query param changes).
+          const currentPath = window.location.href.split('?')[0]; // Remove query params for comparison
+          const targetPath = redirectUrl.split('?')[0];
+          
+          if (currentPath !== targetPath) {
+            console.log("User already logged in, redirecting to:", redirectUrl);
+            window.location.href = redirectUrl;
+          } else {
+            console.log("User already logged in and on the target page. No redirect needed.");
+          }
+        } else {
+          console.log('User logged out (onAuthStateChanged). Displaying auth container.');
+          // If no user is logged in, ensure the authentication form is visible.
+          if (authContainer) {
+              // This is a sign-up/login page, so we want the container to be visible
+              // if no user is logged in. No explicit action needed here beyond
+              // the initial HTML state.
+          } else {
+              console.error("Auth container element not found. Check ID 'auth-container' in your HTML.");
+          }
+        }
+      });
+    })(); // End of self-executing async function.
+  </script>
+  <footer>
+    <p>&copy; 2025 Sports Square. All rights reserved.</p>
+    <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank">X</a></p>
+  </footer>
+  <p><a href="./sitemap.html">Sitemap</a></p>
+</body>
+</html>
