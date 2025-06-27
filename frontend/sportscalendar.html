@@ -1,159 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports Calendar</title>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
-     crossorigin="anonymous"></script>
-     <link rel="icon" type="image/x-icon" href="./favicon.ico">
-</head>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sports Calendar</title>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7385129367264824"
+   crossorigin="anonymous"></script>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+  
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6CR81XMZN5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6CR81XMZN5');
+  </script>
+  
+  <script src="./notifications.js"></script>
 
-  gtag('config', 'G-6CR81XMZN5');
-</script>
-<script src="./notifications.js"></script>
+  <style>
+    :root {
+      --background-dark: #1a1a2e;
 
-<style>
+      --neon-green: #00ff00;
+      --neon-blue: #00ffff;
+      --neon-yellow: #faff00;
+
+      --text-light: #e0e0e0;
+      --text-lighter: #b0b0b0; 
+      --accent-dark: #0f3460; 
+      --button-text-dark: #1a1a2e; 
+      --input-text-color: #e0e0e0; 
+      --placeholder-color: #888; 
+    }
+
     body {
-        background-color: rgb(249, 251, 231);
-        font-family: 'Montserrat', sans-serif;
-        text-align: center;
-        padding: 50px;
+      background-color: var(--background-dark);
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      padding: 50px;
+      color: var(--text-light); 
+      margin: 0;
+      line-height: 1.6;
     }
+
+    h1, h2, h3, h4 {
+      font-family: 'Chakra Petch', sans-serif; 
+      color: var(--neon-blue); 
+      text-shadow: 0 0 5px var(--neon-blue); 
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
     h1 {
-        color: blue;
+      font-size: 3.5em; 
+      color: var(--neon-green); 
+      text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
     }
-    .calendar {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 20px;
+
+    a {
+      color: var(--neon-blue);
+      text-decoration: none;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
     }
-    nav {
-        background-color: rgba(255, 0, 0, 0.6);
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px; 
-        padding: 20px 0; 
-        max-width: 100%; 
+
+    a:hover {
+      color: var(--neon-red);
+      text-shadow: 0 0 5px var(--neon-green);
     }
+
+    .header-buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 25px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .header-buttons button,
+    .subscribe-button,
+    nav button {
+      padding: 15px 30px;
+      background-color: var(--neon-blue);
+      color: var(--button-text-dark); 
+      font-size: 1.1em;
+      font-weight: bold;
+      border: none;
+      border-radius: 50px; 
+      cursor: pointer;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 0 15px var(--neon-blue);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-family: 'Rajdhani', sans-serif; 
+      border: 2px solid transparent;
+    }
+
+    .header-buttons button:hover,
+    .subscribe-button:hover,
+    nav button:hover {
+      background-color: var(--neon-green); 
+      box-shadow: 0 0 25px var(--neon-green);
+      transform: translateY(-2px);
+      border-color: var(--neon-blue); 
+    }
+
+    #dashboardButton {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: var(--neon-green);
+      color: var(--button-text-dark);
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      display: none;
+      z-index: 1000;
+      box-shadow: 0 0 10px var(--neon-green);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    }
+
+    #dashboardButton:hover {
+      background-color: var(--neon-yellow);
+      box-shadow: 0 0 15px var(--neon-yellow);
+      transform: translateY(-2px);
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 380px;
+      padding: 15px;
+      margin-bottom: 20px;
+      background-color: var(--accent-dark); 
+      border: 2px solid var(--neon-blue);
+      border-radius: 8px;
+      color: var(--input-text-color); 
+      font-size: 1.1em;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); 
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    input[type="text"]::placeholder,
+    input[type="email"]::placeholder {
+      color: var(--placeholder-color);
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus {
+      outline: none;
+      border-color: var(--neon-green);
+      box-shadow: 0 0 15px var(--neon-green);
+    }
+
     nav ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+      list-style-type: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 40px;
+      background-color: var(--neon-yellow); 
+      padding: 15px 0;
+      box-shadow: 0 5px 15px rgba(255, 255, 0, 0.4); 
+      flex-wrap: wrap;
     }
-    nav li {
-        margin: 0 10px; 
+
+    nav ul li a {
+      color: var(--button-text-dark); 
+      font-weight: bold;
+      padding: 8px 15px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+      font-family: 'Rajdhani', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
-    nav a {
-        color: var(--neon-blue);
-        text-decoration: none;
-        font-size: 1.2rem; 
-        padding: 10px 15px; 
-        border-radius: 6px; 
-        transition: background-color 0.3s ease, color 0.3s ease;
+
+    nav ul li a:hover {
+      background-color: var(--neon-blue);
+      color: var(--text-light);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
     }
-    nav a:hover {
-        background-color: rgba(0, 255, 255, 0.1); 
-        color: var(--neon-green); 
-    }
-    nav a:active {
-        background-color: rgba(0, 255, 255, 0.2); 
-        color: var(--neon-yellow); 
-    }
-</style>
-<body>
-    <nav>
-        <ul>
-          <li><a href="./index.html">Home</a></li>
-          <li><a href="./tags.html">Posts</a></li>
-          <li><a href="./sportscalendar.html">Calendar</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="./subscriberchat.html">Subscriber Chat</a></li>
-          <li><a href="./podcast.html">Podcast</a></li>
-          <li><a href="./social.html">Social Media</a></li>
-        </ul>
-      </nav>
-    
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
 
-
-<script src="./firebase-config.js"></script>
-<script src="./presence.js"></script>
-
-<h1>Find Your Favorite Team</h1>
-<div id="teams">
-    <div id="MLB" class="team-category">
-        <h2>Major League Baseball</h2>
-        <a href="athleticscalendar.html" class="team-link">Athletics</a>
-    </div>
-
-    <div id="NHL" class="team-category">
-        <h2>National Hockey League</h2>
-        <a href="bruinscalendar.html" class="team-link">Boston Bruins</a>
-    </div>
-
-    <div id="NBA" class="team-category">
-        <h2>National Basketball Association</h2>
-        <a href="warriorscalendar.html" class="team-link">Golden State Warriors</a>
-    </div>
-
-    <div id="NFL" class="team-category">
-        <h2>National Football League</h2>
-        <a href="eaglescalendar.html" class="team-link">Philadelphia Eagles</a>
-    </div>
-</div>
-
-<style>
     .team-category {
-        margin: 20px 0;
-        padding: 15px;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        background-color: #f9f9f9;
-        width: 80%;
-        max-width: 500px;
-        text-align: center;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      width: 80%;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      color: var(--button-text-dark);
     }
 
     .team-category h2 {
-        color: #333;
-        margin-bottom: 10px;
+      color: var(--button-text-dark);
+      margin-bottom: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
     }
 
     .team-link {
-        display: inline-block;
-        margin-top: 10px;
-        padding: 10px 20px;
-        text-decoration: none;
-        color: white;
-        background-color: #007BFF;
-        border-radius: 5px;
-        font-weight: bold;
-        transition: background-color 0.3s ease;
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: white;
+      background-color: var(--neon-blue);
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      font-family: 'Rajdhani', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .team-link:hover {
-        background-color: #0056b3;
+      background-color: var(--neon-black);
     }
-</style>
-<footer style="margin-top: 20px; color: #e0e0e0;">
-    <p style="color: #e0e0e0";>&copy; 2025 Sports Square. All rights reserved.</p>
-    <p style="color: #e0e0e0";>Follow us on <a href="https://x.com/Sports__Square" target="_blank" style="color: #00ffff;">X</a></p>
-</footer>
-<p><a href="./sitemap.html" style="color: #00ffff;">Sitemap</a></p>
+
+    footer {
+      margin-top: 80px;
+      padding: 40px;
+      background-color: var(--neon-yellow); 
+      box-shadow: 0 -5px 20px rgba(255, 255, 0, 0.4);
+      color: var(--button-text-dark); 
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 1px;
+    }
+
+    footer p {
+      margin: 5px 0;
+      font-size: 1.1em;
+    }
+
+    footer a {
+      color: var(--neon-blue);
+      text-decoration: underline;
+      font-weight: bold;
+    }
+
+    footer a:hover {
+      color: var(--neon-green);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./tags.html">Posts</a></li>
+      <li><a href="./sportscalendar.html">Calendar</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="./subscriberchat.html">Subscriber Chat</a></li>
+      <li><a href="./podcast.html">Podcast</a></li>
+      <li><a href="./social.html">Social Media</a></li>
+    </ul>
+  </nav>
+
+  <h1>Find Your Favorite Team</h1>
+  <div id="teams">
+    <div id="MLB" class="team-category">
+      <h2>Major League Baseball</h2>
+      <a href="athleticscalendar.html" class="team-link">Athletics</a>
+    </div>
+
+    <div id="NHL" class="team-category">
+      <h2>National Hockey League</h2>
+      <a href="bruinscalendar.html" class="team-link">Boston Bruins</a>
+    </div>
+
+    <div id="NBA" class="team-category">
+      <h2>National Basketball Association</h2>
+      <a href="warriorscalendar.html" class="team-link">Golden State Warriors</a>
+    </div>
+
+    <div id="NFL" class="team-category">
+      <h2>National Football League</h2>
+      <a href="eaglescalendar.html" class="team-link">Philadelphia Eagles</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Sports Square. All rights reserved.</p>
+    <p>Follow us on <a href="https://x.com/Sports__Square" target="_blank" rel="noopener noreferrer">X</a></p>
+    <p><a href="./sitemap.html">Sitemap</a></p>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+
+  <script src="./firebase-config.js"></script>
+  <script src="./presence.js"></script>
 </body>
 </html>

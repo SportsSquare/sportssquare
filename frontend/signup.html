@@ -344,7 +344,7 @@
               messageEl.textContent = `Login successful! Welcome back ${email}`;
 
               const params = new URLSearchParams(window.location.search);
-              const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/posts/so-long-pops';
+              const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/';
               console.log("Redirecting to:", redirectUrl);
               window.location.href = redirectUrl;
             } catch (error) {
@@ -366,7 +366,7 @@
         if (user) {
           console.log('User logged in (onAuthStateChanged):', user.email);
           const params = new URLSearchParams(window.location.search);
-          const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app/posts/so-long-pops';
+          const redirectUrl = params.get('redirect') || 'https://sportssquare.netlify.app';
 
 
           const currentPath = window.location.href.split('?')[0]; // Remove query params for comparison
