@@ -5,7 +5,6 @@ service cloud.firestore {
     // Helper function for admin check
     function isAdmin() {
       // Replace with the actual UID of your admin user.
-      // Make sure this UID is correct for the account you want to be admin.
       return request.auth.uid == 'ibLtQvJhIPN2icV7IyB1IUIgzN12';
     }
 
@@ -60,19 +59,29 @@ service cloud.firestore {
 
     // COMMENTS COLLECTION (TOP-LEVEL)
     // This rule is crucial for loading comments on articles.
-    // It is a top-level collection as per your client-side code: db.collection("comments")
     match /comments/{commentId} {
-      // *** THIS IS THE CRITICAL LINE: Allow EVERYONE to read comments ***
+      // Allow EVERYONE to read comments
       allow read: if true;
       // Authenticated users can create (post) comments
       allow create: if request.auth != null;
-      // Authenticated users can update ONLY the 'likes' array on comments.
+
+      // Allows an authenticated user to add their UID to the 'likes' array
       allow update: if request.auth != null &&
-                       request.resource.data.keys().hasOnly(['likes']) &&
-                       request.resource.data.likes is list;
+                       request.resource.data.likes is list &&
+                       request.resource.data.likes.hasAll(resource.data.likes) &&
+                       request.resource.data.likes.hasAny([request.auth.uid]) &&
+                       request.resource.data.likes.size() == resource.data.likes.size() + 1;
+
       // Comment owner or admin can delete a comment
       allow delete: if request.auth.uid == resource.data.uid || isAdmin();
     }
+
+    // --- NEW RULE FOR USER PREFERENCES ---
+    // Users can read, create, and update their own favorite teams.
+    match /userPreferences/{userId} {
+      allow read, create, update: if request.auth != null && request.auth.uid == userId;
+    }
+    // --- END NEW RULE ---
 
     // NOTIFICATIONS COLLECTION (Top-level, for site-wide announcements)
     match /notifications/{notificationId} {
