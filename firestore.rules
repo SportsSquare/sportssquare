@@ -1,0 +1,137 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function for admin check
+    function isAdmin() {
+      // Replace with the actual UID of your admin user.
+      // Make sure this UID is correct for the account you want to be admin.
+      return request.auth.uid == 'ibLtQvJhIPN2icV7IyB1IUIgzN12';
+    }
+
+    // USERS COLLECTION
+    match /users/{userId} {
+      // Authenticated users can read other user profiles
+      allow read: if request.auth != null;
+      // Users can create their own profile upon signup
+      allow create: if request.auth != null && request.auth.uid == userId;
+      // Users can update their own profile fields.
+      allow update: if request.auth != null && request.auth.uid == userId;
+      // Only admin can delete user profiles
+      allow delete: if isAdmin();
+
+      // READ NOTIFICATIONS SUBCOLLECTION for Users
+      match /readNotifications/{notificationId} {
+        // Users can read, create, and delete their own read notifications
+        allow read, create, delete: if request.auth.uid == userId;
+      }
+    }
+
+    // POSTS COLLECTION (Used for articles like "So Long Pops")
+    match /posts/{postId} {
+      // Authenticated users can read posts
+      allow read: if request.auth != null;
+      // Authenticated users can create posts
+      allow create: if request.auth != null;
+
+      // Allow any authenticated user to update ONLY 'likes' and 'repostCount' fields
+      // and ensure 'repostCount' only increments or stays the same.
+      allow update: if request.auth != null &&
+                      request.resource.data.keys().hasOnly(['likes', 'repostCount']) &&
+                      (request.resource.data.repostCount is number && request.resource.data.repostCount >= resource.data.repostCount);
+
+      // Post owner or admin can update/delete any other field of a post.
+      allow update, delete: if request.auth.uid == resource.data.uid || isAdmin();
+
+      // LIKES SUBCOLLECTION for Posts
+      match /likes/{likeId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null;
+        allow delete: if request.auth.uid == resource.data.uid;
+      }
+
+      // RATINGS SUBCOLLECTION for Posts
+      match /ratings/{ratingId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null;
+        allow update, delete: if request.auth.uid == resource.data.uid;
+      }
+    }
+
+    // COMMENTS COLLECTION (TOP-LEVEL)
+    // This rule is crucial for loading comments on articles.
+    // It is a top-level collection as per your client-side code: db.collection("comments")
+    match /comments/{commentId} {
+      // *** THIS IS THE CRITICAL LINE: Allow EVERYONE to read comments ***
+      allow read: if true;
+      // Authenticated users can create (post) comments
+      allow create: if request.auth != null;
+      // Authenticated users can update ONLY the 'likes' array on comments.
+      allow update: if request.auth != null &&
+                       request.resource.data.keys().hasOnly(['likes']) &&
+                       request.resource.data.likes is list;
+      // Comment owner or admin can delete a comment
+      allow delete: if request.auth.uid == resource.data.uid || isAdmin();
+    }
+
+    // NOTIFICATIONS COLLECTION (Top-level, for site-wide announcements)
+    match /notifications/{notificationId} {
+      allow read: if true; // Public read for announcements/general notifications
+      // Only admin can create, update, or delete site-wide notifications
+      allow create, update, delete: if isAdmin();
+    }
+
+    // REPORTS COLLECTION (Top-level)
+    match /reports/{reportId} {
+      // Authenticated users can create reports
+      allow create: if request.auth != null;
+      // Only admin can read, update, or delete reports
+      allow read, update, delete: if isAdmin();
+    }
+
+    // DMS COLLECTION (Direct Messages)
+    match /dms/{dmId} {
+      // Only participants of the DM can read/write to the DM document itself
+      allow read, write: if request.auth != null
+                          && resource.data.participants.hasAny([request.auth.uid]);
+
+      // Specific rules for creating new DM conversations
+      allow create: if request.auth != null
+                          && request.resource.data.participants.size() == 2
+                          && request.resource.data.participantsData.size() == 2
+                          && request.resource.data.participants.hasAll([request.auth.uid])
+                          && request.resource.data.participantsData[0].uid == request.resource.data.participants[0]
+                          && request.resource.data.participantsData[1].uid == request.resource.data.participants[1]
+                          && request.resource.data.participantsData[0].uid != request.resource.data.participantsData[1].uid;
+
+      // MESSAGES SUBCOLLECTION within DMS
+      match /messages/{messageId} {
+        // Participants of the parent DM can read/create messages within that DM
+        allow read, create: if request.auth != null
+                                  && get(/databases/$(database)/documents/dms/$(dmId)).data.participants.hasAny([request.auth.uid]);
+        // Allow updating 'readBy' field for messages by participants.
+        allow update: if request.auth != null
+                            && get(/databases/$(database)/documents/dms/$(dmId)).data.participants.hasAny([request.auth.uid])
+                            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['readBy'])
+                            && request.resource.data.readBy is list
+                            && request.resource.data.readBy.hasAll(resource.data.readBy);
+      }
+    }
+
+    // ARTICLES COLLECTION (Top-level, if distinct from 'posts' for some reason)
+    // If your articles are actually stored in the 'posts' collection, this might be redundant.
+    // If you have a separate 'articles' collection, then this rule is active.
+    match /articles/{articleId} {
+      allow read: if true; // Anyone can read articles (if meant to be public)
+      allow create: if request.auth != null; // Authenticated users can create articles
+
+      // Allow any authenticated user to update ONLY the 'likes' array on articles.
+      allow update: if request.auth != null &&
+                       request.resource.data.keys().hasOnly(['likes']) &&
+                       request.resource.data.likes is list;
+
+      // Article author or admin can update/delete other fields of the article.
+      allow update, delete: if request.auth.uid == resource.data.authorId || isAdmin();
+    }
+  }
+}
