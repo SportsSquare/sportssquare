@@ -1189,15 +1189,34 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
           const twentyFourHoursAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000)); 
 
           posts.forEach(p => {
-              if (p.tag && p.createdAt && p.createdAt.toDate() > twentyFourHoursAgo) {
-                  const tag = p.tag.toLowerCase();
-                  tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-              }
-          });
+  if (p.tag && p.createdAt) {
+    let createdAtDate;
 
+    if (typeof p.createdAt.toDate === 'function') {
+      createdAtDate = p.createdAt.toDate();
+    } else if (p.createdAt instanceof Date) {
+      createdAtDate = p.createdAt;
+    } else if (typeof p.createdAt === 'string' || typeof p.createdAt === 'number') {
+      createdAtDate = new Date(p.createdAt);
+    } else if (p.createdAt.seconds) {
+      createdAtDate = new Date(p.createdAt.seconds * 1000);
+    } else {
+      // fallback - skip this post or log warning
+      console.warn('Unknown createdAt format:', p.createdAt);
+      return;
+    }
+
+    if (createdAtDate > twentyFourHoursAgo) {
+      const tag = p.tag.toLowerCase();
+      tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+    }
+  }
+});
+
+          // Convert the tagCounts object into an array of [tag, count] pairs
+          // and then sort them in descending order based on the count.
           const sortedTags = Object.entries(tagCounts)
-              .sort(([, countA], [, countB]) => countB - countA)
-              .slice(0, 5); 
+                                   .sort(([, countA], [, countB]) => countB - countA);
 
           trendingTagsDiv.innerHTML = '<h3>Trending Tags</h3>';
           if (sortedTags.length === 0) {
@@ -1401,19 +1420,27 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
 
           el.querySelector(".likeBtn").onclick = async () => {
             const ref = db.collection("posts").doc(p.id);
-            liked
-              ? await ref.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) })
-              : await ref.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
+            const currentLikes = (await ref.get()).data()?.likes || []; // Fetch current likes for the post
+            const userLiked = currentLikes.includes(currentUser.uid);
+
+            if (userLiked) {
+                await ref.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
+            } else {
+                await ref.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
+            }
             await handlePostInteraction(p, 'like'); 
 
+            // Directly update the UI for this specific like button
             const updatedPostSnap = await ref.get();
             if (updatedPostSnap.exists) {
                 const updatedPostData = { id: updatedPostSnap.id, ...updatedPostSnap.data() };
-                const currentPostEl = container.querySelector(`[data-post-id="${updatedPostData.id}"]`);
-                if (currentPostEl) {
-                    const likeBtn = currentPostEl.querySelector(".likeBtn");
-                    const newLikedStatus = updatedPostData.likes?.includes(currentUser.uid);
-                    likeBtn.textContent = `${newLikedStatus ? "Unlike" : "Like"} (${updatedPostData.likes?.length || 0})`;
+                const likeBtn = el.querySelector(".likeBtn"); // Use 'el' which is the current post element
+                const newLikedStatus = updatedPostData.likes?.includes(currentUser.uid);
+                likeBtn.textContent = `${newLikedStatus ? "Unlike" : "Like"} (${updatedPostData.likes?.length || 0})`;
+                if (newLikedStatus) {
+                    likeBtn.classList.add('liked');
+                } else {
+                    likeBtn.classList.remove('liked');
                 }
             }
           };
@@ -1474,6 +1501,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
         const commentsListEl = getEl(`commentsList-${pid}`);
 
         const postCommentBtn = cd.querySelector(".postCommentBtn");
+        // Ensure listener is attached only once to prevent multiple firings
         if (postCommentBtn && !postCommentBtn.dataset.listenerAttached) { 
           postCommentBtn.onclick = async (e) => {
             const txt = getEl(`commentInput-${e.target.dataset.id}`).value.trim();
@@ -1484,13 +1512,13 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
                 .collection("comments")
                 .add({
                   uid: currentUser.uid,
-                  username: currentUser.displayName || currentUser.email, // Use displayName if available
+                  username: currentUser.displayName || currentUser.email,
                   text: txt,
                   createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                  likes: [] // Add likes array for comments
+                  likes: []
                 });
               getEl(`commentInput-${e.target.dataset.id}`).value = '';
-              loadComments(e.target.dataset.id);
+              loadComments(e.target.dataset.id); // Reload comments for immediate update after new comment
 
               const postSnap = await db.collection("posts").doc(e.target.dataset.id).get();
               if (postSnap.exists) {
@@ -1501,17 +1529,20 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
           postCommentBtn.dataset.listenerAttached = true; 
         }
         
+        // --- START OF COMMENTS FETCHING AND RENDERING LOGIC ---
         const snap = await db.collection("posts").doc(pid).collection("comments").orderBy("createdAt").get();
-        commentsListEl.innerHTML = ""; 
+        commentsListEl.innerHTML = ""; // Clear existing comments before re-rendering
+
         snap.forEach((doc) => {
           const c = doc.data();
           const commentId = doc.id;
-          const t = c.createdAt ? c.createdAt.toDate().toLocaleString() : "";
+          // Robust date handling for createdAt
+          const t = c.createdAt && typeof c.createdAt.toDate === 'function' ? c.createdAt.toDate().toLocaleString() : '';
           const likedComment = c.likes?.includes(currentUser.uid);
 
           const commentDiv = document.createElement('div');
           commentDiv.className = 'comment';
-          commentDiv.dataset.commentId = commentId; // Store comment ID
+          commentDiv.dataset.commentId = commentId; // Store comment ID for easy access
           commentDiv.innerHTML = `<span><b>${escapeHtml(c.username)}</b>: ${escapeHtml(c.text)} <small>(${t})</small></span>
             <button class="like-comment-btn ${likedComment ? 'liked' : ''}" data-pid="${pid}" data-cid="${commentId}">${likedComment ? 'Unlike' : 'Like'} (${c.likes?.length || 0})</button>
             ${
@@ -1521,6 +1552,7 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
             }`;
           commentsListEl.appendChild(commentDiv);
 
+          // Re-attach event listeners for dynamically created buttons within comments
           const likeCommentBtn = commentDiv.querySelector(".like-comment-btn");
           if (likeCommentBtn) {
               likeCommentBtn.onclick = async (e) => {
@@ -1535,7 +1567,22 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
                   } else {
                       await commentRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
                   }
-                  loadComments(targetPid); // Reload comments for immediate update
+                  
+                  // --- FIX FOR COMMENT LIKE COUNT NOT UPDATING INSTANTLY ---
+                  const updatedCommentSnap = await commentRef.get(); // Get the updated comment data
+                  if (updatedCommentSnap.exists) {
+                      const updatedCommentData = updatedCommentSnap.data();
+                      const newLikedStatus = updatedCommentData.likes?.includes(currentUser.uid);
+                      likeCommentBtn.textContent = `${newLikedStatus ? 'Unlike' : 'Like'} (${updatedCommentData.likes?.length || 0})`;
+                      if (newLikedStatus) {
+                          likeCommentBtn.classList.add('liked');
+                      } else {
+                          likeCommentBtn.classList.remove('liked');
+                      }
+                  }
+                  // --- END OF FIX ---
+
+                  // REMOVE THIS LINE: loadComments(targetPid); // No longer needed as we update directly
               };
           }
 
@@ -1568,8 +1615,8 @@ div[id^="commentsDiv-"] button.postCommentBtn:active {
                   };
               }
           }
-        });
-      }
+        }); // End of snap.forEach
+      } // End of loadComments
 
       async function showUserProfile(uid) {
         currentProfileUID = uid;
