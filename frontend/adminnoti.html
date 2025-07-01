@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Admin Notification Panel</title>
   <style>
+    /* Your CSS remains here as it was */
     #admin-panel {
       display: none;
       margin-top: 20px;
@@ -149,7 +150,11 @@
     }
   </style>
   <link rel="icon" type="image/x-icon" href="./favicon.ico">
-</head>
+
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script> <script src="./firebase-config.js"></script> <script src="./presence.js"></script> </head>
 <body>
   
 
@@ -165,34 +170,16 @@
 </div>
 
 
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
-
-
-<script src="/path/to/firebase-config.js"></script>
-<script src="/path/to/presence.js"></script>
-
-
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyC-p_D5KgLbpMm_5REwdDaaq-YBrE3pwkk",
-  authDomain: "sportssquare-b96ed.firebaseapp.com",
-  projectId: "sportssquare-b96ed",
-  storageBucket: "sportssquare-b96ed.firebasestorage.app",
-  messagingSenderId: "844736978057",
-  appId: "1:844736978057:web:76c8db520d3c27bdeb7a58"
-};
-
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-  const auth = firebase.auth();
+  // NO DUPLICATE FIREBASE INITIALIZATION HERE.
+  // firebase-config.js already handles firebase.initializeApp, window.db, and window.auth.
 
   const adminUID = "ibLtQvJhIPN2icV7IyB1IUIgzN12"; // Replace with YOUR actual UID
   const adminPanel = document.getElementById('admin-panel');
   const status = document.getElementById('status');
 
-  auth.onAuthStateChanged(user => {
+  // Use the globally available Firebase instances from firebase-config.js
+  window.auth.onAuthStateChanged(user => { 
     if (user && user.uid === adminUID) {
       adminPanel.style.display = 'block';
     } else {
@@ -213,7 +200,8 @@ const firebaseConfig = {
       readBy: []
     };
 
-    db.collection("notifications").add(notification)
+    // Use the globally available Firebase instance
+    window.db.collection("notifications").add(notification)
       .then(() => {
         status.textContent = "Notification sent!";
         document.getElementById('message').value = '';
@@ -223,12 +211,14 @@ const firebaseConfig = {
       });
   }
 </script>
-<script src="./notifications.js"></script>
+
 <footer style="margin-top: 20px; color: #e0e0e0;">
   <p style="color: #e0e0e0";>&copy; 2025 Sports Square. All rights reserved.</p>
   <p style="color: #e0e0e0";>Follow us on <a href="https://x.com/Sports__Square" target="_blank" style="color: #00ffff;">X</a></p>
 </footer>
 <p><a href="./sitemap.html" style="color: #00ffff;">Sitemap</a></p>
+
+<script src="./notifications.js"></script>
 
 </body>
 </html>
